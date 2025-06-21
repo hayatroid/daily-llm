@@ -4,35 +4,35 @@
 
 Build a system that:
 
-- 💬 Records daily conversations with AI
-- 📄 Creates summaries automatically
-- 🌐 Publishes everything as a website
+- [x] 💬 Records daily conversations with AI
+- [x] 📄 Creates summaries automatically
+- [x] 🌐 Publishes everything as a website
 
 ## 🚫 Non-Goals
 
-- Choosing specific technologies (covered in another doc)
-- Implementation details
-- Visual design details
+- [x] Choosing specific technologies (covered in 002-tech-stack.md)
+- [x] Implementation details (covered in 003-implementation-plan.md)
+- [x] Visual design details (implemented terminal theme)
 
 ## ✨ Main Features
 
 ### 1. 💬 Save Conversations
 
-- Store AI chats as Markdown files
-- Easy-to-read format
-- Organized by date
+- [x] Store AI chats as Markdown files
+- [x] Easy-to-read format with frontmatter
+- [x] Organized by date (`content/YYYY-MM-DD/`)
 
 ### 2. 📝 Create Daily Summaries
 
-- Read all conversations from the day
-- Use AI to make a summary
-- Save as a single summary file
+- [x] Read all conversations from the day
+- [x] Use AI to make a summary
+- [x] Save as a single summary file (`summary.md`)
 
 ### 3. 🌐 Publish to Web
 
-- Show conversations and summaries by date
-- Add search to find topics
-- Use tags to organize content
+- [x] Show conversations and summaries by date
+- [ ] Add search to find topics (deferred - Non-Goal)
+- [ ] Use tags to organize content (basic tags implemented, advanced filtering deferred)
 
 ## 📁 Directory Structure
 
@@ -53,18 +53,22 @@ daily-llm/
 
 ### 1. 💬 Recording Conversations
 
-- Save each AI chat as Markdown
-- Name files: `001-[topic].md`, `002-[topic].md`, etc.
-- Store in: `content/YYYY-MM-DD/`
+- [x] Save each AI chat as Markdown
+- [x] Name files: `001-[topic].md`, `002-[topic].md`, etc.
+- [x] Store in: `content/YYYY-MM-DD/`
+- [x] Use frontmatter for metadata (date, time, title, tags)
 
 ### 2. 📝 Making Summaries
 
-1. Read all conversation files from the day
-2. Ask AI to create a summary
-3. Save as `content/YYYY-MM-DD/summary.md`
+- [x] Read all conversation files from the day
+- [x] Ask AI to create a summary
+- [x] Save as `content/YYYY-MM-DD/summary.md`
+- [x] Include highlights and key takeaways
 
 ### 3. 🌐 Publishing Online
 
-- Display conversations and summaries by date
-- Let people search for topics
-- Use tags to find related content
+- [x] Display conversations and summaries by date
+- [x] Automatic build and deployment via GitHub Actions
+- [x] Custom domain support (`daily-llm.hayatro.id`)
+- [ ] Let people search for topics (deferred)
+- [ ] Advanced tag filtering (deferred)
