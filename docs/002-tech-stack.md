@@ -79,7 +79,8 @@ Features to consider later:
 - [x] Automatic deploys with GitHub Actions
 - [x] Custom domain support configured
 - [x] No server management needed
-- [ ] DNS propagation (waiting)
+- [x] DNS propagation completed
+- [x] Live deployment verified
 
 ## 📦 Dependencies
 
