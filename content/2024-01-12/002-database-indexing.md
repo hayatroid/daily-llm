@@ -1,5 +1,5 @@
 ---
-date: 2024-01-12
+date: '2024-01-12'
 time: '14:30'
 title: 'Database Indexing Best Practices'
 tags: ['database', 'sql', 'performance', 'indexing']

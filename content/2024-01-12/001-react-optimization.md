@@ -1,5 +1,5 @@
 ---
-date: 2024-01-12
+date: '2024-01-12'
 time: '09:15'
 title: 'React Performance Optimization Techniques'
 tags: ['react', 'performance', 'optimization', 'hooks']

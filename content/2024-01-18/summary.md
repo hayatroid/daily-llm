@@ -1,5 +1,5 @@
 ---
-date: 2024-01-18
+date: '2024-01-18'
 conversations: 3
 highlights:
   - 'Covered Docker best practices from security to multi-stage builds'

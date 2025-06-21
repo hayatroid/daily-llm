@@ -1,5 +1,5 @@
 ---
-date: 2024-01-18
+date: '2024-01-18'
 time: '16:45'
 title: 'Git Workflow and Branching Strategies'
 tags: ['git', 'version-control', 'workflow', 'collaboration']

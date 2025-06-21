@@ -1,5 +1,5 @@
 ---
-date: 2024-01-18
+date: '2024-01-18'
 time: '10:45'
 title: 'Docker Container Best Practices'
 tags: ['docker', 'containers', 'devops', 'deployment']
