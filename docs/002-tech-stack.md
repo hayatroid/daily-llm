@@ -84,6 +84,7 @@ Features to consider later:
 ## 📦 Dependencies
 
 ### Core
+
 ```json
 {
   "dependencies": {
@@ -93,6 +94,7 @@ Features to consider later:
 ```
 
 ### Code Quality (Added for maintainability)
+
 ```json
 {
   "devDependencies": {

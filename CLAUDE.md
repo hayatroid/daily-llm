@@ -40,12 +40,13 @@ Remember: **Core first, adventure later!** 🚀
 Convert all `docs/` files to implementation checklists when project progresses:
 
 - Use `[x]` for completed items
-- Use `[ ]` for pending/deferred items  
+- Use `[ ]` for pending/deferred items
 - Track implementation progress visually
 - Update checklists as features are built
 - Maintain accountability and visibility
 
 **Example:**
+
 ```markdown
 ## 🎯 Goals
 
@@ -57,6 +58,7 @@ Build the core features with:
 ```
 
 This helps:
+
 - **Visual progress tracking** - See what's done vs pending
 - **Project retrospectives** - Clear completion status
 - **Future planning** - Identify what was deferred
@@ -82,13 +84,24 @@ npm run lint
 npm run lint:fix
 ```
 
-**Pre-commit checklist:**
+**Pre-commit checklist (MANDATORY):**
 
-- ✅ `npm run format` - Fix formatting
-- ✅ `npm run lint` - Check for errors
-- ✅ `npm run build` - Ensure builds successfully
+- ✅ `npm run format` - Fix formatting (REQUIRED)
+- ✅ `npm run lint` - Check for errors (REQUIRED)
+- ✅ `npm run build` - Ensure builds successfully (REQUIRED)
 
-GitHub Actions CI will automatically check these on every push.
+**⚠️ IMPORTANT:** You MUST run formatter and linter before every `git push`. This is non-negotiable.
+
+```bash
+# Required workflow before git push:
+npm run format
+npm run lint
+git add .
+git commit -m "..."
+git push
+```
+
+GitHub Actions CI will automatically check these on every push and will fail if code quality standards are not met.
 
 ## 🚀 Project Specific Notes
 
