@@ -7,15 +7,9 @@ export async function getStaticPaths() {
   // Get all content directories
   const summaries = await Astro.glob('../../content/**/summary.md');
   
-  return summaries.map((summary) => {
-    // Convert date to YYYY-MM-DD format
-    const date = summary.frontmatter.date;
-    const dateString = typeof date === 'string' ? date : date.toISOString().split('T')[0];
-    
-    return {
-      params: { date: dateString }
-    };
-  });
+  return summaries.map((summary) => ({
+    params: { date: summary.frontmatter.date.toString() }
+  }));
 }
 
 const { date } = Astro.params;
