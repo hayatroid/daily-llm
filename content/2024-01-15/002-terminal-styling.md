@@ -1,14 +1,16 @@
 ---
-date: "2024-01-15"
-time: "14:20"
-title: "Creating a Terminal-Inspired Design"
-tags: ["css", "design", "terminal", "monospace"]
+date: '2024-01-15'
+time: '14:20'
+title: 'Creating a Terminal-Inspired Design'
+tags: ['css', 'design', 'terminal', 'monospace']
 ---
 
 ## User
+
 I want my blog to look like a terminal. What CSS variables should I use?
 
 ## Assistant
+
 Perfect! Here's a clean terminal theme:
 
 ```css
@@ -37,9 +39,11 @@ body {
 ```
 
 ## User
+
 Should I add any animations?
 
 ## Assistant
+
 Keep it minimal for now! Maybe just:
 
 ```css
@@ -49,8 +53,14 @@ Keep it minimal for now! Maybe just:
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 ```
 

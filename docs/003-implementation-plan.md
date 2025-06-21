@@ -3,6 +3,7 @@
 ## 🎯 Goals
 
 Define the concrete details needed to start building:
+
 - Markdown frontmatter structure
 - Page layouts and routes
 - URL structure
@@ -18,30 +19,34 @@ Define the concrete details needed to start building:
 ## 📄 Content Format
 
 ### Conversation Markdown Structure
+
 ```markdown
 ---
 date: 2024-01-01
-time: "14:30"
-title: "Web Development Best Practices"
-tags: ["web", "javascript", "astro"]
+time: '14:30'
+title: 'Web Development Best Practices'
+tags: ['web', 'javascript', 'astro']
 ---
 
 ## User
+
 How do I optimize my Astro site for performance?
 
 ## Assistant
+
 Here are the key performance optimizations...
 ```
 
 ### Summary Markdown Structure
+
 ```markdown
 ---
 date: 2024-01-01
 conversations: 3
 highlights:
-  - "Discussed Astro performance"
-  - "Explored CSS architecture"
-  - "Reviewed deployment options"
+  - 'Discussed Astro performance'
+  - 'Explored CSS architecture'
+  - 'Reviewed deployment options'
 ---
 
 # Daily Summary - January 1, 2024
@@ -52,11 +57,13 @@ Today's conversations covered web development topics...
 ## 🗺️ Page Structure
 
 ### 1. **Home Page** (`/`)
+
 - Show all summaries (latest first)
 - Links to daily pages
 - Simple terminal-style header
 
 ### 2. **Daily Page** (`/2024-01-01/`)
+
 - Display all conversations from that day
 - Show summary at the top
 - Navigation to prev/next day
@@ -94,6 +101,7 @@ daily-llm/
 ## 🚀 GitHub Actions Workflow
 
 ### `.github/workflows/deploy.yml`
+
 ```yaml
 name: Deploy to GitHub Pages
 
@@ -135,6 +143,7 @@ jobs:
 ## ⚙️ Astro Configuration
 
 ### `astro.config.mjs`
+
 ```js
 import { defineConfig } from 'astro/config';
 
@@ -143,8 +152,8 @@ export default defineConfig({
   base: '/daily-llm',
   output: 'static',
   build: {
-    format: 'directory'
-  }
+    format: 'directory',
+  },
 });
 ```
 

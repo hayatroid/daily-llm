@@ -1,10 +1,10 @@
 ---
-date: "2024-01-15"
+date: '2024-01-15'
 conversations: 3
 highlights:
-  - "Set up Astro with minimal configuration"
-  - "Designed terminal-inspired CSS theme"
-  - "Configured GitHub Pages deployment"
+  - 'Set up Astro with minimal configuration'
+  - 'Designed terminal-inspired CSS theme'
+  - 'Configured GitHub Pages deployment'
 ---
 
 # Daily Summary - January 15, 2024
@@ -18,7 +18,7 @@ Finished with **deployment strategy** using GitHub Actions. The workflow is stra
 ## Key Takeaways
 
 - Astro's file-based routing makes date pages simple
-- Terminal theme should prioritize readability over flashy effects  
+- Terminal theme should prioritize readability over flashy effects
 - GitHub Pages deployment is mostly automated once configured
 
 Ready to start building the actual pages tomorrow!

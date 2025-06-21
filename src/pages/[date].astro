@@ -50,13 +50,13 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
   {summary.length > 0 && (
     <div class="summary-section">
-      <h3><span class="command">></span> summary.md</h3>
+      <h3><span class="command">{'>'}</span> summary.md</h3>
       <SummaryCard summary={summary[0]} />
     </div>
   )}
 
   <div class="conversations-section">
-    <h3><span class="command">></span> conversations ({sortedConversations.length})</h3>
+    <h3><span class="command">{'>'}</span> conversations ({sortedConversations.length})</h3>
     <div class="conversations">
       {sortedConversations.map((conversation) => (
         <ConversationCard conversation={conversation} />

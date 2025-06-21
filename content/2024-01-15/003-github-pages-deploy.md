@@ -1,14 +1,16 @@
 ---
-date: "2024-01-15"
-time: "16:45"
-title: "Deploying Astro to GitHub Pages"
-tags: ["github-pages", "deployment", "ci-cd", "astro"]
+date: '2024-01-15'
+time: '16:45'
+title: 'Deploying Astro to GitHub Pages'
+tags: ['github-pages', 'deployment', 'ci-cd', 'astro']
 ---
 
 ## User
+
 What's the GitHub Actions workflow for deploying Astro to GitHub Pages?
 
 ## Assistant
+
 Here's the complete workflow for `.github/workflows/deploy.yml`:
 
 ```yaml
@@ -50,9 +52,11 @@ jobs:
 ```
 
 ## User
+
 Do I need any special Astro config for GitHub Pages?
 
 ## Assistant
+
 Yes! Update your `astro.config.mjs`:
 
 ```js
@@ -61,8 +65,8 @@ export default defineConfig({
   base: '/repository-name',
   output: 'static',
   build: {
-    format: 'directory'
-  }
+    format: 'directory',
+  },
 });
 ```
 

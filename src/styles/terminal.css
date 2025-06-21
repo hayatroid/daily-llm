@@ -20,7 +20,12 @@ body {
   font-size: 14px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--term-green);
   font-weight: bold;
 }
@@ -51,7 +56,8 @@ a:hover {
   color: var(--term-gray);
 }
 
-pre, code {
+pre,
+code {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--term-gray);
   padding: 10px;
@@ -85,6 +91,12 @@ pre, code {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }

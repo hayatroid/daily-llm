@@ -4,6 +4,6 @@ export default defineConfig({
   site: 'https://daily-llm.hayatro.id',
   output: 'static',
   build: {
-    format: 'directory'
-  }
+    format: 'directory',
+  },
 });

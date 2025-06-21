@@ -3,6 +3,7 @@
 ## 🎯 Goals
 
 Build the core features with:
+
 - Fast static site generation
 - Markdown-based content
 - CLI-inspired minimal design
@@ -11,6 +12,7 @@ Build the core features with:
 ## 🚫 Non-Goals
 
 Features to consider later:
+
 - Interactive terminal commands
 - ASCII art and animations
 - Sound effects
@@ -21,12 +23,14 @@ Features to consider later:
 ## 🛠️ Core Stack
 
 ### 📄 Static Site Generator: **Astro**
+
 - Zero JS by default
 - Fast builds
 - Great Markdown support
 - Easy GitHub Pages deployment
 
 ### 🎨 Styling: **Plain CSS** with Terminal Theme
+
 ```css
 :root {
   --term-green: #00ff00;
@@ -37,11 +41,13 @@ Features to consider later:
 ```
 
 ### 📝 Content: **Markdown**
+
 - Simple `.md` files
 - Frontmatter for metadata
 - No complexity needed
 
 ### 🏗️ Build: **npm** scripts
+
 ```json
 {
   "scripts": {
@@ -53,6 +59,7 @@ Features to consider later:
 ```
 
 ### 🌐 Hosting: **GitHub Pages**
+
 - Free hosting for public repos
 - Automatic deploys with GitHub Actions
 - Custom domain support
