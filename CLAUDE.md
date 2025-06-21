@@ -35,6 +35,33 @@ This helps:
 
 Remember: **Core first, adventure later!** 🚀
 
+### Checklist Documentation Pattern
+
+Convert all `docs/` files to implementation checklists when project progresses:
+
+- Use `[x]` for completed items
+- Use `[ ]` for pending/deferred items  
+- Track implementation progress visually
+- Update checklists as features are built
+- Maintain accountability and visibility
+
+**Example:**
+```markdown
+## 🎯 Goals
+
+Build the core features with:
+
+- [x] Fast static site generation
+- [x] Markdown-based content
+- [ ] Advanced search features (deferred)
+```
+
+This helps:
+- **Visual progress tracking** - See what's done vs pending
+- **Project retrospectives** - Clear completion status
+- **Future planning** - Identify what was deferred
+- **Team communication** - Share progress transparently
+
 ## 🔧 Code Quality
 
 ### Formatter and Linter
