@@ -33,7 +33,7 @@ const { frontmatter, Content } = summary;
   </div>
   
   <div class="actions">
-    <a href={`/${frontmatter.date}/`} class="command">cd {frontmatter.date}/</a>
+    <a href={`/${typeof frontmatter.date === 'string' ? frontmatter.date : frontmatter.date.toISOString().split('T')[0]}/`} class="command">cd {typeof frontmatter.date === 'string' ? frontmatter.date : frontmatter.date.toISOString().split('T')[0]}/</a>
   </div>
 </article>
 
