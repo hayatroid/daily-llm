@@ -1,0 +1,59 @@
+---
+export interface Props {
+  conversation: {
+    frontmatter: {
+      date: string;
+      time: string;
+      title: string;
+      tags: string[];
+    };
+    Content: any;
+  };
+}
+
+const { conversation } = Astro.props;
+const { frontmatter, Content } = conversation;
+---
+
+<article class="conversation">
+  <div class="meta">
+    <span class="prompt">></span> {frontmatter.time} 
+    <span class="command">{frontmatter.title}</span>
+  </div>
+  
+  <div class="tags">
+    {frontmatter.tags.map((tag: string) => (
+      <span class="tag">#{tag}</span>
+    ))}
+  </div>
+  
+  <div class="content">
+    <Content />
+  </div>
+</article>
+
+<style>
+  .tags {
+    margin: 10px 0;
+  }
+  
+  .tag {
+    color: var(--term-gray);
+    font-size: 12px;
+    margin-right: 10px;
+  }
+  
+  .content {
+    margin: 15px 0;
+  }
+  
+  .content h2 {
+    color: var(--term-amber);
+    font-size: 16px;
+    margin: 15px 0 5px 0;
+  }
+  
+  .content pre {
+    overflow-x: auto;
+  }
+</style>

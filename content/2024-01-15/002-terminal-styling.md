@@ -1,5 +1,5 @@
 ---
-date: 2024-01-15
+date: "2024-01-15"
 time: "14:20"
 title: "Creating a Terminal-Inspired Design"
 tags: ["css", "design", "terminal", "monospace"]

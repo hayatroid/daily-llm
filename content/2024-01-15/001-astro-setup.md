@@ -1,5 +1,5 @@
 ---
-date: 2024-01-15
+date: "2024-01-15"
 time: "09:30"
 title: "Setting up Astro for Static Site Generation"
 tags: ["astro", "web-development", "static-sites"]

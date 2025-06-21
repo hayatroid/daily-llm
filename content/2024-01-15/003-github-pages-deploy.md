@@ -1,5 +1,5 @@
 ---
-date: 2024-01-15
+date: "2024-01-15"
 time: "16:45"
 title: "Deploying Astro to GitHub Pages"
 tags: ["github-pages", "deployment", "ci-cd", "astro"]

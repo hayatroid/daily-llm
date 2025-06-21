@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ConversationCard from '../components/ConversationCard.astro';
+import SummaryCard from '../components/SummaryCard.astro';
+
+export async function getStaticPaths() {
+  // Get all content directories
+  const summaries = await Astro.glob('../../content/**/summary.md');
+  
+  return summaries.map((summary) => ({
+    params: { date: summary.frontmatter.date.toString() }
+  }));
+}
+
+const { date } = Astro.params;
+
+// Get all content files and filter for this date
+const allContent = await Astro.glob('../../content/**/*.md');
+
+// Get the summary for this date
+const summary = allContent.filter(file => 
+  file.file.includes(`/${date}/summary.md`)
+);
+
+// Get all conversations for this date
+const conversations = allContent.filter(file => 
+  file.file.includes(`/${date}/`) && !file.file.endsWith('summary.md')
+);
+
+// Sort conversations by filename
+const sortedConversations = conversations
+  .sort((a, b) => {
+    const aNum = parseInt(a.file.split('/').pop()?.split('-')[0] || '0');
+    const bNum = parseInt(b.file.split('/').pop()?.split('-')[0] || '0');
+    return aNum - bNum;
+  });
+
+const pageTitle = `${date} - Daily LLM Conversations`;
+---
+
+<BaseLayout title={pageTitle}>
+  <div class="navigation">
+    <a href="/" class="command">← ls ../</a>
+  </div>
+
+  <div class="date-header">
+    <h2><span class="prompt">$</span> cat {date}/</h2>
+    <p class="comment"># Daily conversations and summary</p>
+  </div>
+
+  {summary.length > 0 && (
+    <div class="summary-section">
+      <h3><span class="command">></span> summary.md</h3>
+      <SummaryCard summary={summary[0]} />
+    </div>
+  )}
+
+  <div class="conversations-section">
+    <h3><span class="command">></span> conversations ({sortedConversations.length})</h3>
+    <div class="conversations">
+      {sortedConversations.map((conversation) => (
+        <ConversationCard conversation={conversation} />
+      ))}
+    </div>
+  </div>
+
+  {sortedConversations.length === 0 && summary.length === 0 && (
+    <div class="empty">
+      <p class="comment"># No content found for {date}</p>
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .navigation {
+    margin-bottom: 20px;
+  }
+  
+  .date-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--term-gray);
+  }
+  
+  .date-header h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .summary-section,
+  .conversations-section {
+    margin: 30px 0;
+  }
+  
+  .conversations {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .empty {
+    text-align: center;
+    padding: 40px;
+    border: 1px dashed var(--term-gray);
+  }
+</style>

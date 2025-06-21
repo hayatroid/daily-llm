@@ -1,5 +1,5 @@
 ---
-date: 2024-01-15
+date: "2024-01-15"
 conversations: 3
 highlights:
   - "Set up Astro with minimal configuration"

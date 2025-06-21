@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SummaryCard from '../components/SummaryCard.astro';
+
+// Get all summary files
+const summaries = await Astro.glob('../../content/**/summary.md');
+
+// Sort by date (newest first)
+const sortedSummaries = summaries.sort((a, b) => {
+  return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
+});
+---
+
+<BaseLayout title="Daily LLM Conversations">
+  <div class="intro">
+    <p class="comment"># Latest daily summaries</p>
+    <p class="comment"># Use 'cd YYYY-MM-DD/' to view full conversations</p>
+  </div>
+
+  <div class="summaries">
+    {sortedSummaries.map((summary) => (
+      <SummaryCard summary={summary} />
+    ))}
+  </div>
+
+  {sortedSummaries.length === 0 && (
+    <div class="empty">
+      <p class="comment"># No conversations yet</p>
+      <p>Start by adding files to <code>content/YYYY-MM-DD/</code></p>
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .intro {
+    margin-bottom: 30px;
+  }
+  
+  .summaries {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .empty {
+    text-align: center;
+    padding: 40px;
+    border: 1px dashed var(--term-gray);
+  }
+</style>
