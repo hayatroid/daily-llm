@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BreadcrumbNav from '../../components/BreadcrumbNav.astro';
+import StatsBadge from '../../components/StatsBadge.astro';
 import { processConversation } from '../../utils/contentProcessor.js';
+import { ICONS, LABELS } from '../../utils/icons.js';
+import { createDateUrl } from '../../utils/slugUtils.js';
 
 export async function getStaticPaths() {
   // Get all conversation files (exclude summaries)
@@ -36,21 +40,19 @@ const pageTitle = `${frontmatter.title} - ${date}`;
 
 <BaseLayout title={pageTitle}>
   <div class="main-content">
-    <nav class="breadcrumb-nav">
-      <a href="/" class="breadcrumb-link">🏠 Home</a>
-      <span class="breadcrumb-separator">{'>'}</span>
-      <a href={`/${date}/`} class="breadcrumb-link">📅 {date}</a>
-      <span class="breadcrumb-separator">{'>'}</span>
-      <span class="breadcrumb-current">💬 {frontmatter.title}</span>
-    </nav>
+    <BreadcrumbNav items={[
+      { href: '/', label: LABELS.HOME, icon: ICONS.HOME },
+      { href: createDateUrl(date), label: date, icon: ICONS.CALENDAR },
+      { label: frontmatter.title, icon: ICONS.CONVERSATION, current: true }
+    ]} />
 
     <header class="conversation-header">
       <div class="header-main">
-        <h1 class="conversation-title">🤖 {frontmatter.title}</h1>
+        <h1 class="conversation-title">{ICONS.ROBOT} {frontmatter.title}</h1>
         <div class="conversation-stats">
-          <span class="stat">⏰ {frontmatter.time}</span>
-          <span class="stat">🔄 {processed.exchangeCount} exchanges</span>
-          {processed.hasCode && <span class="stat">💻 Code included</span>}
+          <StatsBadge icon={ICONS.TIME} value={frontmatter.time} />
+          <StatsBadge icon={ICONS.EXCHANGE} value={processed.exchangeCount} label={LABELS.EXCHANGES} />
+          {processed.hasCode && <StatsBadge icon={ICONS.CODE} value={LABELS.CODE_INCLUDED} />}
         </div>
       </div>
       
@@ -69,11 +71,11 @@ const pageTitle = `${frontmatter.title} - ${date}`;
 
     <footer class="conversation-footer">
       <div class="navigation-actions">
-        <a href={`/${date}/`} class="nav-btn secondary">
-          ← Back to {date}
+        <a href={createDateUrl(date)} class="nav-btn secondary">
+          ← {LABELS.BACK_TO} {date}
         </a>
         <a href="/" class="nav-btn primary">
-          🏠 All Days
+          {ICONS.HOME} {LABELS.ALL_DAYS}
         </a>
       </div>
     </footer>
@@ -81,34 +83,6 @@ const pageTitle = `${frontmatter.title} - ${date}`;
 </BaseLayout>
 
 <style>
-  .breadcrumb-nav {
-    margin-bottom: 2rem;
-    padding: 0.75rem 1rem;
-    background: rgba(0, 255, 0, 0.05);
-    border-radius: 4px;
-    border: 1px solid var(--term-dim);
-  }
-
-  .breadcrumb-link {
-    color: var(--term-amber);
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-
-  .breadcrumb-link:hover {
-    color: var(--term-green);
-    text-decoration: underline;
-  }
-
-  .breadcrumb-separator {
-    color: var(--term-dim);
-    margin: 0 0.5rem;
-  }
-
-  .breadcrumb-current {
-    color: var(--term-text);
-    font-weight: bold;
-  }
 
   .conversation-header {
     border: 1px solid var(--term-green);
@@ -132,13 +106,6 @@ const pageTitle = `${frontmatter.title} - ${date}`;
     margin-bottom: 1rem;
   }
 
-  .stat {
-    color: var(--term-dim);
-    font-size: 0.875rem;
-    background: rgba(102, 102, 102, 0.1);
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
-  }
 
   .conversation-tags {
     display: flex;
@@ -258,9 +225,5 @@ const pageTitle = `${frontmatter.title} - ${date}`;
       justify-content: center;
     }
 
-    .breadcrumb-nav {
-      padding: 0.5rem;
-      font-size: 0.8rem;
-    }
   }
 </style>

@@ -1,5 +1,9 @@
 ---
-import { processConversation } from '../utils/contentProcessor.js';
+import CardContainer from './CardContainer.astro';
+import StatsBadge from './StatsBadge.astro';
+import { calculateDateStatistics } from '../utils/dateStatistics.js';
+import { ICONS, LABELS } from '../utils/icons.js';
+import { createDateUrl } from '../utils/slugUtils.js';
 
 export interface Props {
   summary: {
@@ -17,43 +21,23 @@ export interface Props {
 const { summary, allContent = [] } = Astro.props;
 const { frontmatter } = summary;
 
-// Get all conversations for this date to gather stats
-const dateConversations = allContent.filter(file => 
-  file.file.includes(`/${frontmatter.date}/`) && !file.file.endsWith('summary.md')
-);
-
-// Process conversations to get additional stats
-let totalExchanges = 0;
-let topicTags = new Set();
-let hasCodeCount = 0;
-
-dateConversations.forEach(conv => {
-  if (conv.rawContent) {
-    const processed = processConversation(conv.rawContent());
-    totalExchanges += processed.exchangeCount;
-    if (processed.hasCode) hasCodeCount++;
-    
-    // Collect tags
-    if (conv.frontmatter.tags) {
-      conv.frontmatter.tags.forEach(tag => topicTags.add(tag));
-    }
-  }
-});
+// Calculate statistics using the utility function
+const stats = calculateDateStatistics(frontmatter.date, allContent);
 ---
 
-<div class="daily-summary-card">
+<CardContainer variant="compact" hoverable>
   <header class="summary-header">
-    <h2 class="date-title">📅 {frontmatter.date}</h2>
+    <h2 class="date-title">{ICONS.CALENDAR} {frontmatter.date}</h2>
     <div class="stats">
-      <span class="stat">💬 {frontmatter.conversations} conversations</span>
-      {totalExchanges > 0 && (
-        <span class="stat">🔄 {totalExchanges} exchanges</span>
+      <StatsBadge icon={ICONS.CONVERSATION} value={stats.conversations} label={LABELS.CONVERSATIONS} />
+      {stats.totalExchanges > 0 && (
+        <StatsBadge icon={ICONS.EXCHANGE} value={stats.totalExchanges} label={LABELS.EXCHANGES} />
       )}
-      {topicTags.size > 0 && (
-        <span class="stat">🏷️ {topicTags.size} topics</span>
+      {stats.topicCount > 0 && (
+        <StatsBadge icon={ICONS.TAG} value={stats.topicCount} label={LABELS.TOPICS} />
       )}
-      {hasCodeCount > 0 && (
-        <span class="stat">💻 {hasCodeCount} with code</span>
+      {stats.hasCodeCount > 0 && (
+        <StatsBadge icon={ICONS.CODE} value={stats.hasCodeCount} label={LABELS.WITH_CODE} />
       )}
     </div>
   </header>
@@ -63,7 +47,7 @@ dateConversations.forEach(conv => {
       <h3 class="highlights-title">Key Insights</h3>
       <ul class="highlights-list">
         {frontmatter.highlights.slice(0, 3).map((highlight: string) => (
-          <li class="highlight-item">✨ {highlight}</li>
+          <li class="highlight-item">{ICONS.HIGHLIGHT} {highlight}</li>
         ))}
         {frontmatter.highlights.length > 3 && (
           <li class="more-highlights">
@@ -75,26 +59,16 @@ dateConversations.forEach(conv => {
   )}
 
   <footer class="summary-actions">
-    <a href={`/${frontmatter.date}/`} class="view-all-btn">
+    <a href={createDateUrl(frontmatter.date)} class="view-all-btn">
       <span class="command">cd {frontmatter.date}/</span>
-      <span class="arrow">→</span>
+      <span class="arrow">{ICONS.ARROW_RIGHT}</span>
     </a>
   </footer>
-</div>
+</CardContainer>
 
 <style>
   .daily-summary-card {
-    border: 1px solid var(--term-green);
-    border-radius: 4px;
-    padding: 1.25rem;
     margin-bottom: 1.5rem;
-    background: rgba(0, 255, 0, 0.02);
-    transition: all 0.2s ease;
-  }
-
-  .daily-summary-card:hover {
-    border-color: var(--term-amber);
-    background: rgba(255, 176, 0, 0.05);
   }
 
   .summary-header {
@@ -115,13 +89,6 @@ dateConversations.forEach(conv => {
     margin-bottom: 0.5rem;
   }
 
-  .stat {
-    color: var(--term-dim);
-    font-size: 0.875rem;
-    background: rgba(102, 102, 102, 0.1);
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
-  }
 
   .highlights-preview {
     margin-bottom: 1rem;
@@ -190,17 +157,11 @@ dateConversations.forEach(conv => {
   /* Responsive design */
   @media (max-width: 767px) {
     .daily-summary-card {
-      padding: 1rem;
       margin-bottom: 1rem;
     }
 
     .stats {
       gap: 0.5rem;
-    }
-
-    .stat {
-      font-size: 0.8rem;
-      padding: 0.2rem 0.4rem;
     }
 
     .date-title {

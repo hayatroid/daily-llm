@@ -1,5 +1,9 @@
 ---
+import CardContainer from './CardContainer.astro';
+import StatsBadge from './StatsBadge.astro';
 import { processConversation } from '../utils/contentProcessor.js';
+import { ICONS, LABELS } from '../utils/icons.js';
+import { extractSlugFromFile, createConversationUrl } from '../utils/slugUtils.js';
 
 export interface Props {
   conversation: {
@@ -23,17 +27,17 @@ const { frontmatter, rawContent, file } = conversation;
 const processed = processConversation(rawContent());
 
 // Extract conversation slug from file path
-const filename = file.split('/').pop()?.replace('.md', '') || '';
+const filename = extractSlugFromFile(file);
 ---
 
-<div class="conversation-preview-card">
+<CardContainer variant="default" hoverable>
   <header class="preview-header">
-    <h3 class="preview-title">🤖 {frontmatter.title}</h3>
+    <h3 class="preview-title">{ICONS.ROBOT} {frontmatter.title}</h3>
     <div class="preview-stats">
-      <span class="stat">⏰ {frontmatter.time}</span>
-      <span class="stat">🔄 {processed.exchangeCount} exchanges</span>
+      <StatsBadge icon={ICONS.TIME} value={frontmatter.time} />
+      <StatsBadge icon={ICONS.EXCHANGE} value={processed.exchangeCount} label={LABELS.EXCHANGES} />
       {processed.hasCode && (
-        <span class="stat">💻 Code</span>
+        <StatsBadge icon={ICONS.CODE} value="Code" />
       )}
     </div>
   </header>
@@ -54,34 +58,21 @@ const filename = file.split('/').pop()?.replace('.md', '') || '';
   )}
 
   <footer class="preview-actions">
-    <a href={`/${date}/${filename}/`} class="read-btn">
-      <span class="read-text">Read Full →</span>
+    <a href={createConversationUrl(date, filename)} class="read-btn">
+      <span class="read-text">{LABELS.READ_FULL}</span>
     </a>
     <div class="preview-meta">
       <span class="meta-info">{filename}</span>
     </div>
   </footer>
-</div>
+</CardContainer>
 
 <style>
   .conversation-preview-card {
-    border: 1px solid var(--term-green);
-    border-radius: 4px;
-    padding: 1.25rem;
-    background: rgba(0, 255, 0, 0.02);
-    transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
     min-height: 300px;
     width: 100%;
-    box-sizing: border-box;
-  }
-
-  .conversation-preview-card:hover {
-    border-color: var(--term-amber);
-    background: rgba(255, 176, 0, 0.05);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 255, 0, 0.1);
   }
 
   .preview-header {
@@ -102,13 +93,6 @@ const filename = file.split('/').pop()?.replace('.md', '') || '';
     gap: 0.5rem;
   }
 
-  .stat {
-    color: var(--term-dim);
-    font-size: 0.8rem;
-    background: rgba(102, 102, 102, 0.1);
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-  }
 
   .preview-content {
     flex: 1;
@@ -183,10 +167,6 @@ const filename = file.split('/').pop()?.replace('.md', '') || '';
 
   /* Responsive design */
   @media (max-width: 767px) {
-    .conversation-preview-card {
-      padding: 1rem;
-    }
-
     .preview-title {
       font-size: 1rem;
     }

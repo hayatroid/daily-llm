@@ -1,0 +1,86 @@
+---
+export interface Props {
+  items: Array<{
+    href?: string;
+    label: string;
+    icon?: string;
+    current?: boolean;
+  }>;
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumb-nav">
+  {items.map((item, index) => (
+    <>
+      {item.current || !item.href ? (
+        <span class="breadcrumb-current">
+          {item.icon} {item.label}
+        </span>
+      ) : (
+        <a href={item.href} class="breadcrumb-link">
+          {item.icon} {item.label}
+        </a>
+      )}
+      {index < items.length - 1 && (
+        <span class="breadcrumb-separator">{'>'}</span>
+      )}
+    </>
+  ))}
+</nav>
+
+<style>
+  .breadcrumb-nav {
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 4px;
+    border: 1px solid var(--term-dim);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .breadcrumb-link {
+    color: var(--term-amber);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--term-green);
+    text-decoration: underline;
+  }
+
+  .breadcrumb-separator {
+    color: var(--term-dim);
+    margin: 0 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .breadcrumb-current {
+    color: var(--term-text);
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  /* Responsive design */
+  @media (max-width: 767px) {
+    .breadcrumb-nav {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .breadcrumb-link,
+    .breadcrumb-current {
+      font-size: 0.8rem;
+    }
+
+    .breadcrumb-separator {
+      margin: 0 0.3rem;
+    }
+  }
+</style>

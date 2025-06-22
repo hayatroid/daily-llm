@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ConversationPreviewCard from '../components/ConversationPreviewCard.astro';
 import DetailedSummaryCard from '../components/DetailedSummaryCard.astro';
+import BreadcrumbNav from '../components/BreadcrumbNav.astro';
+import { ICONS, LABELS } from '../utils/icons.js';
 
 export async function getStaticPaths() {
   // Get all content directories
@@ -40,26 +42,25 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
 <BaseLayout title={pageTitle}>
   <div class="main-content">
-    <nav class="breadcrumb-nav">
-      <a href="/" class="breadcrumb-link">🏠 Home</a>
-      <span class="breadcrumb-separator">{'>'}</span>
-      <span class="breadcrumb-current">📅 {date}</span>
-    </nav>
+    <BreadcrumbNav items={[
+      { href: '/', label: LABELS.HOME, icon: ICONS.HOME },
+      { label: date, icon: ICONS.CALENDAR, current: true }
+    ]} />
 
     <div class="date-header">
-      <h1 class="date-title">📅 {date}</h1>
-      <p class="date-subtitle">Daily conversations and insights</p>
+      <h1 class="date-title">{ICONS.CALENDAR} {date}</h1>
+      <p class="date-subtitle">{LABELS.DAILY_CONVERSATIONS}</p>
     </div>
 
     {summary.length > 0 && (
       <div class="summary-section">
-        <h2 class="section-title">📝 Daily Summary</h2>
+        <h2 class="section-title">{ICONS.SUMMARY} Daily Summary</h2>
         <DetailedSummaryCard summary={summary[0]} allContent={allContent} />
       </div>
     )}
 
     <div class="conversations-section">
-      <h2 class="section-title">💬 Conversations ({sortedConversations.length})</h2>
+      <h2 class="section-title">{ICONS.CONVERSATION} Conversations ({sortedConversations.length})</h2>
       <div class="conversations-grid">
         {sortedConversations.map((conversation) => (
           <ConversationPreviewCard conversation={conversation} date={date} />
@@ -69,8 +70,8 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
     {sortedConversations.length === 0 && summary.length === 0 && (
       <div class="empty">
-        <p class="comment"># No content found for {date}</p>
-        <p>Start by adding files to <code>content/{date}/</code></p>
+        <p class="comment"># {LABELS.NO_CONTENT_FOUND} {date}</p>
+        <p>{LABELS.START_BY_ADDING} <code>content/{date}/</code></p>
       </div>
     )}
   </div>
@@ -78,34 +79,6 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
 
 <style>
-  .breadcrumb-nav {
-    margin-bottom: 2rem;
-    padding: 0.75rem 1rem;
-    background: rgba(0, 255, 0, 0.05);
-    border-radius: 4px;
-    border: 1px solid var(--term-dim);
-  }
-
-  .breadcrumb-link {
-    color: var(--term-amber);
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-
-  .breadcrumb-link:hover {
-    color: var(--term-green);
-    text-decoration: underline;
-  }
-
-  .breadcrumb-separator {
-    color: var(--term-dim);
-    margin: 0 0.5rem;
-  }
-
-  .breadcrumb-current {
-    color: var(--term-text);
-    font-weight: bold;
-  }
   
   .date-header {
     text-align: center;
