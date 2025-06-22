@@ -66,14 +66,29 @@ Convert to checklists during implementation:
 
 ```markdown
 ---
-date: '2024-MM-DD'
-time: 'HH:MM'
 title: '[Topic]'
 tags: ['tag1', 'tag2']
+outcome: '[Concrete result achieved]'
 ---
 ```
 
-**IMPORTANT:** Always use string format for `date` field (quoted)
+**Summary:**
+
+```markdown
+---
+title: '[Summary title]'
+tags: ['tag1', 'tag2']
+outcomes:
+  - '[Key result 1]'
+  - '[Key result 2]'
+---
+```
+
+**Frontmatter Strategy Change (2024-12-22):**
+
+- ❌ **Removed:** `date`, `time`, `conversations` fields (redundant with file path/structure)
+- ✅ **Added:** `outcome`/`outcomes` fields showing concrete results achieved
+- 📍 **Rationale:** Focus on meaningful information (what was accomplished) rather than metadata (when/how many)
 
 **日英混在文の書式ルール:**
 
@@ -81,17 +96,5 @@ tags: ['tag1', 'tag2']
 - 例: `Reactアプリケーション` → `React アプリケーション`
 - 例: `Dockerコンテナ` → `Docker コンテナ`
 - 例: `API設計` → `API 設計`
-
-**Summary:**
-
-```markdown
----
-date: '2024-MM-DD'
-conversations: [NUMBER]
-highlights:
-  - '[Key insight]'
-  - '[Technical decision]'
----
-```
 
 **Core Principle:** Core first, adventure later! 🚀
