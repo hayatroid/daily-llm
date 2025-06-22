@@ -7,6 +7,27 @@
   --term-cyan: #00ffff;
   --term-dim: #666666;
   --term-white: #ffffff;
+
+  /* 省スペース統一パターン */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+
+  /* ヘッダーサイズ統一 */
+  --text-h1-size: 1.3rem;
+  --text-h2-size: 1.1rem;
+  --text-h3-size: 1rem;
+  --text-weight-medium: 500;
+
+  /* モバイル用サイズ */
+  --text-h1-mobile: 1.1rem;
+  --text-h2-mobile: 1rem;
+  --text-small: 0.85rem;
+  --text-small-mobile: 0.8rem;
+  --text-medium: 0.9rem;
 }
 
 * {
@@ -104,34 +125,16 @@ code {
   }
 }
 
-/* Legacy ConversationCard styles removed - now using ConversationPreviewCard */
-
-/* Improved layout */
+/* Main layout */
 .main-content {
   max-width: 80ch;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--space-2xl);
 }
 
-/* Responsive design */
+/* Responsive layout */
 @media (max-width: 767px) {
-  .conversation-card {
-    margin: 0.5rem;
-    padding: 0.75rem;
-  }
-
-  .preview {
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-
-  .conversation-card header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .expand-btn {
-    align-self: flex-start;
-    margin-top: 0.5rem;
+  .main-content {
+    padding: var(--space-lg);
   }
 }

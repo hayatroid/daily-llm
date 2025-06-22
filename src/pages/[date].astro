@@ -2,7 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ConversationPreviewCard from '../components/ConversationPreviewCard.astro';
 import DetailedSummaryCard from '../components/DetailedSummaryCard.astro';
-import BreadcrumbNav from '../components/BreadcrumbNav.astro';
+import SimpleNav from '../components/SimpleNav.astro';
+import CompactHeader from '../components/CompactHeader.astro';
 import { ICONS, LABELS } from '../utils/icons.js';
 
 export async function getStaticPaths() {
@@ -37,30 +38,44 @@ const sortedConversations = conversations
     return aNum - bNum;
   });
 
+
 const pageTitle = `${date} - Daily LLM Conversations`;
 ---
 
 <BaseLayout title={pageTitle}>
   <div class="main-content">
-    <BreadcrumbNav items={[
-      { href: '/', label: LABELS.HOME, icon: ICONS.HOME },
-      { label: date, icon: ICONS.CALENDAR, current: true }
-    ]} />
+    <SimpleNav 
+      currentDate={date}
+      currentPage="date"
+      allContent={allContent}
+    />
 
-    <div class="date-header">
-      <h1 class="date-title">{ICONS.CALENDAR} {date}</h1>
-      <p class="date-subtitle">{LABELS.DAILY_CONVERSATIONS}</p>
-    </div>
+    <CompactHeader 
+      title={date}
+      subtitle={LABELS.DAILY_CONVERSATIONS}
+      icon={ICONS.CALENDAR}
+      variant="page"
+    />
 
     {summary.length > 0 && (
       <div class="summary-section">
-        <h2 class="section-title">{ICONS.SUMMARY} Daily Summary</h2>
+        <CompactHeader 
+          title="Daily Summary"
+          icon={ICONS.SUMMARY}
+          level={2}
+          variant="section"
+        />
         <DetailedSummaryCard summary={summary[0]} allContent={allContent} />
       </div>
     )}
 
     <div class="conversations-section">
-      <h2 class="section-title">{ICONS.CONVERSATION} Conversations ({sortedConversations.length})</h2>
+      <CompactHeader 
+        title={`Conversations (${sortedConversations.length})`}
+        icon={ICONS.CONVERSATION}
+        level={2}
+        variant="section"
+      />
       <div class="conversations-grid">
         {sortedConversations.map((conversation) => (
           <ConversationPreviewCard conversation={conversation} date={date} />
@@ -80,38 +95,10 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
 <style>
   
-  .date-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem;
-    border: 1px solid var(--term-green);
-    border-radius: 4px;
-    background: rgba(0, 255, 0, 0.02);
-  }
-  
-  .date-title {
-    color: var(--term-green);
-    margin: 0 0 0.5rem 0;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  
-  .date-subtitle {
-    color: var(--term-dim);
-    margin: 0;
-    font-size: 1rem;
-  }
-  
-  .section-title {
-    color: var(--term-amber);
-    margin: 0 0 1.5rem 0;
-    font-size: 1.25rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--term-dim);
-  }
+  /* CompactHeader コンポーネントで統一 */
   
   .summary-section {
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-2xl);
   }
   
   .conversations-section {
@@ -161,16 +148,8 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
   /* Responsive design */
   @media (max-width: 767px) {
-    .date-header {
-      padding: 1.5rem 1rem;
-    }
-    
-    .date-title {
-      font-size: 1.5rem;
-    }
-    
     .conversations-grid {
-      gap: 1rem;
+      gap: var(--space-lg);
     }
   }
 </style>

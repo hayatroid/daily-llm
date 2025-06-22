@@ -32,11 +32,6 @@ const { items } = Astro.props;
 
 <style>
   .breadcrumb-nav {
-    margin-bottom: 2rem;
-    padding: 0.75rem 1rem;
-    background: rgba(0, 255, 0, 0.05);
-    border-radius: 4px;
-    border: 1px solid var(--term-dim);
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -46,7 +41,7 @@ const { items } = Astro.props;
   .breadcrumb-link {
     color: var(--term-amber);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: var(--text-small);
     transition: color 0.2s ease;
   }
 
@@ -57,30 +52,25 @@ const { items } = Astro.props;
 
   .breadcrumb-separator {
     color: var(--term-dim);
-    margin: 0 0.5rem;
-    font-size: 0.8rem;
+    margin: 0 var(--space-sm);
+    font-size: 0.75rem;
   }
 
   .breadcrumb-current {
     color: var(--term-text);
-    font-weight: bold;
-    font-size: 0.9rem;
+    font-weight: var(--text-weight-medium);
+    font-size: var(--text-small);
   }
 
   /* Responsive design */
   @media (max-width: 767px) {
-    .breadcrumb-nav {
-      padding: 0.5rem;
-      font-size: 0.8rem;
-    }
-
     .breadcrumb-link,
     .breadcrumb-current {
-      font-size: 0.8rem;
+      font-size: var(--text-small-mobile);
     }
 
     .breadcrumb-separator {
-      margin: 0 0.3rem;
+      margin: 0 var(--space-xs);
     }
   }
 </style>

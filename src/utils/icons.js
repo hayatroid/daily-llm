@@ -11,6 +11,7 @@ export const ICONS = {
   HIGHLIGHT: '✨',
   TOPIC: '🏷️',
   ARROW_RIGHT: '→',
+  ARROW_LEFT: '←',
   SEPARATOR: '>',
 };
 
