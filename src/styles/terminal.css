@@ -133,8 +133,6 @@ code {
 
 /* Main layout */
 .main-content {
-  max-width: 80ch;
-  margin: 0 auto;
   padding: var(--space-2xl);
 }
 
