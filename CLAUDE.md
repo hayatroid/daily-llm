@@ -66,18 +66,27 @@ Convert to checklists during implementation:
 
 ```markdown
 ---
-date: 2024-MM-DD
+date: '2024-MM-DD'
 time: 'HH:MM'
 title: '[Topic]'
 tags: ['tag1', 'tag2']
 ---
 ```
 
+**IMPORTANT:** Always use string format for `date` field (quoted)
+
+**日英混在文の書式ルール:**
+
+- 英単語の前後に半角スペースを必ず挿入
+- 例: `Reactアプリケーション` → `React アプリケーション`
+- 例: `Dockerコンテナ` → `Docker コンテナ`
+- 例: `API設計` → `API 設計`
+
 **Summary:**
 
 ```markdown
 ---
-date: 2024-MM-DD
+date: '2024-MM-DD'
 conversations: [NUMBER]
 highlights:
   - '[Key insight]'

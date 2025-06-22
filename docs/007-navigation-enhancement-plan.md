@@ -14,7 +14,7 @@ Implement essential navigation structure improvements for better site usability:
 
 Advanced features to defer for later:
 
-- [x] ~~Tag-based filtering and search~~ - **DEFERRED** 
+- [x] ~~Tag-based filtering and search~~ - **DEFERRED**
 - [x] ~~Keyboard shortcuts and hotkeys~~ - **DEFERRED**
 - [x] ~~User preferences and bookmarks~~ - **DEFERRED**
 - [x] ~~Advanced animations and transitions~~ - **DEFERRED**
@@ -25,23 +25,27 @@ Advanced features to defer for later:
 ### ✅ Completed Components
 
 **CompactHeader.astro**
+
 - Unified header component with page/section variants
 - Font size: 1.3rem (reduced from 2rem) - **35% size reduction**
 - Spacing: 0.75rem margins vs previous 2rem - **62% space reduction**
 - Responsive: 1.1rem mobile font with CSS custom properties
 
 **SimpleNav.astro**
+
 - Clean breadcrumb navigation with icons
 - Previous/Next date navigation buttons
 - Mobile-optimized with 0.8rem font sizing
 - Terminal-style button design with hover states
 
 **BreadcrumbNav.astro**
+
 - Home → Date → Conversation hierarchy
 - URL-consistent labeling (uses conversation slugs)
 - Consistent spacing with CSS custom properties
 
 **navigationData.js**
+
 - `generateNavigationContext()` - Date-based navigation logic
 - `generateBreadcrumbs()` - Dynamic breadcrumb generation
 - `extractUniqueDates()` - Content date discovery
@@ -49,18 +53,18 @@ Advanced features to defer for later:
 ### 🎨 Design System Achievements
 
 **Spacing System**
+
 ```css
---space-xs: 0.25rem    --space-lg: 1rem
---space-sm: 0.5rem     --space-xl: 1.5rem  
---space-md: 0.75rem    --space-2xl: 2rem
+--space-xs: 0.25rem --space-lg: 1rem --space-sm: 0.5rem --space-xl: 1.5rem
+  --space-md: 0.75rem --space-2xl: 2rem;
 ```
 
 **Typography System**
+
 ```css
---text-h1-size: 1.3rem     --text-h1-mobile: 1.1rem
---text-h2-size: 1.1rem     --text-h2-mobile: 1rem
---text-small: 0.85rem      --text-small-mobile: 0.8rem
---text-medium: 0.9rem      --text-weight-medium: 500
+--text-h1-size: 1.3rem --text-h1-mobile: 1.1rem --text-h2-size: 1.1rem
+  --text-h2-mobile: 1rem --text-small: 0.85rem --text-small-mobile: 0.8rem
+  --text-medium: 0.9rem --text-weight-medium: 500;
 ```
 
 ### 📈 Performance Metrics
@@ -73,12 +77,14 @@ Advanced features to defer for later:
 ### 🔄 Architecture Decisions
 
 **What Changed from Original Plan:**
+
 - **Removed**: StickyHeader, DateNavigator, TableOfContents (too complex)
 - **Added**: CompactHeader, SimpleNav, BreadcrumbNav (minimal, focused)
 - **Philosophy**: Terminal aesthetic > feature richness
 - **Approach**: Space efficiency > comprehensive navigation
 
 **Technical Implementation:**
+
 ```javascript
 // Actual implementation in src/utils/navigationData.js
 export function generateNavigationContext(allContent, currentDate) {
@@ -88,8 +94,10 @@ export function generateNavigationContext(allContent, currentDate) {
   return {
     availableDates,
     previousDate: currentIndex > 0 ? availableDates[currentIndex - 1] : null,
-    nextDate: currentIndex < availableDates.length - 1 
-      ? availableDates[currentIndex + 1] : null,
+    nextDate:
+      currentIndex < availableDates.length - 1
+        ? availableDates[currentIndex + 1]
+        : null,
     totalDates: availableDates.length,
     currentPosition: currentIndex + 1,
     isFirstDate: currentIndex === 0,
@@ -109,17 +117,20 @@ export function generateNavigationContext(allContent, currentDate) {
 ## 💡 Key Learnings
 
 **User Feedback Integration:**
+
 - "TOC はこのサービスの価値観にそぐわない" → Removed completely
 - "h1 のデザインがうるさい" → Reduced font size 35%
 - "これだ！この方向でいくわ！" → Space-efficient approach validated
 
 **Design Philosophy Evolved:**
+
 - Content-first > Feature-rich navigation
 - Terminal simplicity > Modern web conventions
 - Immediate content access > Progressive disclosure
 - Visual quietness > Prominent UI elements
 
 **Technical Success:**
+
 - CSS custom properties eliminate magic numbers
 - Component composition enables consistent spacing
 - Mobile-first responsive design with semantic breakpoints
