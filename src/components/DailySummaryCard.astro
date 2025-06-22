@@ -1,0 +1,210 @@
+---
+import { processConversation } from '../utils/contentProcessor.js';
+
+export interface Props {
+  summary: {
+    frontmatter: {
+      date: string;
+      conversations: number;
+      highlights: string[];
+    };
+    Content: any;
+    rawContent: () => string;
+  };
+  allContent?: any[];
+}
+
+const { summary, allContent = [] } = Astro.props;
+const { frontmatter } = summary;
+
+// Get all conversations for this date to gather stats
+const dateConversations = allContent.filter(file => 
+  file.file.includes(`/${frontmatter.date}/`) && !file.file.endsWith('summary.md')
+);
+
+// Process conversations to get additional stats
+let totalExchanges = 0;
+let topicTags = new Set();
+let hasCodeCount = 0;
+
+dateConversations.forEach(conv => {
+  if (conv.rawContent) {
+    const processed = processConversation(conv.rawContent());
+    totalExchanges += processed.exchangeCount;
+    if (processed.hasCode) hasCodeCount++;
+    
+    // Collect tags
+    if (conv.frontmatter.tags) {
+      conv.frontmatter.tags.forEach(tag => topicTags.add(tag));
+    }
+  }
+});
+---
+
+<div class="daily-summary-card">
+  <header class="summary-header">
+    <h2 class="date-title">📅 {frontmatter.date}</h2>
+    <div class="stats">
+      <span class="stat">💬 {frontmatter.conversations} conversations</span>
+      {totalExchanges > 0 && (
+        <span class="stat">🔄 {totalExchanges} exchanges</span>
+      )}
+      {topicTags.size > 0 && (
+        <span class="stat">🏷️ {topicTags.size} topics</span>
+      )}
+      {hasCodeCount > 0 && (
+        <span class="stat">💻 {hasCodeCount} with code</span>
+      )}
+    </div>
+  </header>
+
+  {frontmatter.highlights && frontmatter.highlights.length > 0 && (
+    <div class="highlights-preview">
+      <h3 class="highlights-title">Key Insights</h3>
+      <ul class="highlights-list">
+        {frontmatter.highlights.slice(0, 3).map((highlight: string) => (
+          <li class="highlight-item">✨ {highlight}</li>
+        ))}
+        {frontmatter.highlights.length > 3 && (
+          <li class="more-highlights">
+            <span class="meta-info">+{frontmatter.highlights.length - 3} more insights</span>
+          </li>
+        )}
+      </ul>
+    </div>
+  )}
+
+  <footer class="summary-actions">
+    <a href={`/${frontmatter.date}/`} class="view-all-btn">
+      <span class="command">cd {frontmatter.date}/</span>
+      <span class="arrow">→</span>
+    </a>
+  </footer>
+</div>
+
+<style>
+  .daily-summary-card {
+    border: 1px solid var(--term-green);
+    border-radius: 4px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    background: rgba(0, 255, 0, 0.02);
+    transition: all 0.2s ease;
+  }
+
+  .daily-summary-card:hover {
+    border-color: var(--term-amber);
+    background: rgba(255, 176, 0, 0.05);
+  }
+
+  .summary-header {
+    margin-bottom: 1rem;
+  }
+
+  .date-title {
+    color: var(--term-green);
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat {
+    color: var(--term-dim);
+    font-size: 0.875rem;
+    background: rgba(102, 102, 102, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  .highlights-preview {
+    margin-bottom: 1rem;
+  }
+
+  .highlights-title {
+    color: var(--term-amber);
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+  }
+
+  .highlights-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .highlight-item {
+    color: var(--term-text);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    font-size: 0.9rem;
+  }
+
+  .more-highlights {
+    margin-top: 0.5rem;
+  }
+
+  .meta-info {
+    color: var(--term-dim);
+    font-style: italic;
+    font-size: 0.8rem;
+  }
+
+  .summary-actions {
+    border-top: 1px solid var(--term-gray);
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--term-amber);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+  }
+
+  .view-all-btn:hover {
+    color: var(--term-green);
+    text-decoration: underline;
+  }
+
+  .arrow {
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+  }
+
+  .view-all-btn:hover .arrow {
+    transform: translateX(2px);
+  }
+
+  /* Responsive design */
+  @media (max-width: 767px) {
+    .daily-summary-card {
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      gap: 0.5rem;
+    }
+
+    .stat {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .date-title {
+      font-size: 1.1rem;
+    }
+  }
+</style>

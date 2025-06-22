@@ -4,6 +4,9 @@
   --term-text: #e0e0e0;
   --term-gray: #666666;
   --term-amber: #ffb000;
+  --term-cyan: #00ffff;
+  --term-dim: #666666;
+  --term-white: #ffffff;
 }
 
 * {
@@ -98,5 +101,37 @@ code {
   51%,
   100% {
     opacity: 0;
+  }
+}
+
+/* Legacy ConversationCard styles removed - now using ConversationPreviewCard */
+
+/* Improved layout */
+.main-content {
+  max-width: 80ch;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Responsive design */
+@media (max-width: 767px) {
+  .conversation-card {
+    margin: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .preview {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .conversation-card header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expand-btn {
+    align-self: flex-start;
+    margin-top: 0.5rem;
   }
 }

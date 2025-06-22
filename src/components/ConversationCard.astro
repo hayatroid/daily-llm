@@ -1,4 +1,6 @@
 ---
+import { processConversation } from '../utils/contentProcessor.js';
+
 export interface Props {
   conversation: {
     frontmatter: {
@@ -8,19 +10,23 @@ export interface Props {
       tags: string[];
     };
     Content: any;
+    rawContent: () => string;
   };
 }
 
 const { conversation } = Astro.props;
-const { frontmatter, Content } = conversation;
+const { frontmatter, Content, rawContent } = conversation;
+
+// Process the conversation to extract metadata
+const processed = processConversation(rawContent());
 ---
 
-<article class="conversation">
-  <div class="meta">
-    <span class="prompt">{'>'}</span> {frontmatter.time} 
-    <span class="command">{frontmatter.title}</span>
-  </div>
-  
+<conversation-card
+  title={frontmatter.title}
+  preview={processed.preview}
+  time={frontmatter.time}
+  exchange-count={processed.exchangeCount.toString()}
+>
   <div class="tags">
     {frontmatter.tags.map((tag: string) => (
       <span class="tag">#{tag}</span>
@@ -30,7 +36,7 @@ const { frontmatter, Content } = conversation;
   <div class="content">
     <Content />
   </div>
-</article>
+</conversation-card>
 
 <style>
   .tags {

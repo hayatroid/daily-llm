@@ -1,9 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SummaryCard from '../components/SummaryCard.astro';
+import DailySummaryCard from '../components/DailySummaryCard.astro';
+
+// Get all content files
+const allContent = await Astro.glob('../../content/**/*.md');
 
 // Get all summary files
-const summaries = await Astro.glob('../../content/**/summary.md');
+const summaries = allContent.filter(file => file.file.endsWith('summary.md'));
 
 // Sort by date (newest first)
 const sortedSummaries = summaries.sort((a, b) => {
@@ -12,39 +15,51 @@ const sortedSummaries = summaries.sort((a, b) => {
 ---
 
 <BaseLayout title="Daily LLM Conversations">
-  <div class="intro">
-    <p class="comment"># Latest daily summaries</p>
-    <p class="comment"># Use 'cd YYYY-MM-DD/' to view full conversations</p>
-  </div>
-
-  <div class="summaries">
-    {sortedSummaries.map((summary) => (
-      <SummaryCard summary={summary} />
-    ))}
-  </div>
-
-  {sortedSummaries.length === 0 && (
-    <div class="empty">
-      <p class="comment"># No conversations yet</p>
-      <p>Start by adding files to <code>content/YYYY-MM-DD/</code></p>
+  <div class="main-content">
+    <div class="intro">
+      <p class="comment"># Daily AI conversation summaries</p>
+      <p class="comment"># Click on any date to explore full conversations</p>
     </div>
-  )}
+
+    <div class="summaries-grid">
+      {sortedSummaries.map((summary) => (
+        <DailySummaryCard summary={summary} allContent={allContent} />
+      ))}
+    </div>
+
+    {sortedSummaries.length === 0 && (
+      <div class="empty">
+        <p class="comment"># No conversations yet</p>
+        <p>Start by adding files to <code>content/YYYY-MM-DD/</code></p>
+      </div>
+    )}
+  </div>
 </BaseLayout>
 
 <style>
   .intro {
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--term-gray);
   }
   
-  .summaries {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+  .summaries-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 768px) {
+    .summaries-grid {
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
   }
   
   .empty {
     text-align: center;
     padding: 40px;
     border: 1px dashed var(--term-gray);
+    border-radius: 4px;
+    margin-top: 2rem;
   }
 </style>

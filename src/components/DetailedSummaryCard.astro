@@ -1,0 +1,255 @@
+---
+import { processConversation } from '../utils/contentProcessor.js';
+
+export interface Props {
+  summary: {
+    frontmatter: {
+      date: string;
+      conversations: number;
+      highlights: string[];
+    };
+    Content: any;
+    rawContent: () => string;
+  };
+  allContent?: any[];
+}
+
+const { summary, allContent = [] } = Astro.props;
+const { frontmatter, Content } = summary;
+
+// Get all conversations for this date to gather stats
+const dateConversations = allContent.filter(file => 
+  file.file.includes(`/${frontmatter.date}/`) && !file.file.endsWith('summary.md')
+);
+
+// Process conversations to get additional stats
+let totalExchanges = 0;
+let topicTags = new Set();
+let hasCodeCount = 0;
+
+dateConversations.forEach(conv => {
+  if (conv.rawContent) {
+    const processed = processConversation(conv.rawContent());
+    totalExchanges += processed.exchangeCount;
+    if (processed.hasCode) hasCodeCount++;
+    
+    // Collect tags
+    if (conv.frontmatter.tags) {
+      conv.frontmatter.tags.forEach(tag => topicTags.add(tag));
+    }
+  }
+});
+---
+
+<article class="detailed-summary-card">
+  <header class="summary-header">
+    <div class="header-main">
+      <h2 class="summary-title">📝 Daily Summary - {frontmatter.date}</h2>
+      <div class="summary-stats">
+        <span class="stat">💬 {frontmatter.conversations} conversations</span>
+        {totalExchanges > 0 && (
+          <span class="stat">🔄 {totalExchanges} exchanges</span>
+        )}
+        {topicTags.size > 0 && (
+          <span class="stat">🏷️ {topicTags.size} topics</span>
+        )}
+        {hasCodeCount > 0 && (
+          <span class="stat">💻 {hasCodeCount} with code</span>
+        )}
+      </div>
+    </div>
+  </header>
+
+  {frontmatter.highlights && frontmatter.highlights.length > 0 && (
+    <section class="highlights-section">
+      <h3 class="highlights-title">🌟 Key Highlights</h3>
+      <ul class="highlights-list">
+        {frontmatter.highlights.map((highlight: string) => (
+          <li class="highlight-item">✨ {highlight}</li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="summary-content">
+    <h3 class="content-title">📖 Detailed Summary</h3>
+    <div class="content-body">
+      <Content />
+    </div>
+  </section>
+
+  {topicTags.size > 0 && (
+    <section class="topics-section">
+      <h3 class="topics-title">🏷️ Topics Covered</h3>
+      <div class="topics-list">
+        {Array.from(topicTags).map((tag: string) => (
+          <span class="topic-tag">#{tag}</span>
+        ))}
+      </div>
+    </section>
+  )}
+</article>
+
+<style>
+  .detailed-summary-card {
+    border: 1px solid var(--term-green);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    background: rgba(0, 255, 0, 0.02);
+    position: relative;
+    z-index: 1;
+    clear: both;
+  }
+
+  .summary-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--term-dim);
+  }
+
+  .summary-title {
+    color: var(--term-green);
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .summary-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .stat {
+    color: var(--term-dim);
+    font-size: 0.875rem;
+    background: rgba(102, 102, 102, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  .highlights-section,
+  .summary-content,
+  .topics-section {
+    margin-bottom: 2rem;
+  }
+
+  .highlights-title,
+  .content-title,
+  .topics-title {
+    color: var(--term-amber);
+    font-size: 1.1rem;
+    margin: 0 0 1rem 0;
+    font-weight: bold;
+  }
+
+  .highlights-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .highlight-item {
+    color: var(--term-text);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+    padding: 0.5rem 0;
+    border-left: 3px solid var(--term-amber);
+    padding-left: 1rem;
+    background: rgba(255, 176, 0, 0.05);
+  }
+
+  .content-body {
+    color: var(--term-text);
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+
+  .content-body :global(h2) {
+    color: var(--term-amber);
+    font-size: 1rem;
+    margin: 1.5rem 0 0.75rem 0;
+  }
+
+  .content-body :global(h3) {
+    color: var(--term-green);
+    font-size: 0.9rem;
+    margin: 1rem 0 0.5rem 0;
+  }
+
+  .content-body :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .content-body :global(ul) {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .content-body :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .content-body :global(code) {
+    color: var(--term-cyan);
+    background: rgba(0, 255, 255, 0.1);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+
+  .content-body :global(pre) {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid var(--term-cyan);
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
+  .content-body :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+
+  .topics-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .topic-tag {
+    color: var(--term-cyan);
+    font-size: 0.8rem;
+    background: rgba(0, 255, 255, 0.1);
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid var(--term-cyan);
+  }
+
+  /* Responsive design */
+  @media (max-width: 767px) {
+    .detailed-summary-card {
+      padding: 1.5rem;
+    }
+
+    .summary-title {
+      font-size: 1.25rem;
+    }
+
+    .summary-stats {
+      gap: 0.5rem;
+    }
+
+    .stat {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .highlight-item {
+      padding-left: 0.75rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>

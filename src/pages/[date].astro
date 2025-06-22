@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ConversationCard from '../components/ConversationCard.astro';
-import SummaryCard from '../components/SummaryCard.astro';
+import ConversationPreviewCard from '../components/ConversationPreviewCard.astro';
+import DetailedSummaryCard from '../components/DetailedSummaryCard.astro';
 
 export async function getStaticPaths() {
   // Get all content directories
@@ -39,68 +39,165 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 ---
 
 <BaseLayout title={pageTitle}>
-  <div class="navigation">
-    <a href="/" class="command">← ls ../</a>
-  </div>
+  <div class="main-content">
+    <nav class="breadcrumb-nav">
+      <a href="/" class="breadcrumb-link">🏠 Home</a>
+      <span class="breadcrumb-separator">{'>'}</span>
+      <span class="breadcrumb-current">📅 {date}</span>
+    </nav>
 
-  <div class="date-header">
-    <h2><span class="prompt">$</span> cat {date}/</h2>
-    <p class="comment"># Daily conversations and summary</p>
-  </div>
-
-  {summary.length > 0 && (
-    <div class="summary-section">
-      <h3><span class="command">{'>'}</span> summary.md</h3>
-      <SummaryCard summary={summary[0]} />
+    <div class="date-header">
+      <h1 class="date-title">📅 {date}</h1>
+      <p class="date-subtitle">Daily conversations and insights</p>
     </div>
-  )}
 
-  <div class="conversations-section">
-    <h3><span class="command">{'>'}</span> conversations ({sortedConversations.length})</h3>
-    <div class="conversations">
-      {sortedConversations.map((conversation) => (
-        <ConversationCard conversation={conversation} />
-      ))}
+    {summary.length > 0 && (
+      <div class="summary-section">
+        <h2 class="section-title">📝 Daily Summary</h2>
+        <DetailedSummaryCard summary={summary[0]} allContent={allContent} />
+      </div>
+    )}
+
+    <div class="conversations-section">
+      <h2 class="section-title">💬 Conversations ({sortedConversations.length})</h2>
+      <div class="conversations-grid">
+        {sortedConversations.map((conversation) => (
+          <ConversationPreviewCard conversation={conversation} date={date} />
+        ))}
+      </div>
     </div>
+
+    {sortedConversations.length === 0 && summary.length === 0 && (
+      <div class="empty">
+        <p class="comment"># No content found for {date}</p>
+        <p>Start by adding files to <code>content/{date}/</code></p>
+      </div>
+    )}
   </div>
-
-  {sortedConversations.length === 0 && summary.length === 0 && (
-    <div class="empty">
-      <p class="comment"># No content found for {date}</p>
-    </div>
-  )}
 </BaseLayout>
 
+
 <style>
-  .navigation {
-    margin-bottom: 20px;
+  .breadcrumb-nav {
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 4px;
+    border: 1px solid var(--term-dim);
+  }
+
+  .breadcrumb-link {
+    color: var(--term-amber);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--term-green);
+    text-decoration: underline;
+  }
+
+  .breadcrumb-separator {
+    color: var(--term-dim);
+    margin: 0 0.5rem;
+  }
+
+  .breadcrumb-current {
+    color: var(--term-text);
+    font-weight: bold;
   }
   
   .date-header {
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--term-gray);
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    border: 1px solid var(--term-green);
+    border-radius: 4px;
+    background: rgba(0, 255, 0, 0.02);
   }
   
-  .date-header h2 {
+  .date-title {
+    color: var(--term-green);
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .date-subtitle {
+    color: var(--term-dim);
     margin: 0;
-    font-size: 20px;
+    font-size: 1rem;
   }
   
-  .summary-section,
+  .section-title {
+    color: var(--term-amber);
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--term-dim);
+  }
+  
+  .summary-section {
+    margin-bottom: 3rem;
+  }
+  
   .conversations-section {
-    margin: 30px 0;
+    margin-bottom: 2rem;
   }
   
-  .conversations {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  .conversations-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    margin-top: 2rem;
+    width: 100%;
+    grid-auto-rows: auto;
+  }
+  
+  @media (min-width: 768px) {
+    .conversations-grid {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .conversations-grid {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
   
   .empty {
     text-align: center;
-    padding: 40px;
+    padding: 3rem 2rem;
     border: 1px dashed var(--term-gray);
+    border-radius: 4px;
+    margin: 2rem 0;
+  }
+  
+  .empty code {
+    background: rgba(0, 255, 255, 0.1);
+    color: var(--term-cyan);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+  }
+
+  /* Responsive design */
+  @media (max-width: 767px) {
+    .date-header {
+      padding: 1.5rem 1rem;
+    }
+    
+    .date-title {
+      font-size: 1.5rem;
+    }
+    
+    .conversations-grid {
+      gap: 1rem;
+    }
   }
 </style>
