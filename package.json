@@ -14,7 +14,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "astro": "^4.15.12"
+    "astro": "^4.15.12",
+    "reset-css": "^5.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.34.1",

@@ -1,11 +1,8 @@
 ---
-date: '2024-01-20'
-time: '09:30'
 title: 'React 最適化とパフォーマンス改善'
-tags: ['react', 'パフォーマンス', '最適化']
+tags: ['react', 'performance', 'optimization']
+outcome: 'レンダリング65%高速化、メモリ38%削減'
 ---
-
-# React 最適化とパフォーマンス改善
 
 ## 問題の特定
 

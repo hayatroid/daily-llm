@@ -1,11 +1,8 @@
 ---
-date: '2024-01-20'
-time: '16:45'
 title: 'RESTful API 設計のベストプラクティス'
-tags: ['api', 'rest', '設計', 'backend']
+tags: ['api', 'rest', 'design', 'backend']
+outcome: 'セキュリティベストプラクティス策定'
 ---
-
-# RESTful API 設計のベストプラクティス
 
 ## API 設計の基本原則
 

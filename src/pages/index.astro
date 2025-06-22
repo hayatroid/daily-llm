@@ -1,65 +1,130 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DailySummaryCard from '../components/DailySummaryCard.astro';
+import Pwd from '../components/Pwd.astro';
+import Prompt from '../components/Prompt.astro';
+
+// Get site URL from Astro config
+const siteUrl = new URL(Astro.site || 'https://localhost:4321');
+const siteDomain = siteUrl.hostname;
 
 // Get all content files
 const allContent = await Astro.glob('../../content/**/*.md');
 
-// Get all summary files
-const summaries = allContent.filter(file => file.file.endsWith('summary.md'));
+// Group conversations by date (exclude summaries)
+const dateGroups = new Map();
+allContent
+  .filter(file => !file.file.endsWith('summary.md'))
+  .forEach(file => {
+    const pathParts = file.file.split('/');
+    const dateFolder = pathParts[pathParts.length - 2];
+    
+    if (!dateGroups.has(dateFolder)) {
+      dateGroups.set(dateFolder, []);
+    }
+    dateGroups.get(dateFolder).push({
+      frontmatter: file.frontmatter,
+      slug: pathParts[pathParts.length - 1].replace('.md', '')
+    });
+  });
 
-// Sort by date (newest first)
-const sortedSummaries = summaries.sort((a, b) => {
-  return new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime();
-});
+// Sort dates (newest first)
+const sortedDates = Array.from(dateGroups.keys()).sort((a, b) => 
+  new Date(b).getTime() - new Date(a).getTime()
+);
 ---
 
 <BaseLayout title="Daily LLM Conversations">
   <div class="main-content">
-    <div class="intro">
-      <p class="comment"># Daily AI conversation summaries</p>
-      <p class="comment"># Click on any date to explore full conversations</p>
+    <div class="section-gap">
+      <Pwd currentPage="home" allContent={allContent} />
     </div>
 
-    <div class="summaries-grid">
-      {sortedSummaries.map((summary) => (
-        <DailySummaryCard summary={summary} allContent={allContent} />
-      ))}
-    </div>
-
-    {sortedSummaries.length === 0 && (
-      <div class="empty">
-        <p class="comment"># No conversations yet</p>
-        <p>Start by adding files to <code>content/YYYY-MM-DD/</code></p>
+    <div class="terminal-session">
+      <div class="command-block">
+        <Prompt command="tree" />
       </div>
-    )}
+      
+      <div class="tree-output">
+        <a href="/" class="tree-root">{siteDomain}/</a>
+        
+        {sortedDates.map((date) => {
+          const conversations = dateGroups.get(date);
+          
+          return (
+            <div class="date-section">
+              <div class="date-item">
+                <a href={`/${date}/`} class="date-link">{date}/</a>
+                <span class="item-count">{conversations.length} conversations</span>
+              </div>
+              
+              <div class="file-list">
+                {conversations.map((conv) => (
+                  <div class="file-item">
+                    <a href={`/${date}/${conv.slug}`} class="file-link">
+                      {conv.frontmatter.title}
+                    </a>
+                    {conv.frontmatter.time && (
+                      <span class="file-meta">{conv.frontmatter.time}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+        
+        {sortedDates.length === 0 && (
+          <div class="empty-tree">
+            <span class="empty-msg">(no conversations yet)</span>
+          </div>
+        )}
+      </div>
+    </div>
+
   </div>
 </BaseLayout>
 
 <style>
-  .intro {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--term-gray);
+
+  .tree-output {
+    line-height: var(--line-height-normal);
   }
-  
-  .summaries-grid {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: 1fr;
+
+  .tree-root {
+    color: var(--term-link);
+    margin-bottom: var(--space-sm);
+    text-decoration: none;
+    display: block;
   }
-  
-  @media (min-width: 768px) {
-    .summaries-grid {
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+  .tree-root:hover {
+    opacity: 0.7;
+  }
+
+  .date-section {
+    margin-bottom: var(--space-md);
+  }
+
+  .file-list {
+    margin-left: 4ch;
+  }
+
+  .empty-tree {
+    margin-left: 2ch;
+    color: var(--term-dim);
+  }
+
+
+  /* Responsive */
+  @media (max-width: 767px) {
+    .date-item,
+    .file-item {
+      flex-direction: column;
+      gap: 0.25rem;
     }
-  }
-  
-  .empty {
-    text-align: center;
-    padding: 40px;
-    border: 1px dashed var(--term-gray);
-    border-radius: 4px;
-    margin-top: 2rem;
+    
+    .file-meta {
+      margin-left: 0;
+    }
   }
 </style>

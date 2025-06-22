@@ -1,11 +1,8 @@
 ---
-date: '2024-01-20'
-time: '14:15'
 title: 'Docker multi-stage build によるイメージ最適化'
-tags: ['docker', 'devops', 'インフラ']
+tags: ['docker', 'devops', 'infrastructure']
+outcome: 'イメージサイズ85%削減（1.2GB→180MB）'
 ---
-
-# Docker multi-stage build によるイメージ最適化
 
 ## 背景
 

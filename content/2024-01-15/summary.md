@@ -1,13 +1,11 @@
 ---
-date: '2024-01-15'
-conversations: 3
-highlights:
-  - 'Set up Astro with minimal configuration'
-  - 'Designed terminal-inspired CSS theme'
-  - 'Configured GitHub Pages deployment'
+title: '学習サマリー'
+tags: ['astro', 'css', 'deployment', 'github']
+outcomes:
+  - 'Astro: 最小構成でセットアップ完了'
+  - 'CSS: ターミナル風テーマ作成'
+  - 'GitHub: デプロイメント自動化構築'
 ---
-
-# Daily Summary - January 15, 2024
 
 Today was all about getting the technical foundation right for the blog. Started with **Astro setup** and learned about the minimal configuration needed for static site generation. The key insight was using `getStaticPaths()` for dynamic date-based routing.
 

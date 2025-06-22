@@ -1,13 +1,10 @@
 ---
-date: '2024-01-12'
-conversations: 2
-highlights:
-  - 'Explored React performance optimization with memo, useMemo, and useCallback'
-  - 'Learned database indexing strategies and when to apply them'
-  - 'Discussed trade-offs between read and write performance'
+title: '学習サマリー'
+tags: ['react', 'database', 'performance', 'optimization']
+outcomes:
+  - 'React: memo, useMemo, useCallback最適化手法習得'
+  - 'データベース: インデックス戦略とトレードオフ理解'
 ---
-
-# Daily Summary - January 12, 2024
 
 Today's conversations focused on **performance optimization** across different layers of the tech stack. Started with React performance issues, diving deep into component memoization and state management patterns. The key insight was keeping state as local as possible and using the right hook for the job.
 

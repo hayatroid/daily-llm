@@ -1,123 +1,228 @@
 :root {
-  --term-green: #00ff00;
-  --term-bg: #0a0a0a;
-  --term-text: #e0e0e0;
-  --term-gray: #666666;
-  --term-amber: #ffb000;
-  --term-cyan: #00ffff;
-  --term-dim: #666666;
-  --term-white: #ffffff;
+  /* Minimal CLI color palette */
+  --term-green: #00ff00; /* Commands, prompts, active states only */
+  --term-bg: #0a0a0a; /* Dark background */
+  --term-heading: #ffffff; /* Headings (pure white) */
+  --term-body: #999999; /* Body text (gray) */
+  --term-link: #ffffff; /* Links (white) */
+  --term-dim: #999999; /* Metadata (gray) */
 
-  /* 省スペース統一パターン */
+  /* Essential backgrounds */
+  --bg-code-inline: rgba(255, 255, 255, 0.1);
+  --bg-code-block: rgba(255, 255, 255, 0.03);
+
+  /* Spacing scale */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
-  --space-md: 0.75rem;
-  --space-lg: 1rem;
-  --space-xl: 1.5rem;
-  --space-2xl: 2rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-block: 1.25rem;
+  --space-line: 0.75rem;
+  --space-section: 2.5rem;
 
-  /* ヘッダーサイズ統一 */
-  --text-h1-size: 1.3rem;
-  --text-h2-size: 1.1rem;
-  --text-h3-size: 1rem;
-  --text-weight-medium: 500;
+  /* Unified component spacing */
+  --space-command-after: var(--space-md);
+  --space-section-gap: var(--space-lg);
 
-  /* モバイル用サイズ */
-  --text-h1-mobile: 1.1rem;
-  --text-h2-mobile: 1rem;
-  --text-small: 0.85rem;
-  --text-small-mobile: 0.8rem;
-  --text-medium: 0.9rem;
+  /* Typography */
+  --text-normal: 1rem;
+  --text-large: 1.125rem;
+  --text-small: 0.875rem;
+  --text-body: 0.95rem;
+  --text-code: 0.9em;
 
-  /* フォントファミリー */
+  /* Special spacing for inline elements */
+  --space-inline-code: 0.2em 0.4em;
+
+  /* Font weights */
+  --text-weight-normal: 400;
+  --text-weight-bold: 700;
+
+  /* Line heights */
+  --line-height-compact: 1.4;
+  --line-height-normal: 1.6;
+
+  /* Transitions */
+  --transition-color: color 0.2s ease;
+  --transition-fast: all 0.15s ease;
+
+  /* Font families */
   --font-mono: 'Fira Code', monospace;
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, 'Noto Sans', sans-serif;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 20px;
+  padding: var(--space-md);
   background: var(--term-bg);
-  color: var(--term-text);
-  font-family: var(--font-sans);
-  line-height: 1.6;
-  font-size: 14px;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--term-green);
-  font-weight: bold;
+  color: var(--term-heading);
+  font-family: var(--font-mono);
+  line-height: var(--line-height-normal);
+  font-size: var(--text-normal);
 }
 
 a {
-  color: var(--term-amber);
+  color: var(--term-link);
   text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+  opacity: 0.7;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 80ch;
   margin: 0 auto;
 }
 
-.prompt {
+pre {
+  margin: var(--space-sm) 0;
+  padding: var(--space-sm);
+  background: var(--bg-code-block);
+  overflow-x: auto;
+  font-size: var(--text-small);
+  border-radius: 4px;
+}
+
+code {
+  font-family: var(--font-mono);
+  color: var(--term-body);
+}
+
+p code,
+li code {
+  background: var(--bg-code-inline);
+  padding: var(--space-inline-code);
+}
+
+pre code {
+  background: transparent;
+}
+
+/* Tree structure */
+.tree {
+  font-family: var(--font-mono);
+  line-height: var(--line-height-compact);
+  white-space: pre;
+}
+
+.tree-item {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  padding: calc(var(--space-xs) / 2) 0;
+}
+
+.tree-prefix {
+  color: var(--term-dim);
+  flex-shrink: 0;
+}
+
+.tree-name {
+  color: var(--term-body);
+}
+
+.tree-dir {
+  color: var(--term-body);
+}
+
+.tree-file {
+  color: var(--term-body);
+}
+
+.tree-date {
   color: var(--term-green);
 }
 
-.command {
-  color: var(--term-amber);
+.tree-meta {
+  color: var(--term-dim);
+  margin-left: 1ch;
 }
 
-.comment {
-  color: var(--term-gray);
+/* Directory listing */
+.directory {
+  margin: var(--space-md) 0;
 }
 
-pre,
-code {
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  font-family: var(--font-mono);
+.dir-header {
+  color: var(--term-body);
+  margin-bottom: var(--space-sm);
 }
 
-.conversation {
-  margin: 20px 0;
-  padding: 15px;
-  border: 1px solid var(--term-gray);
-  border-radius: 4px;
+.dir-contents {
+  padding-left: var(--space-md);
 }
 
+/* File entry */
+.file-entry {
+  display: flex;
+  align-items: baseline;
+  padding: var(--space-xs) 0;
+  gap: 1ch;
+}
+
+.file-prefix {
+  color: var(--term-dim);
+  min-width: 4ch;
+  text-align: right;
+}
+
+.file-name {
+  flex: 1;
+}
+
+.file-meta {
+  color: var(--term-dim);
+  font-size: var(--text-small);
+}
+
+/* Summary blocks */
 .summary {
-  margin: 20px 0;
-  padding: 20px;
-  border: 2px solid var(--term-green);
-  border-radius: 4px;
+  margin: var(--space-lg) 0;
+  padding: var(--space-md);
+  background: rgba(0, 255, 0, 0.05);
 }
 
+/* Metadata */
 .meta {
-  color: var(--term-gray);
-  font-size: 12px;
-  margin-bottom: 10px;
+  color: var(--term-dim);
+  font-size: var(--text-small);
 }
 
-.cursor::after {
-  content: '▊';
+ul,
+ol {
+  color: var(--term-body);
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+li {
+  color: var(--term-body);
+}
+
+p {
+  color: var(--term-body);
+}
+
+/* Cursor animation for interactive commands */
+.cursor::after,
+.interactive-cursor::after {
+  content: '█';
   animation: blink 1s infinite;
+  color: var(--term-green);
+}
+
+/* Clickable command cursor - only for interactive elements */
+.clickable-command::after {
+  content: '█';
+  animation: blink 1s infinite;
+  color: var(--term-green);
+  margin-left: 0.2ch;
 }
 
 @keyframes blink {
@@ -131,14 +236,93 @@ code {
   }
 }
 
-/* Main layout */
-.main-content {
-  padding: var(--space-2xl);
+/* Command line interface styles */
+.command-line {
+  display: flex;
+  gap: 1ch;
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
 }
 
-/* Responsive layout */
+.comment {
+  color: var(--term-dim);
+}
+
+/* Common file listing patterns */
+.file-item {
+  display: flex;
+  align-items: baseline;
+  gap: 2ch;
+  margin-bottom: var(--space-xs);
+}
+
+.file-link {
+  color: var(--term-link);
+  text-decoration: none;
+  transition: var(--transition-color);
+}
+
+.file-link:hover {
+  opacity: 0.7;
+}
+
+/* Date/directory patterns */
+.date-item {
+  display: flex;
+  align-items: baseline;
+  gap: 2ch;
+  margin-left: 2ch;
+  margin-bottom: var(--space-xs);
+}
+
+.date-link {
+  color: var(--term-link);
+  text-decoration: none;
+  transition: var(--transition-color);
+}
+
+.date-link:hover {
+  opacity: 0.7;
+}
+
+.item-count {
+  color: var(--term-dim);
+  font-size: var(--text-small);
+}
+
+/* Session containers */
+.terminal-session,
+.tree-session,
+.cat-session,
+.summary-section {
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-lg);
+}
+
+/* Responsive */
 @media (max-width: 767px) {
-  .main-content {
-    padding: var(--space-lg);
+  body {
+    padding: var(--space-sm);
+    font-size: var(--text-small);
   }
+
+  h1 {
+    font-size: var(--text-normal);
+  }
+  h2 {
+    font-size: var(--text-body);
+  }
+  h3 {
+    font-size: var(--text-body);
+  }
+}
+
+/* Unified spacing utility classes */
+.command-block {
+  margin-top: var(--space-section);
+  margin-bottom: var(--space-sm);
+}
+
+.section-gap {
+  margin-bottom: var(--space-section-gap);
 }

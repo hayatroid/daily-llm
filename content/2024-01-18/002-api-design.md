@@ -1,8 +1,7 @@
 ---
-date: '2024-01-18'
-time: '15:20'
 title: 'RESTful API Design Principles'
 tags: ['api', 'rest', 'backend', 'design']
+outcome: 'HTTPメソッドとJSON構造規約策定'
 ---
 
 ## User

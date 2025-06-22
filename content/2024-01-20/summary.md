@@ -1,13 +1,11 @@
 ---
-date: '2024-01-20'
-conversations: 3
-highlights:
-  - 'React 最適化でレンダリング速度 65% 向上、メモリ使用量 38% 削減'
-  - 'Docker multi-stage build でイメージサイズ 85% 削減（1.2GB→180MB）'
-  - 'RESTful API 設計パターンとセキュリティベストプラクティス策定'
+title: '学習サマリー'
+tags: ['react', 'docker', 'api', 'security']
+outcomes:
+  - 'React最適化: レンダリング65%高速化'
+  - 'Docker: イメージサイズ85%削減'
+  - 'API設計: セキュリティパターン策定'
 ---
-
-# 2024年1月20日の学習サマリー
 
 ## 今日の主な議論
 

@@ -1,0 +1,97 @@
+---
+import Prompt from './Prompt.astro';
+import { generateBreadcrumbs } from '../utils/navigationData.js';
+
+export interface Props {
+  currentDate?: string;
+  currentPage?: 'home' | 'date' | 'conversation';
+  conversationSlug?: string;
+  conversationTitle?: string;
+  allContent: any[];
+}
+
+const { 
+  currentDate, 
+  currentPage = 'home', 
+  conversationSlug, 
+  conversationTitle,
+  allContent = []
+} = Astro.props;
+
+// Generate breadcrumbs
+const breadcrumbs = generateBreadcrumbs(currentDate, conversationSlug, conversationTitle);
+---
+
+<nav class="cli-nav">
+  <div class="pwd command-block">
+    <Prompt command="pwd" />
+  </div>
+  <div class="path">
+    <div class="breadcrumb">
+      {breadcrumbs.map((item, index) => (
+        <>
+          <a href={item.href || '#'} class:list={['path-link', { current: item.current }]}>
+            {item.label}
+          </a>
+          {index < breadcrumbs.length - 1 && (
+            <span class="path-separator">/</span>
+          )}
+        </>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<style>
+  .cli-nav {
+    font-family: var(--font-mono);
+    font-size: var(--text-normal);
+  }
+
+  .pwd {
+    display: flex;
+    gap: 1ch;
+    margin-bottom: var(--space-xs);
+  }
+
+  .prompt {
+    color: var(--term-green);
+  }
+
+  .command {
+    color: var(--term-green);
+  }
+
+  .path {
+    color: var(--term-body);
+    margin-bottom: var(--space-sm);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    font-family: var(--font-mono);
+  }
+
+  .path-link {
+    color: var(--term-link);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .path-link:hover {
+    opacity: 0.7;
+  }
+
+  .path-separator {
+    color: var(--term-dim);
+    margin: 0 0.5ch;
+  }
+
+  .path-link.current {
+    color: var(--term-link);
+  }
+
+</style>

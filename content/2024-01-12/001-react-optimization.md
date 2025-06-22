@@ -1,8 +1,7 @@
 ---
-date: '2024-01-12'
-time: '09:15'
 title: 'React Performance Optimization Techniques'
 tags: ['react', 'performance', 'optimization', 'hooks']
+outcome: 'memo, useMemo, useCallback最適化手法習得'
 ---
 
 ## User

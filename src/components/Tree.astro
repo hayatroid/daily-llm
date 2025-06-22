@@ -1,0 +1,78 @@
+---
+import { processConversation } from '../utils/contentProcessor.js';
+import { extractSlugFromFile, createConversationUrl } from '../utils/slugUtils.js';
+
+export interface Props {
+  conversations: any[];
+  date: string;
+}
+
+const { conversations, date } = Astro.props;
+
+const processedConversations = conversations.map((conv) => {
+  const { frontmatter, rawContent, file } = conv;
+  const processed = processConversation(rawContent());
+  const slug = extractSlugFromFile(file);
+  
+  return {
+    frontmatter,
+    processed,
+    slug,
+    url: createConversationUrl(date, slug)
+  };
+});
+---
+
+<div class="date-section">
+  <div class="date-item">
+    <a href={`/${date}/`} class="date-header">{date}/</a>
+    <span class="item-count">{processedConversations.length} conversations</span>
+  </div>
+  
+  <div class="file-list">
+    {processedConversations.map((conv) => (
+      <div class="file-item">
+        <a href={conv.url} class="file-link">{conv.frontmatter.title}</a>
+        <span class="file-meta">
+          {conv.frontmatter.time} · {conv.processed.exchangeCount} exchanges
+          {conv.processed.hasCode && ' · code'}
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .date-section {
+    font-family: var(--font-mono);
+    font-size: var(--text-normal);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-md);
+  }
+
+  .date-header {
+    color: var(--term-link);
+    text-decoration: none;
+  }
+
+  .date-header:hover {
+    opacity: 0.7;
+  }
+
+  .file-list {
+    margin-left: 4ch;
+  }
+
+  /* Responsive */
+  @media (max-width: 767px) {
+    .date-item,
+    .file-item {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    
+    .file-meta {
+      margin-left: 0;
+    }
+  }
+</style>

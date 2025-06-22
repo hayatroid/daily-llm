@@ -1,0 +1,42 @@
+---
+export interface Props {
+  command: string;
+  clickable?: boolean;
+  href?: string;
+}
+
+const { command, clickable = false, href } = Astro.props;
+---
+
+<div class="command-line">
+  <span class="prompt">$</span>{clickable && href ? (
+    <a href={href} class="command clickable-command">{command}</a>
+  ) : (
+    <span class="command">{command}</span>
+  )}
+</div>
+
+<style>
+  .command-line {
+    font-family: var(--font-mono);
+  }
+
+  .prompt {
+    color: var(--term-green);
+    margin-right: 0.25ch;
+  }
+
+  .command {
+    color: var(--term-green);
+    font-family: var(--font-mono);
+  }
+
+  .command.clickable-command {
+    text-decoration: none;
+    transition: var(--transition-color);
+  }
+
+  .command.clickable-command:hover {
+    opacity: 0.7;
+  }
+</style>

@@ -1,10 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import SimpleNav from '../../components/SimpleNav.astro';
-import StatsBadge from '../../components/StatsBadge.astro';
-import CompactHeader from '../../components/CompactHeader.astro';
+import Pwd from '../../components/Pwd.astro';
+import Cat from '../../components/Cat.astro';
+import Prompt from '../../components/Prompt.astro';
 import { processConversation } from '../../utils/contentProcessor.js';
-import { ICONS, LABELS } from '../../utils/icons.js';
 import { createDateUrl, extractSlugFromFile } from '../../utils/slugUtils.js';
 
 export async function getStaticPaths() {
@@ -39,189 +38,66 @@ const processed = processConversation(rawContent());
 // Get all content for navigation context
 const allContent = await Astro.glob('../../../content/**/*.md');
 
+// Generate navigation context for conversation navigation (within same date)
+const sameDateConversations = allContent
+  .filter(file => file.file.includes(`/${date}/`) && !file.file.endsWith('summary.md'))
+  .sort((a, b) => {
+    const aNum = parseInt(a.file.split('/').pop()?.split('-')[0] || '0');
+    const bNum = parseInt(b.file.split('/').pop()?.split('-')[0] || '0');
+    return aNum - bNum;
+  });
+
+const currentIndex = sameDateConversations.findIndex(conv => 
+  extractSlugFromFile(conv.file) === conversationSlug
+);
+
+const prevConversation = currentIndex > 0 ? sameDateConversations[currentIndex - 1] : null;
+const nextConversation = currentIndex < sameDateConversations.length - 1 ? sameDateConversations[currentIndex + 1] : null;
+
 const pageTitle = `${frontmatter.title} - ${date}`;
 ---
 
 <BaseLayout title={pageTitle}>
   <div class="main-content">
-    <SimpleNav 
-      currentDate={date}
-      currentPage="conversation"
-      conversationSlug={conversationSlug}
-      conversationTitle={frontmatter.title}
-      allContent={allContent}
-    />
-
-    <header class="conversation-header">
-      <CompactHeader 
-        title={frontmatter.title}
-        icon={ICONS.ROBOT}
-        variant="page"
+    <div class="section-gap">
+      <Pwd 
+        currentDate={date}
+        currentPage="conversation"
+        conversationSlug={conversationSlug}
+        conversationTitle={frontmatter.title}
+        allContent={allContent}
       />
-      <div class="conversation-stats">
-        <StatsBadge icon={ICONS.TIME} value={frontmatter.time} />
-        <StatsBadge icon={ICONS.EXCHANGE} value={processed.exchangeCount} label={LABELS.EXCHANGES} />
-        {processed.hasCode && <StatsBadge icon={ICONS.CODE} value={LABELS.CODE_INCLUDED} />}
-      </div>
-      
-      {frontmatter.tags && frontmatter.tags.length > 0 && (
-        <div class="conversation-tags">
-          {frontmatter.tags.map((tag: string) => (
-            <span class="tag">#{tag}</span>
-          ))}
-        </div>
-      )}
-    </header>
+    </div>
 
-    <article class="conversation-content">
-      <Content />
-    </article>
-
-    <footer class="conversation-footer">
-      <div class="navigation-actions">
-        <a href={createDateUrl(date)} class="nav-btn secondary">
-          ← {LABELS.BACK_TO} {date}
-        </a>
-        <a href="/" class="nav-btn primary">
-          {ICONS.HOME} {LABELS.ALL_DAYS}
-        </a>
+    <Cat 
+      filename={`${date}/${conversationSlug}`}
+      frontmatter={frontmatter}
+      Content={Content}
+    >
+      <div slot="title" class="title-nav">
+        {prevConversation ? (
+          <a href={`/${date}/${extractSlugFromFile(prevConversation.file)}/`} class="nav-arrow nav-prev" title={prevConversation.frontmatter.title}>
+            ←
+          </a>
+        ) : (
+          <span class="nav-arrow disabled">←</span>
+        )}
+        <h1>{frontmatter.title}</h1>
+        {nextConversation ? (
+          <a href={`/${date}/${extractSlugFromFile(nextConversation.file)}/`} class="nav-arrow nav-next" title={nextConversation.frontmatter.title}>
+            →
+          </a>
+        ) : (
+          <span class="nav-arrow disabled">→</span>
+        )}
       </div>
-    </footer>
+    </Cat>
+
+    <!-- Navigation Commands -->
+    <div class="command-block">
+      <Prompt command="cd ../" clickable={true} href={createDateUrl(date)} />
+      <Prompt command="cd ../../" clickable={true} href="/" />
+    </div>
   </div>
 </BaseLayout>
 
-<style>
-
-  .conversation-header {
-    margin-bottom: var(--space-xl);
-  }
-
-  .conversation-stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-    margin-bottom: var(--space-md);
-    justify-content: center;
-  }
-
-
-  .conversation-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    color: var(--term-cyan);
-    font-size: var(--text-small-mobile);
-    background: rgba(0, 255, 255, 0.1);
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    border: 1px solid var(--term-cyan);
-  }
-
-  .conversation-content {
-    border: 1px solid var(--term-gray);
-    border-radius: 4px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    background: rgba(255, 255, 255, 0.01);
-    line-height: 1.7;
-  }
-
-  .conversation-content :global(h2) {
-    color: var(--term-amber);
-    font-size: var(--text-h2-size);
-    margin: 2rem 0 1rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--term-dim);
-  }
-
-  .conversation-content :global(pre) {
-    background: rgba(0, 255, 255, 0.05);
-    border: 1px solid var(--term-cyan);
-    border-radius: 4px;
-    padding: 1rem;
-    margin: 1rem 0;
-    overflow-x: auto;
-  }
-
-  .conversation-content :global(code) {
-    color: var(--term-cyan);
-    background: rgba(0, 255, 255, 0.1);
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-
-  .conversation-content :global(pre code) {
-    background: none;
-    padding: 0;
-  }
-
-  .conversation-footer {
-    border-top: 1px solid var(--term-gray);
-    padding-top: 1.5rem;
-  }
-
-  .navigation-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .nav-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: var(--text-medium);
-    transition: all 0.2s ease;
-  }
-
-  .nav-btn.primary {
-    background: var(--term-green);
-    color: var(--term-bg);
-    border: 1px solid var(--term-green);
-  }
-
-  .nav-btn.primary:hover {
-    background: var(--term-amber);
-    border-color: var(--term-amber);
-  }
-
-  .nav-btn.secondary {
-    background: transparent;
-    color: var(--term-amber);
-    border: 1px solid var(--term-amber);
-  }
-
-  .nav-btn.secondary:hover {
-    background: var(--term-amber);
-    color: var(--term-bg);
-  }
-
-  /* Responsive design */
-  @media (max-width: 767px) {
-    .conversation-header {
-      padding: 1rem;
-    }
-
-    .conversation-content {
-      padding: 1.25rem;
-    }
-
-    .navigation-actions {
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .nav-btn {
-      width: 100%;
-      justify-content: center;
-    }
-
-  }
-</style>

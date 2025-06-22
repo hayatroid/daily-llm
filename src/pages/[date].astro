@@ -1,18 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ConversationPreviewCard from '../components/ConversationPreviewCard.astro';
-import DetailedSummaryCard from '../components/DetailedSummaryCard.astro';
-import SimpleNav from '../components/SimpleNav.astro';
-import CompactHeader from '../components/CompactHeader.astro';
-import { ICONS, LABELS } from '../utils/icons.js';
+import Pwd from '../components/Pwd.astro';
+import Tree from '../components/Tree.astro';
+import Cat from '../components/Cat.astro';
+import Prompt from '../components/Prompt.astro';
+import { generateNavigationContext } from '../utils/navigationData.js';
 
 export async function getStaticPaths() {
   // Get all content directories
   const summaries = await Astro.glob('../../content/**/summary.md');
   
-  return summaries.map((summary) => ({
-    params: { date: summary.frontmatter.date.toString() }
-  }));
+  return summaries.map((summary) => {
+    // Extract date from file path: content/2024-01-20/summary.md -> 2024-01-20
+    const pathParts = summary.file.split('/');
+    const date = pathParts[pathParts.length - 2];
+    return {
+      params: { date }
+    };
+  });
 }
 
 const { date } = Astro.params;
@@ -21,7 +26,7 @@ const { date } = Astro.params;
 const allContent = await Astro.glob('../../content/**/*.md');
 
 // Get the summary for this date
-const summary = allContent.filter(file => 
+const summary = allContent.find(file => 
   file.file.includes(`/${date}/summary.md`)
 );
 
@@ -38,118 +43,79 @@ const sortedConversations = conversations
     return aNum - bNum;
   });
 
+// Generate navigation context for date navigation
+const navigationContext = generateNavigationContext(allContent, date);
 
 const pageTitle = `${date} - Daily LLM Conversations`;
 ---
 
 <BaseLayout title={pageTitle}>
   <div class="main-content">
-    <SimpleNav 
-      currentDate={date}
-      currentPage="date"
-      allContent={allContent}
-    />
+    <div class="section-gap">
+      <Pwd 
+        currentDate={date}
+        currentPage="date"
+        allContent={allContent}
+      />
+    </div>
 
-    <CompactHeader 
-      title={date}
-      subtitle={LABELS.DAILY_CONVERSATIONS}
-      icon={ICONS.CALENDAR}
-      variant="page"
-    />
-
-    {summary.length > 0 && (
-      <div class="summary-section">
-        <CompactHeader 
-          title="Daily Summary"
-          icon={ICONS.SUMMARY}
-          level={2}
-          variant="section"
-        />
-        <DetailedSummaryCard summary={summary[0]} allContent={allContent} />
-      </div>
+    {summary && (
+      <Cat 
+        filename={date}
+        frontmatter={summary.frontmatter}
+        Content={summary.Content}
+      >
+        <div slot="title" class="title-nav">
+          {navigationContext.previousDate ? (
+            <a href={`/${navigationContext.previousDate}/`} class="nav-arrow nav-prev" title={navigationContext.previousDate}>
+              ←
+            </a>
+          ) : (
+            <span class="nav-arrow disabled">←</span>
+          )}
+          <h1>{summary.frontmatter.title}</h1>
+          {navigationContext.nextDate ? (
+            <a href={`/${navigationContext.nextDate}/`} class="nav-arrow nav-next" title={navigationContext.nextDate}>
+              →
+            </a>
+          ) : (
+            <span class="nav-arrow disabled">→</span>
+          )}
+        </div>
+      </Cat>
     )}
 
-    <div class="conversations-section">
-      <CompactHeader 
-        title={`Conversations (${sortedConversations.length})`}
-        icon={ICONS.CONVERSATION}
-        level={2}
-        variant="section"
-      />
-      <div class="conversations-grid">
-        {sortedConversations.map((conversation) => (
-          <ConversationPreviewCard conversation={conversation} date={date} />
-        ))}
+    <div class="tree-session section-gap">
+      <div class="command-block">
+        <Prompt command="tree" />
+      </div>
+      
+      <div class="file-listing">
+        <Tree conversations={sortedConversations} date={date} />
       </div>
     </div>
 
-    {sortedConversations.length === 0 && summary.length === 0 && (
+    {sortedConversations.length === 0 && (
       <div class="empty">
-        <p class="comment"># {LABELS.NO_CONTENT_FOUND} {date}</p>
-        <p>{LABELS.START_BY_ADDING} <code>content/{date}/</code></p>
+        <p class="comment"># No conversations found for {date}</p>
       </div>
     )}
+
+    <!-- Navigation Commands -->
+    <div class="command-block">
+      <Prompt command="cd ../" clickable={true} href="/" />
+    </div>
   </div>
 </BaseLayout>
 
-
 <style>
-  
-  /* CompactHeader コンポーネントで統一 */
-  
-  .summary-section {
-    margin-bottom: var(--space-2xl);
-  }
-  
-  .conversations-section {
-    margin-bottom: 2rem;
-  }
-  
-  .conversations-grid {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: 1fr;
-    margin-top: 2rem;
-    width: 100%;
-    grid-auto-rows: auto;
-  }
-  
-  @media (min-width: 768px) {
-    .conversations-grid {
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 2rem;
-      align-items: start;
-    }
-  }
-  
-  @media (min-width: 1200px) {
-    .conversations-grid {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-  
-  .empty {
-    text-align: center;
-    padding: 3rem 2rem;
-    border: 1px dashed var(--term-gray);
-    border-radius: 4px;
-    margin: 2rem 0;
-  }
-  
-  .empty code {
-    background: rgba(0, 255, 255, 0.1);
-    color: var(--term-cyan);
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
+
+  .file-listing {
+    margin-left: 0;
   }
 
-  /* Responsive design */
-  @media (max-width: 767px) {
-    .conversations-grid {
-      gap: var(--space-lg);
-    }
+  .empty {
+    color: var(--term-dim);
+    margin-top: var(--space-lg);
   }
 </style>
