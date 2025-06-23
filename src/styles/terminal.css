@@ -142,17 +142,9 @@ h6 {
   margin-right: 1ch;
 }
 
-/* Decorative elements (muted text) - always inline-block to prevent shift */
-h1::before,
-h2::before,
-h3::before,
-h4::before,
-h5::before,
-h6::before {
+/* Heading markers - consistent with prompt styling */
+.heading-marker {
   color: var(--term-text);
-  display: inline-block;
-  text-decoration: none;
-  vertical-align: baseline;
   margin-right: 1ch;
 }
 
@@ -176,24 +168,9 @@ code,
   color: var(--term-text);
 }
 
-/* Hover effects - interactive elements */
-a:hover,
-.tree-link:hover,
-.nav-arrow:hover,
-.path-link:hover,
-.tree-root:hover,
-h1:hover,
-h2:hover,
-h3:hover,
-h4:hover,
-h5:hover,
-h6:hover {
+/* Hover effects - all links get underline in their text color */
+a:hover {
   text-decoration: underline;
-}
-
-.clickable-command:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--term-green);
 }
 
 .container {

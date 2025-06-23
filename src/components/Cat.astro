@@ -66,11 +66,13 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
     margin: 0;
   }
 
-  .file-content h1 {
+  .file-content :global(h1) {
     font-size: var(--text-normal);
     font-weight: var(--text-weight-bold);
     margin: 0;
     font-family: var(--font-mono);
+    display: flex;
+    align-items: baseline;
   }
 
   /* Title navigation styles for slot usage */
@@ -87,8 +89,10 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
     font-weight: var(--text-weight-bold);
     margin: 0;
     font-family: var(--font-mono);
-    text-align: center;
     flex: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
   }
 
   .file-content :global(.nav-arrow) {
@@ -115,21 +119,18 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
     margin-top: var(--space-md);
     margin-bottom: var(--space-sm);
     font-weight: var(--text-weight-bold);
-  }
-
-  .file-content :global(h2::before) {
-    content: "## ";
+    display: flex;
+    align-items: baseline;
   }
 
   .file-content :global(h3) {
     margin-top: var(--space-sm);
     margin-bottom: var(--space-xs);
     font-weight: var(--text-weight-bold);
+    display: flex;
+    align-items: baseline;
   }
 
-  .file-content :global(h3::before) {
-    content: "### ";
-  }
 
   .file-content :global(p) {
     margin: var(--space-sm) 0;
@@ -146,18 +147,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
     margin-bottom: var(--space-xs);
   }
 
-  /* Anchor-wrapped headings - preserve block display */
-  .file-content :global(a) {
-    display: block;
-    text-decoration: none;
-  }
-  
-  .file-content :global(a h1),
-  .file-content :global(a h2),
-  .file-content :global(a h3) {
-    margin: inherit;
-    color: inherit;
-  }
 </style>
 
 <script>
@@ -184,26 +173,42 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
       const cleanPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
       const absoluteUrl = `${protocol}//${host}${cleanPath}#${slug}`;
       
-      // Wrap entire heading with anchor tag (including ::before decorations)
+      // Get heading text content
+      const headingText = heading.textContent;
+      
+      // Determine heading marker based on tag name
+      const markers = {
+        'H1': '# ',
+        'H2': '## ', 
+        'H3': '### ',
+        'H4': '#### ',
+        'H5': '##### ',
+        'H6': '###### '
+      };
+      const marker = markers[heading.tagName] || '';
+      
+      // Create new structure: <h2><span class="heading-marker">## </span><a>text</a></h2>
+      const markerSpan = document.createElement('span');
+      markerSpan.className = 'heading-marker';
+      markerSpan.textContent = marker;
+      
       const link = document.createElement('a');
       link.href = absoluteUrl;
       link.id = slug;
+      link.textContent = headingText;
       link.addEventListener('click', (e) => {
         e.preventDefault();
         window.history.pushState(null, null, absoluteUrl);
-        link.scrollIntoView({ 
+        heading.scrollIntoView({ 
           behavior: 'smooth',
           block: 'start'
         });
       });
       
-      // Move heading inside the link
-      const parent = heading.parentNode;
-      parent.insertBefore(link, heading);
-      link.appendChild(heading);
-      
-      // Remove ID from heading (now on link)
-      heading.removeAttribute('id');
+      // Replace heading content with marker + link
+      heading.innerHTML = '';
+      heading.appendChild(markerSpan);
+      heading.appendChild(link);
     });
     
     // Handle direct anchor links on page load
