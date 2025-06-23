@@ -2,6 +2,7 @@
 :root {
   /* Terminal colors */
   --term-green: #98c379;
+  --term-blue: #61afef;
   --term-bg: #282c34;
   --term-link: #dcdfe4;
   --term-text: #8b949e;
@@ -34,13 +35,11 @@
   --char-offset: 0.2ch;
   --char-multiplier: 2.5;
   --prompt-spacing: 1ch;
-  --padding-multiplier: 0.8;
   --opacity-hover: 0.7;
 
   /* Animation & backgrounds */
   --duration-fast: 0.2s;
   --duration-blink: 1s;
-  --bg-code-light: rgba(255, 255, 255, 0.1);
   --bg-code-dark: rgba(255, 255, 255, 0.05);
 
   /* Theme toggle */
@@ -63,12 +62,12 @@
 [data-theme='light'] {
   /* Terminal colors */
   --term-green: #50a14f;
+  --term-blue: #0184bc;
   --term-bg: #fafafa;
   --term-link: #383a42;
   --term-text: #6c7680;
 
   /* Code backgrounds */
-  --bg-code-light: rgba(0, 0, 0, 0.05);
   --bg-code-dark: rgba(0, 0, 0, 0.03);
 }
 
@@ -206,14 +205,7 @@ code {
 
 p code,
 li code {
-  background: var(--bg-code-light);
-  padding: calc(var(--space-xs) * var(--padding-multiplier)) var(--space-xs);
-}
-
-/* Reset inline code styling for code blocks */
-pre code {
-  background: none;
-  padding: 0;
+  color: var(--term-blue);
 }
 
 /* Text content defaults */

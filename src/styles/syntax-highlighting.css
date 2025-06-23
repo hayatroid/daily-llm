@@ -1,0 +1,29 @@
+/* One Half Dark */
+:root {
+  --astro-code-color-text: #dcdfe4;
+  --astro-code-color-background: transparent;
+  --astro-code-token-constant: #61afef;
+  --astro-code-token-string: #98c379;
+  --astro-code-token-comment: #5c6370;
+  --astro-code-token-keyword: #e06c75;
+  --astro-code-token-parameter: #dcdfe4;
+  --astro-code-token-function: #61afef;
+  --astro-code-token-string-expression: #98c379;
+  --astro-code-token-punctuation: #dcdfe4;
+  --astro-code-token-link: #56b6c2;
+}
+
+/* One Half Light */
+[data-theme='light'] {
+  --astro-code-color-text: #383a42;
+  --astro-code-color-background: transparent;
+  --astro-code-token-constant: #0184bc;
+  --astro-code-token-string: #50a14f;
+  --astro-code-token-comment: #a0a1a7;
+  --astro-code-token-keyword: #e45649;
+  --astro-code-token-parameter: #383a42;
+  --astro-code-token-function: #0184bc;
+  --astro-code-token-string-expression: #50a14f;
+  --astro-code-token-punctuation: #383a42;
+  --astro-code-token-link: #0997b3;
+}

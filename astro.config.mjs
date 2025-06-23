@@ -6,4 +6,9 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
+  markdown: {
+    shikiConfig: {
+      theme: 'css-variables',
+    },
+  },
 });
