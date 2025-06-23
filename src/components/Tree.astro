@@ -23,56 +23,20 @@ const processedConversations = conversations.map((conv) => {
 });
 ---
 
-<div class="date-section">
-  <div class="date-item">
-    <a href={`/${date}/`} class="date-header">{date}/</a>
-    <span class="item-count">{processedConversations.length} conversations</span>
+<div class="tree-container">
+  <div class="tree-level-0">
+    <a href={`/${date}/`} class="tree-link">{date}/</a>
+    <span class="tree-meta">{processedConversations.length} conversations</span>
   </div>
-  
-  <div class="file-list">
-    {processedConversations.map((conv) => (
-      <div class="file-item">
-        <a href={conv.url} class="file-link">{conv.frontmatter.title}</a>
-        <span class="file-meta">
-          {conv.frontmatter.time} · {conv.processed.exchangeCount} exchanges
-          {conv.processed.hasCode && ' · code'}
-        </span>
-      </div>
-    ))}
-  </div>
+
+  {processedConversations.map((conv) => (
+    <div class="tree-level-1">
+      <a href={conv.url} class="tree-link">{conv.frontmatter.title}</a>
+      <span class="tree-meta">
+        {conv.frontmatter.time} · {conv.processed.exchangeCount} exchanges
+        {conv.processed.hasCode && ' · code'}
+      </span>
+    </div>
+  ))}
 </div>
 
-<style>
-  .date-section {
-    font-family: var(--font-mono);
-    font-size: var(--text-normal);
-    line-height: var(--line-height-normal);
-    margin-bottom: var(--space-md);
-  }
-
-  .date-header {
-    color: var(--term-link);
-    text-decoration: none;
-  }
-
-  .date-header:hover {
-    opacity: 0.7;
-  }
-
-  .file-list {
-    margin-left: 4ch;
-  }
-
-  /* Responsive */
-  @media (max-width: 767px) {
-    .date-item,
-    .file-item {
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-    
-    .file-meta {
-      margin-left: 0;
-    }
-  }
-</style>

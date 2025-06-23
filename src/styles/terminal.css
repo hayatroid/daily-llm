@@ -1,196 +1,114 @@
 :root {
-  /* Minimal CLI color palette */
-  --term-green: #00ff00; /* Commands, prompts, active states only */
-  --term-bg: #0a0a0a; /* Dark background */
-  --term-heading: #ffffff; /* Headings (pure white) */
-  --term-body: #999999; /* Body text (gray) */
-  --term-link: #ffffff; /* Links (white) */
-  --term-dim: #999999; /* Metadata (gray) */
+  /* Terminal colors */
+  --term-green: #00ff00;
+  --term-bg: #0a0a0a;
+  --term-primary: #ffffff;
+  --term-secondary: #999999;
 
-  /* Essential backgrounds */
-  --bg-code-inline: rgba(255, 255, 255, 0.1);
-  --bg-code-block: rgba(255, 255, 255, 0.03);
-
-  /* Spacing scale */
+  /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
   --space-xl: 2rem;
-  --space-block: 1.25rem;
-  --space-line: 0.75rem;
   --space-section: 2.5rem;
-
-  /* Unified component spacing */
-  --space-command-after: var(--space-md);
-  --space-section-gap: var(--space-lg);
 
   /* Typography */
   --text-normal: 1rem;
-  --text-large: 1.125rem;
   --text-small: 0.875rem;
-  --text-body: 0.95rem;
-  --text-code: 0.9em;
-
-  /* Special spacing for inline elements */
-  --space-inline-code: 0.2em 0.4em;
-
-  /* Font weights */
+  --text-lg: 1.5rem;
   --text-weight-normal: 400;
   --text-weight-bold: 700;
-
-  /* Line heights */
   --line-height-compact: 1.4;
   --line-height-normal: 1.6;
-
-  /* Transitions */
-  --transition-color: color 0.2s ease;
-  --transition-fast: all 0.15s ease;
-
-  /* Font families */
+  --line-height-tight: 1;
   --font-mono: 'Fira Code', monospace;
+
+  /* Layout */
+  --gap-default: 1ch;
+  --min-width-small: 4ch;
+  --container-width: 80ch;
+  --border-radius: 4px;
+  --tree-indent: 2ch;
+  --char-offset: 0.2ch;
+  --char-multiplier: 2.5;
+  --padding-multiplier: 0.8;
+  --opacity-hover: 0.7;
+
+  /* Animation & backgrounds */
+  --duration-fast: 0.2s;
+  --duration-blink: 1s;
+  --bg-code-light: rgba(255, 255, 255, 0.1);
+  --bg-code-dark: rgba(255, 255, 255, 0.05);
+
+  /* Responsive */
+  --bp-mobile: 767px;
 }
 
 body {
   padding: var(--space-md);
   background: var(--term-bg);
-  color: var(--term-heading);
+  color: var(--term-primary);
   font-family: var(--font-mono);
   line-height: var(--line-height-normal);
   font-size: var(--text-normal);
 }
 
 a {
-  color: var(--term-link);
+  color: var(--term-primary);
   text-decoration: none;
 }
 
-a:hover {
-  opacity: 0.7;
+a:hover,
+.tree-link:hover {
+  opacity: var(--opacity-hover);
 }
 
 .container {
-  max-width: 80ch;
+  max-width: var(--container-width);
   margin: 0 auto;
 }
 
-pre {
+/* Code & Tree */
+pre,
+.tree,
+.tree-output {
+  font-family: var(--font-mono);
   margin: var(--space-sm) 0;
+}
+
+pre {
   padding: var(--space-sm);
-  background: var(--bg-code-block);
+  background: var(--bg-code-dark);
   overflow-x: auto;
   font-size: var(--text-small);
-  border-radius: 4px;
+  border-radius: var(--border-radius);
 }
 
-code {
-  font-family: var(--font-mono);
-  color: var(--term-body);
-}
-
-p code,
-li code {
-  background: var(--bg-code-inline);
-  padding: var(--space-inline-code);
-}
-
-pre code {
-  background: transparent;
-}
-
-/* Tree structure */
 .tree {
-  font-family: var(--font-mono);
   line-height: var(--line-height-compact);
   white-space: pre;
 }
 
-.tree-item {
-  display: flex;
-  align-items: baseline;
-  margin: 0;
-  padding: calc(var(--space-xs) / 2) 0;
+code {
+  font-family: var(--font-mono);
+  color: var(--term-secondary);
 }
 
-.tree-prefix {
-  color: var(--term-dim);
-  flex-shrink: 0;
+p code,
+li code {
+  background: var(--bg-code-light);
+  padding: calc(var(--space-xs) * var(--padding-multiplier)) var(--space-xs);
 }
 
-.tree-name {
-  color: var(--term-body);
-}
-
-.tree-dir {
-  color: var(--term-body);
-}
-
-.tree-file {
-  color: var(--term-body);
-}
-
-.tree-date {
-  color: var(--term-green);
-}
-
-.tree-meta {
-  color: var(--term-dim);
-  margin-left: 1ch;
-}
-
-/* Directory listing */
-.directory {
-  margin: var(--space-md) 0;
-}
-
-.dir-header {
-  color: var(--term-body);
-  margin-bottom: var(--space-sm);
-}
-
-.dir-contents {
-  padding-left: var(--space-md);
-}
-
-/* File entry */
-.file-entry {
-  display: flex;
-  align-items: baseline;
-  padding: var(--space-xs) 0;
-  gap: 1ch;
-}
-
-.file-prefix {
-  color: var(--term-dim);
-  min-width: 4ch;
-  text-align: right;
-}
-
-.file-name {
-  flex: 1;
-}
-
-.file-meta {
-  color: var(--term-dim);
-  font-size: var(--text-small);
-}
-
-/* Summary blocks */
-.summary {
-  margin: var(--space-lg) 0;
-  padding: var(--space-md);
-  background: rgba(0, 255, 0, 0.05);
-}
-
-/* Metadata */
-.meta {
-  color: var(--term-dim);
-  font-size: var(--text-small);
-}
-
+/* Text content defaults */
 ul,
-ol {
-  color: var(--term-body);
+ol,
+li,
+p,
+.meta,
+.comment {
+  color: var(--term-secondary);
 }
 
 ul {
@@ -201,28 +119,16 @@ ol {
   list-style-type: decimal;
 }
 
-li {
-  color: var(--term-body);
+.meta {
+  font-size: var(--text-small);
 }
 
-p {
-  color: var(--term-body);
-}
-
-/* Cursor animation for interactive commands */
-.cursor::after,
-.interactive-cursor::after {
-  content: '█';
-  animation: blink 1s infinite;
-  color: var(--term-green);
-}
-
-/* Clickable command cursor - only for interactive elements */
+/* Cursor animations */
 .clickable-command::after {
   content: '█';
-  animation: blink 1s infinite;
+  animation: blink var(--duration-blink) infinite;
   color: var(--term-green);
-  margin-left: 0.2ch;
+  margin-left: var(--char-offset);
 }
 
 @keyframes blink {
@@ -236,71 +142,47 @@ p {
   }
 }
 
-/* Command line interface styles */
-.command-line {
-  display: flex;
-  gap: 1ch;
-  margin-bottom: var(--space-sm);
-  font-family: var(--font-mono);
+.tree-output {
+  font-size: var(--text-normal);
+  line-height: var(--line-height-normal);
 }
 
-.comment {
-  color: var(--term-dim);
-}
-
-/* Common file listing patterns */
-.file-item {
+/* Tree structure */
+[class^='tree-level-'] {
   display: flex;
   align-items: baseline;
-  gap: 2ch;
-  margin-bottom: var(--space-xs);
+  gap: var(--gap-default);
+  margin-bottom: calc((1.6 - 1) * var(--space-md) / 2);
 }
 
-.file-link {
-  color: var(--term-link);
+.tree-level-0 {
+  margin-left: 0;
+}
+.tree-level-1 {
+  margin-left: var(--tree-indent);
+}
+.tree-level-2 {
+  margin-left: calc(2 * var(--tree-indent));
+}
+
+.tree-link {
+  color: var(--term-primary);
   text-decoration: none;
-  transition: var(--transition-color);
 }
 
-.file-link:hover {
-  opacity: 0.7;
-}
-
-/* Date/directory patterns */
-.date-item {
-  display: flex;
-  align-items: baseline;
-  gap: 2ch;
-  margin-left: 2ch;
-  margin-bottom: var(--space-xs);
-}
-
-.date-link {
-  color: var(--term-link);
-  text-decoration: none;
-  transition: var(--transition-color);
-}
-
-.date-link:hover {
-  opacity: 0.7;
-}
-
-.item-count {
-  color: var(--term-dim);
+.tree-meta {
+  color: var(--term-secondary);
   font-size: var(--text-small);
 }
 
 /* Session containers */
-.terminal-session,
-.tree-session,
-.cat-session,
-.summary-section {
+[class$='-session'] {
   font-family: var(--font-mono);
   margin-bottom: var(--space-lg);
 }
 
 /* Responsive */
-@media (max-width: 767px) {
+@media (max-width: var(--bp-mobile)) {
   body {
     padding: var(--space-sm);
     font-size: var(--text-small);
@@ -309,11 +191,9 @@ p {
   h1 {
     font-size: var(--text-normal);
   }
-  h2 {
-    font-size: var(--text-body);
-  }
+  h2,
   h3 {
-    font-size: var(--text-body);
+    font-size: var(--text-small);
   }
 }
 
@@ -324,5 +204,5 @@ p {
 }
 
 .section-gap {
-  margin-bottom: var(--space-section-gap);
+  margin-bottom: var(--space-lg);
 }

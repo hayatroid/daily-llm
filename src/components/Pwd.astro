@@ -50,7 +50,7 @@ const breadcrumbs = generateBreadcrumbs(currentDate, conversationSlug, conversat
 
   .pwd {
     display: flex;
-    gap: 1ch;
+    gap: var(--gap-default);
     margin-bottom: var(--space-xs);
   }
 
@@ -63,7 +63,7 @@ const breadcrumbs = generateBreadcrumbs(currentDate, conversationSlug, conversat
   }
 
   .path {
-    color: var(--term-body);
+    color: var(--term-secondary);
     margin-bottom: var(--space-sm);
   }
 
@@ -71,27 +71,27 @@ const breadcrumbs = generateBreadcrumbs(currentDate, conversationSlug, conversat
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0;
+    gap: var(--gap-none);
     font-family: var(--font-mono);
   }
 
   .path-link {
-    color: var(--term-link);
+    color: var(--term-primary);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color var(--duration-fast) ease;
   }
 
   .path-link:hover {
-    opacity: 0.7;
+    opacity: var(--opacity-hover);
   }
 
   .path-separator {
-    color: var(--term-dim);
-    margin: 0 0.5ch;
+    color: var(--term-secondary);
+    margin: 0 calc(var(--char-offset) * var(--char-multiplier));
   }
 
   .path-link.current {
-    color: var(--term-link);
+    color: var(--term-primary);
   }
 
 </style>

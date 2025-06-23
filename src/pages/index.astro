@@ -45,37 +45,37 @@ const sortedDates = Array.from(dateGroups.keys()).sort((a, b) =>
       </div>
       
       <div class="tree-output">
-        <a href="/" class="tree-root">{siteDomain}/</a>
+        <div class="tree-level-0">
+          <a href="/" class="tree-link">{siteDomain}/</a>
+        </div>
         
         {sortedDates.map((date) => {
           const conversations = dateGroups.get(date);
           
           return (
-            <div class="date-section">
-              <div class="date-item">
-                <a href={`/${date}/`} class="date-link">{date}/</a>
-                <span class="item-count">{conversations.length} conversations</span>
+            <>
+              <div class="tree-level-1">
+                <a href={`/${date}/`} class="tree-link">{date}/</a>
+                <span class="tree-meta">{conversations.length} conversations</span>
               </div>
               
-              <div class="file-list">
-                {conversations.map((conv) => (
-                  <div class="file-item">
-                    <a href={`/${date}/${conv.slug}`} class="file-link">
-                      {conv.frontmatter.title}
-                    </a>
-                    {conv.frontmatter.time && (
-                      <span class="file-meta">{conv.frontmatter.time}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+              {conversations.map((conv) => (
+                <div class="tree-level-2">
+                  <a href={`/${date}/${conv.slug}`} class="tree-link">
+                    {conv.frontmatter.title}
+                  </a>
+                  {conv.frontmatter.time && (
+                    <span class="tree-meta">{conv.frontmatter.time}</span>
+                  )}
+                </div>
+              ))}
+            </>
           );
         })}
         
         {sortedDates.length === 0 && (
-          <div class="empty-tree">
-            <span class="empty-msg">(no conversations yet)</span>
+          <div class="tree-level-1">
+            <span class="tree-meta">(no conversations yet)</span>
           </div>
         )}
       </div>
@@ -91,14 +91,14 @@ const sortedDates = Array.from(dateGroups.keys()).sort((a, b) =>
   }
 
   .tree-root {
-    color: var(--term-link);
+    color: var(--term-primary);
     margin-bottom: var(--space-sm);
     text-decoration: none;
     display: block;
   }
 
   .tree-root:hover {
-    opacity: 0.7;
+    opacity: var(--opacity-hover);
   }
 
   .date-section {
@@ -106,21 +106,21 @@ const sortedDates = Array.from(dateGroups.keys()).sort((a, b) =>
   }
 
   .file-list {
-    margin-left: 4ch;
+    margin-left: var(--min-width-small);
   }
 
   .empty-tree {
-    margin-left: 2ch;
-    color: var(--term-dim);
+    margin-left: var(--tree-indent);
+    color: var(--term-secondary);
   }
 
 
   /* Responsive */
-  @media (max-width: 767px) {
+  @media (max-width: var(--bp-mobile)) {
     .date-item,
     .file-item {
       flex-direction: column;
-      gap: 0.25rem;
+      gap: var(--space-xs);
     }
     
     .file-meta {

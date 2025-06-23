@@ -57,7 +57,7 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .meta {
-    color: var(--term-dim);
+    color: var(--term-secondary);
     font-size: var(--text-small);
     margin: var(--space-sm) 0 var(--space-md) 0;
     line-height: var(--line-height-normal);
@@ -68,7 +68,7 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content h1 {
-    color: var(--term-heading);
+    color: var(--term-primary);
     font-size: var(--text-normal);
     font-weight: var(--text-weight-bold);
     margin: 0;
@@ -85,7 +85,7 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content :global(.title-nav h1) {
-    color: var(--term-heading);
+    color: var(--term-primary);
     font-size: var(--text-normal);
     font-weight: var(--text-weight-bold);
     margin: 0;
@@ -95,34 +95,34 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content :global(.nav-arrow) {
-    color: var(--term-link);
+    color: var(--term-primary);
     text-decoration: none;
     font-size: var(--text-normal);
-    line-height: 1;
-    transition: var(--transition-color);
+    line-height: var(--line-height-tight);
+    transition: opacity var(--duration-fast) ease;
     user-select: none;
     display: block;
     padding: var(--space-xs);
   }
 
   .file-content :global(.nav-arrow.disabled) {
-    color: var(--term-dim);
+    color: var(--term-secondary);
     cursor: default;
     pointer-events: none;
   }
 
   .file-content :global(.nav-arrow:hover) {
-    opacity: 0.7;
+    opacity: var(--opacity-hover);
   }
 
   .file-content {
-    color: var(--term-body);
+    color: var(--term-secondary);
     line-height: var(--line-height-normal);
   }
 
   /* Content styling for markdown - CLI heading structure */
   .file-content :global(h2) {
-    color: var(--term-heading);
+    color: var(--term-primary);
     margin-top: var(--space-md);
     margin-bottom: var(--space-sm);
     font-weight: var(--text-weight-bold);
@@ -130,12 +130,12 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
 
   .file-content :global(h2::before) {
     content: "## ";
-    color: var(--term-dim);
-    margin-right: 0.5ch;
+    color: var(--term-secondary);
+    margin-right: calc(var(--char-offset) * var(--char-multiplier));
   }
 
   .file-content :global(h3) {
-    color: var(--term-heading);
+    color: var(--term-primary);
     margin-top: var(--space-sm);
     margin-bottom: var(--space-xs);
     font-weight: var(--text-weight-bold);
@@ -143,8 +143,8 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
 
   .file-content :global(h3::before) {
     content: "### ";
-    color: var(--term-dim);
-    margin-right: 0.5ch;
+    color: var(--term-secondary);
+    margin-right: calc(var(--char-offset) * var(--char-multiplier));
   }
 
   .file-content :global(p) {

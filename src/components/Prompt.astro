@@ -23,7 +23,7 @@ const { command, clickable = false, href } = Astro.props;
 
   .prompt {
     color: var(--term-green);
-    margin-right: 0.25ch;
+    margin-right: calc(var(--char-offset) * var(--char-multiplier));
   }
 
   .command {
@@ -37,6 +37,6 @@ const { command, clickable = false, href } = Astro.props;
   }
 
   .command.clickable-command:hover {
-    opacity: 0.7;
+    opacity: var(--opacity-hover);
   }
 </style>

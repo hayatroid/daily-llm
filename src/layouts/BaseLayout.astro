@@ -49,25 +49,25 @@ const { title, description = "Daily conversations with AI" } = Astro.props;
       
       header h1 {
         margin: 0;
-        font-size: 1.5rem;
+        font-size: var(--text-lg);
         font-weight: var(--text-weight-normal);
-        text-align: center;
+        text-align: left;
       }
       
       header .comment {
-        margin-top: 0.25rem;
-        color: var(--term-dim);
+        margin-top: var(--space-xs);
+        color: var(--term-secondary);
       }
       
       footer {
         margin-top: var(--space-section);
-        color: var(--term-dim);
+        color: var(--term-secondary);
         font-size: var(--text-small);
         text-align: center;
       }
       
       footer a {
-        color: var(--term-link);
+        color: var(--term-primary);
       }
     </style>
   </body>
