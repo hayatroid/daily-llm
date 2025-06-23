@@ -68,7 +68,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content h1 {
-    color: var(--term-primary);
     font-size: var(--text-normal);
     font-weight: var(--text-weight-bold);
     margin: 0;
@@ -85,7 +84,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content :global(.title-nav h1) {
-    color: var(--term-primary);
     font-size: var(--text-normal);
     font-weight: var(--text-weight-bold);
     margin: 0;
@@ -122,7 +120,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
 
   /* Content styling for markdown - CLI heading structure */
   .file-content :global(h2) {
-    color: var(--term-primary);
     margin-top: var(--space-md);
     margin-bottom: var(--space-sm);
     font-weight: var(--text-weight-bold);
@@ -135,7 +132,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content :global(h3) {
-    color: var(--term-primary);
     margin-top: var(--space-sm);
     margin-bottom: var(--space-xs);
     font-weight: var(--text-weight-bold);
@@ -161,4 +157,80 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   .file-content :global(li) {
     margin-bottom: var(--space-xs);
   }
+
+  /* Anchor-wrapped headings - preserve block display */
+  .file-content :global(a) {
+    display: block;
+    text-decoration: none;
+  }
+  
+  .file-content :global(a h1),
+  .file-content :global(a h2),
+  .file-content :global(a h3) {
+    margin: inherit;
+    color: inherit;
+  }
 </style>
+
+<script>
+  import { processHeadingSlugs } from '../utils/slugGenerator.js';
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get all headings in the file content
+    const headings = document.querySelectorAll('.file-content h1, .file-content h2, .file-content h3');
+    
+    if (headings.length === 0) return;
+    
+    // Generate unique slugs for all headings
+    const slugMap = processHeadingSlugs(headings);
+    
+    // Apply anchor functionality to each heading
+    headings.forEach(heading => {
+      const slug = slugMap.get(heading);
+      
+      // Generate absolute URL for anchor
+      const protocol = window.location.protocol;
+      const host = window.location.host;
+      const pathname = window.location.pathname;
+      const cleanPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+      const absoluteUrl = `${protocol}//${host}${cleanPath}#${slug}`;
+      
+      // Wrap entire heading with anchor tag (including ::before decorations)
+      const link = document.createElement('a');
+      link.href = absoluteUrl;
+      link.id = slug;
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.history.pushState(null, null, absoluteUrl);
+        link.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+      
+      // Move heading inside the link
+      const parent = heading.parentNode;
+      parent.insertBefore(link, heading);
+      link.appendChild(heading);
+      
+      // Remove ID from heading (now on link)
+      heading.removeAttribute('id');
+    });
+    
+    // Handle direct anchor links on page load
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1);
+      const targetHeading = document.getElementById(targetId);
+      
+      if (targetHeading) {
+        setTimeout(() => {
+          targetHeading.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100);
+      }
+    }
+  });
+</script>
