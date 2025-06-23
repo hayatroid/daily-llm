@@ -2,6 +2,7 @@
 import 'reset-css';
 import '../styles/terminal.css';
 import Prompt from '../components/Prompt.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 export interface Props {
   title: string;
@@ -26,10 +27,15 @@ const { title, description = "Daily conversations with AI" } = Astro.props;
   <body>
     <div class="container">
       <header>
-        <h1>
-          <Prompt command="daily-llm" clickable={true} href="/" />
-        </h1>
-        <p class="comment"># Daily conversations with AI</p>
+        <div class="header-content">
+          <div class="header-main">
+            <h1>
+              <Prompt command="daily-llm" clickable={true} href="/" />
+            </h1>
+            <p class="comment"># Daily conversations with AI</p>
+          </div>
+          <ThemeToggle />
+        </div>
       </header>
       
       <main>
@@ -41,34 +47,60 @@ const { title, description = "Daily conversations with AI" } = Astro.props;
       </footer>
     </div>
     
+    <script is:inline>
+      // Theme initialization - runs immediately to prevent FOUC
+      (function() {
+        const getTheme = () => {
+          // Check localStorage first
+          const stored = localStorage.getItem('theme');
+          if (stored) return stored;
+          
+          // Fall back to system preference
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            return 'light';
+          }
+          
+          return 'dark';
+        };
+        
+        const theme = getTheme();
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     
     <style>
       header {
         margin-bottom: var(--space-xl);
       }
       
-      header h1 {
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-md);
+      }
+      
+      .header-main {
+        flex: 1;
+      }
+      
+      .header-main h1 {
         margin: 0;
         font-size: var(--text-lg);
         font-weight: var(--text-weight-normal);
         text-align: left;
       }
       
-      header .comment {
+      .header-main .comment {
         margin-top: var(--space-xs);
-        color: var(--term-secondary);
       }
       
       footer {
         margin-top: var(--space-section);
-        color: var(--term-secondary);
         font-size: var(--text-small);
         text-align: center;
       }
       
-      footer a {
-        color: var(--term-primary);
-      }
     </style>
   </body>
 </html>

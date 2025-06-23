@@ -22,21 +22,11 @@ const { command, clickable = false, href } = Astro.props;
   }
 
   .prompt {
-    color: var(--term-green);
     margin-right: var(--prompt-spacing);
   }
 
   .command {
-    color: var(--term-green);
     font-family: var(--font-mono);
   }
 
-  .command.clickable-command {
-    text-decoration: none;
-    transition: var(--transition-color);
-  }
-
-  .command.clickable-command:hover {
-    opacity: var(--opacity-hover);
-  }
 </style>

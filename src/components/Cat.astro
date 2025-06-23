@@ -57,7 +57,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .meta {
-    color: var(--term-secondary);
     font-size: var(--text-small);
     margin: var(--space-sm) 0 var(--space-md) 0;
     line-height: var(--line-height-normal);
@@ -93,8 +92,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content :global(.nav-arrow) {
-    color: var(--term-primary);
-    text-decoration: none;
     font-size: var(--text-normal);
     line-height: var(--line-height-tight);
     transition: opacity var(--duration-fast) ease;
@@ -104,17 +101,12 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   }
 
   .file-content :global(.nav-arrow.disabled) {
-    color: var(--term-secondary);
     cursor: default;
     pointer-events: none;
   }
 
-  .file-content :global(.nav-arrow:hover) {
-    opacity: var(--opacity-hover);
-  }
 
   .file-content {
-    color: var(--term-secondary);
     line-height: var(--line-height-normal);
   }
 
@@ -127,8 +119,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
 
   .file-content :global(h2::before) {
     content: "## ";
-    color: var(--term-secondary);
-    margin-right: calc(var(--char-offset) * var(--char-multiplier));
   }
 
   .file-content :global(h3) {
@@ -139,8 +129,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
 
   .file-content :global(h3::before) {
     content: "### ";
-    color: var(--term-secondary);
-    margin-right: calc(var(--char-offset) * var(--char-multiplier));
   }
 
   .file-content :global(p) {

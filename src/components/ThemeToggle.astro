@@ -1,0 +1,102 @@
+---
+---
+
+<div class="theme-toggle-container">
+  <button id="theme-toggle" type="button" aria-label="Toggle theme">
+  </button>
+</div>
+
+<style>
+  .theme-toggle-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  #theme-toggle {
+    position: relative;
+    background: var(--term-bg);
+    border: 2px solid var(--term-text);
+    border-radius: 50px;
+    width: var(--toggle-width);
+    height: var(--toggle-height);
+    cursor: pointer;
+    font-size: var(--text-small);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity var(--duration-fast) ease-in-out;
+    overflow: hidden;
+  }
+
+  #theme-toggle::before {
+    content: '';
+    position: absolute;
+    width: var(--toggle-slider-size);
+    height: var(--toggle-slider-size);
+    background: var(--term-link);
+    border-radius: 50%;
+    left: var(--toggle-padding);
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform var(--duration-fast) ease-in-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  :global([data-theme='light']) #theme-toggle::before {
+    transform: translateX(var(--toggle-travel)) translateY(-50%);
+  }
+
+
+
+  /* Mobile responsive */
+  @media (max-width: var(--bp-mobile)) {
+    #theme-toggle {
+      width: calc(var(--toggle-width) * 0.8);
+      height: calc(var(--toggle-height) * 0.8);
+    }
+
+    #theme-toggle::before {
+      width: calc(var(--toggle-slider-size) * 0.8);
+      height: calc(var(--toggle-slider-size) * 0.8);
+      left: calc(var(--toggle-padding) * 0.8);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    :global([data-theme='light']) #theme-toggle::before {
+      transform: translateX(calc(var(--toggle-travel) * 0.8)) translateY(-50%);
+    }
+
+  }
+</style>
+
+<script is:inline>
+  // Theme toggle functionality
+  function initThemeToggle() {
+    const toggle = document.getElementById('theme-toggle');
+    
+    if (toggle && !toggle.hasAttribute('data-initialized')) {
+      toggle.setAttribute('data-initialized', 'true');
+      
+      toggle.addEventListener('click', function() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+    }
+  }
+  
+  // Initialize immediately
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
+  
+  // Also initialize on Astro page loads
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>
