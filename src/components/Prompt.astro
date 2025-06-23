@@ -23,7 +23,7 @@ const { command, clickable = false, href } = Astro.props;
 
   .prompt {
     color: var(--term-green);
-    margin-right: calc(var(--char-offset) * var(--char-multiplier));
+    margin-right: var(--prompt-spacing);
   }
 
   .command {

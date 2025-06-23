@@ -1,5 +1,4 @@
 ---
-import { processConversation } from '../utils/contentProcessor.js';
 import { extractSlugFromFile, createConversationUrl } from '../utils/slugUtils.js';
 
 export interface Props {
@@ -10,13 +9,11 @@ export interface Props {
 const { conversations, date } = Astro.props;
 
 const processedConversations = conversations.map((conv) => {
-  const { frontmatter, rawContent, file } = conv;
-  const processed = processConversation(rawContent());
+  const { frontmatter, file } = conv;
   const slug = extractSlugFromFile(file);
   
   return {
     frontmatter,
-    processed,
     slug,
     url: createConversationUrl(date, slug)
   };
@@ -33,8 +30,7 @@ const processedConversations = conversations.map((conv) => {
     <div class="tree-level-1">
       <a href={conv.url} class="tree-link">{conv.frontmatter.title}</a>
       <span class="tree-meta">
-        {conv.frontmatter.time} · {conv.processed.exchangeCount} exchanges
-        {conv.processed.hasCode && ' · code'}
+        {conv.frontmatter.time}
       </span>
     </div>
   ))}
