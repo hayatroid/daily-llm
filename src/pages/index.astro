@@ -3,10 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Pwd from '../components/Pwd.astro';
 import Prompt from '../components/Prompt.astro';
 
-// Get site URL from Astro config
-const siteUrl = new URL(Astro.site || 'https://localhost:4321');
-const siteDomain = siteUrl.hostname;
-
 // Get all content files
 const allContent = await Astro.glob('../../content/**/*.md');
 
@@ -46,7 +42,7 @@ const sortedDates = Array.from(dateGroups.keys()).sort((a, b) =>
       
       <div class="tree-output">
         <div class="tree-level-0">
-          <a href="/" class="tree-link">{siteDomain}/</a>
+          <a href="/" class="tree-link">Home/</a>
         </div>
         
         {sortedDates.map((date) => {

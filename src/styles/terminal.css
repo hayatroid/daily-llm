@@ -162,8 +162,7 @@ ul,
 ol,
 li,
 p,
-code,
-.nav-arrow.disabled {
+code {
   color: var(--term-text);
 }
 
