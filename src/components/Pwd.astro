@@ -4,9 +4,10 @@ import { generateBreadcrumbs } from '../utils/navigationData.js';
 
 export interface Props {
   currentDate?: string;
-  currentPage?: 'home' | 'date' | 'conversation';
+  currentPage?: 'home' | 'date' | 'conversation' | 'tag' | 'tags-index';
   conversationSlug?: string;
   conversationTitle?: string;
+  tagName?: string;
   allContent: any[];
 }
 
@@ -15,11 +16,26 @@ const {
   currentPage = 'home', 
   conversationSlug, 
   conversationTitle,
+  tagName,
   allContent = []
 } = Astro.props;
 
 // Generate breadcrumbs
-const breadcrumbs = generateBreadcrumbs(currentDate, conversationSlug, conversationTitle);
+let breadcrumbs;
+if (currentPage === 'tags-index') {
+  breadcrumbs = [
+    { label: 'Home', href: '/', current: false },
+    { label: 'tags', href: '/tags/', current: true }
+  ];
+} else if (currentPage === 'tag') {
+  breadcrumbs = [
+    { label: 'Home', href: '/', current: false },
+    { label: 'tags', href: '/tags/', current: false },
+    { label: tagName, href: `/tags/${encodeURIComponent(tagName)}/`, current: true }
+  ];
+} else {
+  breadcrumbs = generateBreadcrumbs(currentDate, conversationSlug, conversationTitle);
+}
 ---
 
 <nav class="cli-nav">

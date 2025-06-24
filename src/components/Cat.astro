@@ -28,18 +28,23 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
     <div class="meta">
       {metaFields.length > 0 && (
         <p class="meta-line">
-          {metaFields
-            .map(([key, value]) => {
-              let displayValue = value;
-              
-              if (key === 'tags' && Array.isArray(value)) {
-                displayValue = value.map((tag: string) => `#${tag}`).join(' ');
-              }
-              
-              return displayValue;
-            })
-            .filter(value => value && value !== '')
-            .join(' | ')}
+          {metaFields.map(([key, value], index) => (
+            <span key={index}>
+              {key === 'tags' && Array.isArray(value) ? (
+                <span class="tags-container">
+                  {value.map((tag: string, tagIndex) => (
+                    <span key={tagIndex}>
+                      <a href={`/tags/${encodeURIComponent(tag)}`} class="tag-link">#{tag}</a>
+                      {tagIndex < value.length - 1 && ' '}
+                    </span>
+                  ))}
+                </span>
+              ) : (
+                value
+              )}
+              {index < metaFields.length - 1 && ' | '}
+            </span>
+          ))}
         </p>
       )}
     </div>
@@ -61,6 +66,7 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
   .meta-line {
     margin: 0;
   }
+
 
   .file-content :global(h1) {
     font-size: var(--text-normal);
