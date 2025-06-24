@@ -68,7 +68,7 @@ Convert to checklists during implementation:
 ---
 title: '[Topic]'
 tags: ['tag1', 'tag2']
-outcome: '[Concrete result achieved]'
+description: '[Brief description of the conversation topic and approach]'
 ---
 ```
 
@@ -78,17 +78,14 @@ outcome: '[Concrete result achieved]'
 ---
 title: '[Summary title]'
 tags: ['tag1', 'tag2']
-outcomes:
-  - '[Key result 1]'
-  - '[Key result 2]'
+description: '[Overview of the day's discussions and main topics covered]'
 ---
 ```
 
-**Frontmatter Strategy Change (2024-12-22):**
+**Frontmatter Strategy:**
 
-- ❌ **Removed:** `date`, `time`, `conversations` fields (redundant with file path/structure)
-- ✅ **Added:** `outcome`/`outcomes` fields showing concrete results achieved
-- 📍 **Rationale:** Focus on meaningful information (what was accomplished) rather than metadata (when/how many)
+- ✅ **Core fields:** `title`, `tags`, `description` for all content
+- 📍 **Rationale:** Provides context for discovery and understanding while keeping structure simple
 
 **日英混在文の書式ルール:**
 

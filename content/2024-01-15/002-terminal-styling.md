@@ -1,7 +1,7 @@
 ---
 title: 'Creating a Terminal-Inspired Design'
 tags: ['css', 'design', 'terminal', 'monospace']
-outcome: 'ターミナル風テーマ作成'
+description: 'ブログのデザインをターミナル風にするため、CSS カスタムプロパティを使ったテーマ作成。シンプルなカーソルアニメーションも追加。'
 ---
 
 ## User

@@ -1,7 +1,7 @@
 ---
 title: 'React 最適化とパフォーマンス改善'
 tags: ['react', 'performance', 'optimization']
-outcome: 'レンダリング65%高速化、メモリ38%削減'
+description: 'React アプリケーションのパフォーマンス問題を解決。React.memo、useMemo、仮想化技術を活用してレンダリング時間を 65% 高速化し、メモリ使用量を 38% 削減した実装例を詳解。'
 ---
 
 ## 問題の特定

@@ -1,7 +1,7 @@
 ---
 title: 'Database Indexing Best Practices'
 tags: ['database', 'sql', 'performance', 'indexing']
-outcome: 'インデックス戦略とトレードオフ理解'
+description: 'データベースクエリのパフォーマンス改善のため、インデックスの効果的な使い方とそのトレードオフを学習。クエリ最適化の実践的アプローチを理解。'
 ---
 
 ## User

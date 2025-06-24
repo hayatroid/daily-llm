@@ -1,7 +1,7 @@
 ---
 title: 'Docker multi-stage build によるイメージ最適化'
 tags: ['docker', 'devops', 'infrastructure']
-outcome: 'イメージサイズ85%削減（1.2GB→180MB）'
+description: 'Docker multi-stage build を活用したイメージ最適化の実践。セキュリティを保ちながらイメージサイズを 1.2GB から 180MB まで 85% 削減し、デプロイ効率を大幅に改善。'
 ---
 
 ## 背景

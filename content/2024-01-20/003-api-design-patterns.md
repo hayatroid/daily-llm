@@ -1,7 +1,7 @@
 ---
 title: 'RESTful API 設計のベストプラクティス'
 tags: ['api', 'rest', 'design', 'backend']
-outcome: 'セキュリティベストプラクティス策定'
+description: 'RESTful API 設計のベストプラクティスを深掘り。エラーハンドリングの統一、JWT 認証、レート制限、API ドキュメント化など、セキュリティを重視した実装パターンを学習。'
 ---
 
 ## API 設計の基本原則

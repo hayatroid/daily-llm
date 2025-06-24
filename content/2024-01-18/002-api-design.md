@@ -1,7 +1,7 @@
 ---
 title: 'RESTful API Design Principles'
 tags: ['api', 'rest', 'backend', 'design']
-outcome: 'HTTPメソッドとJSON構造規約策定'
+description: 'RESTful API 設計の基本原則を学習。適切な HTTP メソッドの使用、JSON ペイロードの構造化、エラーハンドリングの一貫性について理解。'
 ---
 
 ## User

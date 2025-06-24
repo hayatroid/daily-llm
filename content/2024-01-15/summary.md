@@ -1,10 +1,7 @@
 ---
 title: '学習サマリー'
 tags: ['astro', 'css', 'deployment', 'github']
-outcomes:
-  - 'Astro: 最小構成でセットアップ完了'
-  - 'CSS: ターミナル風テーマ作成'
-  - 'GitHub: デプロイメント自動化構築'
+description: 'ブログプロジェクトの技術基盤を構築した一日。Astro のセットアップから始まり、ターミナル風デザインの実装、GitHub Pages への自動デプロイまでを網羅。'
 ---
 
 Today was all about getting the technical foundation right for the blog. Started with **Astro setup** and learned about the minimal configuration needed for static site generation. The key insight was using `getStaticPaths()` for dynamic date-based routing.

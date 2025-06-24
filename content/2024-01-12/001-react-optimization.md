@@ -1,7 +1,7 @@
 ---
 title: 'React Performance Optimization Techniques'
 tags: ['react', 'performance', 'optimization', 'hooks']
-outcome: 'memo, useMemo, useCallback最適化手法習得'
+description: 'React アプリケーションのパフォーマンス問題を解決するため、React.memo、useMemo、useCallback を使った最適化手法を学習。State 管理のベストプラクティスも含む。'
 ---
 
 ## User

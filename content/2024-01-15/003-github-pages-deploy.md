@@ -1,7 +1,7 @@
 ---
 title: 'Deploying Astro to GitHub Pages'
 tags: ['github-pages', 'deployment', 'ci-cd', 'astro']
-outcome: 'デプロイメント自動化構築'
+description: 'Astro プロジェクトを GitHub Pages にデプロイするため、GitHub Actions ワークフローを設定。自動ビルドとデプロイの完全な構成を実装。'
 ---
 
 ## User

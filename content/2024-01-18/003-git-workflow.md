@@ -1,7 +1,7 @@
 ---
 title: 'Git Workflow and Branching Strategies'
 tags: ['git', 'version-control', 'workflow', 'collaboration']
-outcome: 'チームコラボワークフロー確立'
+description: 'チーム成長に伴う Git ワークフローの整理。Git Flow と GitHub Flow の比較、クリーンなコミット履歴の維持、マージコンフリクトの解決方法を学習。'
 ---
 
 ## User

@@ -1,7 +1,7 @@
 ---
 title: 'Setting up Astro for Static Site Generation'
 tags: ['astro', 'web-development', 'static-sites']
-outcome: '最小構成でセットアップ完了'
+description: '日々の会話を記録するブログのため、Astro を使った静的サイト生成の最小セットアップを実施。日付ベースの動的ルーティングの方法を学習。'
 ---
 
 ## User

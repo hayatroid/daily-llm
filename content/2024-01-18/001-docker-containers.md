@@ -1,7 +1,7 @@
 ---
 title: 'Docker Container Best Practices'
 tags: ['docker', 'containers', 'devops', 'deployment']
-outcome: 'セキュリティと最適化ベストプラクティス策定'
+description: 'Docker コンテナ作成のベストプラクティスを学習。セキュリティを重視し、非 root ユーザーの使用、脆弱性スキャン、マルチステージビルドなどをカバー。'
 ---
 
 ## User

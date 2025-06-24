@@ -13,8 +13,8 @@ const {
   Content 
 } = Astro.props;
 
-// Skip title field as it's rendered as h1
-const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title');
+// Skip title and description fields (title is rendered as h1, description is internal metadata)
+const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title' && key !== 'description');
 ---
 
 <div class="cat-file-section">
@@ -34,10 +34,6 @@ const metaFields = Object.entries(frontmatter).filter(([key]) => key !== 'title'
               
               if (key === 'tags' && Array.isArray(value)) {
                 displayValue = value.map((tag: string) => `#${tag}`).join(' ');
-              } else if (key === 'outcome' && typeof value === 'string') {
-                displayValue = value;
-              } else if (key === 'outcomes' && Array.isArray(value)) {
-                displayValue = value.join(' | ');
               }
               
               return displayValue;
