@@ -1,4 +1,5 @@
-// Minimal file system interface for component refactoring
+// File system abstractions for path-based component architecture
+import type { FrontmatterData } from './types';
 
 export interface FileSystem {
   read(path: string): Content | null;
@@ -11,17 +12,22 @@ export interface TreeNode {
   path: string;
   type: 'file' | 'directory';
   children?: TreeNode[];
-  metadata?: any;
+  metadata?: FrontmatterData;
 }
 
 export interface Content {
-  metadata: {
-    title: string;
-    tags: string[];
-    description: string;
-    [key: string]: any;
-  };
+  metadata: FrontmatterData;
   Component?: any; // Astro component
+}
+
+// File type checking utilities
+export function isConversationFile(filePath: string): boolean {
+  return filePath.endsWith('.md') && !filePath.endsWith('index.md');
+}
+
+export function extractDateFromPath(filePath: string): string {
+  const pathParts = filePath.split('/');
+  return pathParts[pathParts.length - 2] || '';
 }
 
 export class VirtualFS implements FileSystem {

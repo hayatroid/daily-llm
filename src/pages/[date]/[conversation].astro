@@ -3,8 +3,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Cat from '../../components/Cat.astro';
 import Prompt from '../../components/Prompt.astro';
-import { processConversation } from '../../utils/contentProcessor.js';
-import { createDateUrl, extractSlugFromFile } from '../../utils/slugUtils.js';
+import { processConversation } from '../../lib/content';
+// Inline utility functions (replaced slugUtils.js)
+const extractSlugFromFile = (filePath: string) => filePath.split('/').pop()?.replace('.md', '') || '';
+const createDateUrl = (date: string) => `/${date}/`;
 
 export async function getStaticPaths() {
   // Get all conversation files (exclude summaries)

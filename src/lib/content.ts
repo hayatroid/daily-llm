@@ -1,4 +1,9 @@
-export function processConversation(markdown) {
+/**
+ * Content processing utilities for markdown conversations
+ */
+import type { FrontmatterData, ProcessedContent } from './types';
+
+export function processConversation(markdown: string): ProcessedContent {
   const frontmatter = extractFrontmatter(markdown);
   const content = parseMarkdown(markdown);
 
@@ -14,11 +19,11 @@ export function processConversation(markdown) {
   };
 }
 
-export function extractFrontmatter(markdown) {
+export function extractFrontmatter(markdown: string): FrontmatterData {
   const frontmatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
-  if (!frontmatterMatch) return {};
+  if (!frontmatterMatch) return { title: '', tags: [], description: '' };
 
-  const frontmatter = {};
+  const frontmatter: Record<string, any> = {};
   const lines = frontmatterMatch[1].split('\n');
 
   lines.forEach((line) => {
@@ -42,16 +47,25 @@ export function extractFrontmatter(markdown) {
     }
   });
 
-  return frontmatter;
+  // Ensure required fields have defaults
+  return {
+    title: frontmatter.title || '',
+    tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+    description: frontmatter.description || '',
+    ...frontmatter,
+  } as FrontmatterData;
 }
 
-export function parseMarkdown(markdown) {
+export function parseMarkdown(markdown: string): string {
   // Remove frontmatter
   const content = markdown.replace(/^---\n[\s\S]*?\n---\n/, '');
   return content.trim();
 }
 
-export function extractPreview(content, maxLength) {
+export function extractPreview(
+  content: string,
+  maxLength: number = 150
+): string {
   // Try different patterns for user content
   let userText = '';
 
@@ -103,7 +117,7 @@ export function extractPreview(content, maxLength) {
   return cleanContent.substring(0, maxLength).trim() + '...';
 }
 
-export function countExchanges(content) {
+export function countExchanges(content: string): number {
   // Count both "## User" and "User:" patterns
   const userMessages1 = (content.match(/## User/g) || []).length;
   const userMessages2 = (content.match(/^User:/gm) || []).length;
@@ -116,6 +130,6 @@ export function countExchanges(content) {
   return totalUsers + totalAssistants;
 }
 
-export function detectCodeBlocks(content) {
+export function detectCodeBlocks(content: string): boolean {
   return /```[\s\S]*?```/.test(content);
 }

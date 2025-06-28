@@ -1,14 +1,13 @@
 /**
- * Generate URL-safe slug from heading text
+ * URL slug generation utilities for heading anchors
  * Handles Japanese/English text, removes special characters, ensures uniqueness
  */
+import type { SlugMap } from './types';
 
 /**
  * Convert text to URL-safe slug
- * @param {string} text - Raw heading text
- * @returns {string} URL-safe slug
  */
-export function generateSlug(text) {
+export function generateSlug(text: string): string {
   if (!text || typeof text !== 'string') {
     return 'heading';
   }
@@ -34,11 +33,11 @@ export function generateSlug(text) {
 
 /**
  * Generate unique slug by appending number if duplicate exists
- * @param {string} baseSlug - Base slug to check
- * @param {Set<string>} existingSlugs - Set of already used slugs
- * @returns {string} Unique slug
  */
-export function generateUniqueSlug(baseSlug, existingSlugs) {
+export function generateUniqueSlug(
+  baseSlug: string,
+  existingSlugs: Set<string>
+): string {
   let slug = baseSlug;
   let counter = 1;
 
@@ -52,15 +51,13 @@ export function generateUniqueSlug(baseSlug, existingSlugs) {
 
 /**
  * Process all headings in content and generate unique slugs
- * @param {NodeList} headings - List of heading elements
- * @returns {Map<Element, string>} Map of heading element to unique slug
  */
-export function processHeadingSlugs(headings) {
-  const slugMap = new Map();
-  const usedSlugs = new Set();
+export function processHeadingSlugs(headings: NodeListOf<Element>): SlugMap {
+  const slugMap = new Map<Element, string>();
+  const usedSlugs = new Set<string>();
 
   headings.forEach((heading) => {
-    const baseSlug = generateSlug(heading.textContent);
+    const baseSlug = generateSlug(heading.textContent || '');
     const uniqueSlug = generateUniqueSlug(baseSlug, usedSlugs);
 
     slugMap.set(heading, uniqueSlug);
