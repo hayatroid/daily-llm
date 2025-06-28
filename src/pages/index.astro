@@ -2,31 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Pwd from '../components/Pwd.astro';
 import Prompt from '../components/Prompt.astro';
+import Tree from '../components/Tree.astro';
 
-// Get all content files
+// Get all content files for Pwd component
 const allContent = await Astro.glob('../../content/**/*.md');
-
-// Group conversations by date (exclude summaries)
-const dateGroups = new Map();
-allContent
-  .filter(file => !file.file.endsWith('summary.md'))
-  .forEach(file => {
-    const pathParts = file.file.split('/');
-    const dateFolder = pathParts[pathParts.length - 2];
-    
-    if (!dateGroups.has(dateFolder)) {
-      dateGroups.set(dateFolder, []);
-    }
-    dateGroups.get(dateFolder).push({
-      frontmatter: file.frontmatter,
-      slug: pathParts[pathParts.length - 1].replace('.md', '')
-    });
-  });
-
-// Sort dates (newest first)
-const sortedDates = Array.from(dateGroups.keys()).sort((a, b) => 
-  new Date(b).getTime() - new Date(a).getTime()
-);
 ---
 
 <BaseLayout title="Daily LLM Conversations">
@@ -41,39 +20,7 @@ const sortedDates = Array.from(dateGroups.keys()).sort((a, b) =>
       </div>
       
       <div class="tree-output">
-        <div class="tree-level-0">
-          <a href="/" class="tree-link">Home/</a>
-        </div>
-        
-        {sortedDates.map((date) => {
-          const conversations = dateGroups.get(date);
-          
-          return (
-            <>
-              <div class="tree-level-1">
-                <a href={`/${date}/`} class="tree-link">{date}/</a>
-                <span class="tree-meta">{conversations.length} conversations</span>
-              </div>
-              
-              {conversations.map((conv) => (
-                <div class="tree-level-2">
-                  <a href={`/${date}/${conv.slug}`} class="tree-link">
-                    {conv.frontmatter.title}
-                  </a>
-                  {conv.frontmatter.time && (
-                    <span class="tree-meta">{conv.frontmatter.time}</span>
-                  )}
-                </div>
-              ))}
-            </>
-          );
-        })}
-        
-        {sortedDates.length === 0 && (
-          <div class="tree-level-1">
-            <span class="tree-meta">(no conversations yet)</span>
-          </div>
-        )}
+        <Tree path="/" />
       </div>
     </div>
 
@@ -85,41 +32,3 @@ const sortedDates = Array.from(dateGroups.keys()).sort((a, b) =>
   </div>
 </BaseLayout>
 
-<style>
-
-  .tree-output {
-    line-height: var(--line-height-normal);
-  }
-
-  .tree-root {
-    margin-bottom: var(--space-sm);
-    display: block;
-  }
-
-
-  .date-section {
-    margin-bottom: var(--space-md);
-  }
-
-  .file-list {
-    margin-left: var(--min-width-small);
-  }
-
-  .empty-tree {
-    margin-left: var(--tree-indent);
-  }
-
-
-  /* Responsive */
-  @media (max-width: var(--bp-mobile)) {
-    .date-item,
-    .file-item {
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-    
-    .file-meta {
-      margin-left: 0;
-    }
-  }
-</style>

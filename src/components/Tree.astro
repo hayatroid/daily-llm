@@ -1,38 +1,99 @@
 ---
-import { extractSlugFromFile, createConversationUrl } from '../utils/slugUtils.js';
+import { VirtualFS, type TreeNode } from '../lib/filesystem';
 
 export interface Props {
-  conversations: any[];
-  date: string;
+  path: string;
 }
 
-const { conversations, date } = Astro.props;
+const { path } = Astro.props;
 
-const processedConversations = conversations.map((conv) => {
-  const { frontmatter, file } = conv;
-  const slug = extractSlugFromFile(file);
+// Get all content using Astro.glob (temporary - will be passed from page level later)
+const allContent = await Astro.glob('../../content/**/*.md');
+
+// Create filesystem instance
+const fs = new VirtualFS(allContent);
+
+// Get tree structure
+const treeNodes = fs.tree(path);
+
+// Helper to create URLs matching existing routing structure
+function createUrl(node: TreeNode): string {
+  if (node.type === 'directory') {
+    // Directory URLs: /2024-01-15/
+    return `/${node.name}/`;
+  }
   
-  return {
-    frontmatter,
-    slug,
-    url: createConversationUrl(date, slug)
-  };
-});
+  if (node.name.endsWith('.md') && node.name !== 'index.md') {
+    // Conversation URLs: /2024-01-15/001-astro-setup (no trailing slash)
+    const conversationSlug = node.name.replace('.md', '');
+    const dirPath = node.path.substring(0, node.path.lastIndexOf('/'));
+    const date = dirPath.substring(1); // Remove leading /
+    return `/${date}/${conversationSlug}`;
+  }
+  
+  return node.path;
+}
+
+// Helper to get display name
+function getDisplayName(node: TreeNode): string {
+  if (node.type === 'directory') {
+    return node.name + '/';
+  }
+  
+  if (node.metadata?.title) {
+    return node.metadata.title;
+  }
+  
+  return node.name;
+}
+
+// Recursive function to render tree nodes
+function renderTreeNode(node: TreeNode, level: number): string {
+  const url = createUrl(node);
+  const displayName = getDisplayName(node);
+  const isFile = node.type === 'file' && node.name !== 'index.md';
+  
+  let html = `<div class="tree-level-${level}">`;
+  
+  if (isFile) {
+    html += `<a href="${url}" class="tree-link">${displayName}</a>`;
+    if (node.metadata?.time) {
+      html += `<span class="tree-meta">${node.metadata.time}</span>`;
+    }
+  } else if (node.type === 'directory') {
+    html += `<a href="${url}" class="tree-link">${displayName}</a>`;
+    if (node.children) {
+      const fileCount = node.children.filter(child => child.type === 'file' && child.name !== 'index.md').length;
+      if (fileCount > 0) {
+        html += `<span class="tree-meta">${fileCount} conversations</span>`;
+      }
+    }
+  }
+  
+  html += '</div>';
+  
+  // Recursively render children
+  if (node.children && node.children.length > 0) {
+    for (const child of node.children) {
+      if (child.name !== 'index.md') { // Skip index files in tree display
+        html += renderTreeNode(child, level + 1);
+      }
+    }
+  }
+  
+  return html;
+}
+
+// Generate HTML for all tree nodes, starting with current directory
+let treeHtml = '';
+
+// Show current directory first as a link
+const currentDirName = path === '/' ? 'Home' : path.split('/').filter(Boolean).pop() || '.';
+const currentDirUrl = path === '/' ? '/' : path;
+treeHtml += `<div class="tree-level-0"><a href="${currentDirUrl}" class="tree-link">${currentDirName}/</a></div>`;
+
+// Then show entries, starting from level 1
+treeHtml += treeNodes.map(node => renderTreeNode(node, 1)).join('');
 ---
 
-<div class="tree-container">
-  <div class="tree-level-0">
-    <a href={`/${date}/`} class="tree-link">{date}/</a>
-    <span class="tree-meta">{processedConversations.length} conversations</span>
-  </div>
-
-  {processedConversations.map((conv) => (
-    <div class="tree-level-1">
-      <a href={conv.url} class="tree-link">{conv.frontmatter.title}</a>
-      <span class="tree-meta">
-        {conv.frontmatter.time}
-      </span>
-    </div>
-  ))}
-</div>
-
+<div class="tree-container" set:html={treeHtml}></div>

@@ -8,10 +8,10 @@ import { generateNavigationContext } from '../utils/navigationData.js';
 
 export async function getStaticPaths() {
   // Get all content directories
-  const summaries = await Astro.glob('../../content/**/summary.md');
+  const summaries = await Astro.glob('../../content/**/index.md');
   
   return summaries.map((summary) => {
-    // Extract date from file path: content/2024-01-20/summary.md -> 2024-01-20
+    // Extract date from file path: content/2024-01-20/index.md -> 2024-01-20
     const pathParts = summary.file.split('/');
     const date = pathParts[pathParts.length - 2];
     return {
@@ -27,12 +27,12 @@ const allContent = await Astro.glob('../../content/**/*.md');
 
 // Get the summary for this date
 const summary = allContent.find(file => 
-  file.file.includes(`/${date}/summary.md`)
+  file.file.includes(`/${date}/index.md`)
 );
 
 // Get all conversations for this date
 const conversations = allContent.filter(file => 
-  file.file.includes(`/${date}/`) && !file.file.endsWith('summary.md')
+  file.file.includes(`/${date}/`) && !file.file.endsWith('index.md')
 );
 
 // Sort conversations by filename
@@ -65,7 +65,7 @@ const pageTitle = `${date} - Daily LLM Conversations`;
       </div>
       
       <div class="file-listing">
-        <Tree conversations={sortedConversations} date={date} />
+        <Tree path={`/${date}`} />
       </div>
     </div>
 

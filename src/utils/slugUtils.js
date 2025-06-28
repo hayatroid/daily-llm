@@ -42,7 +42,7 @@ export function createDateUrl(date) {
  * @returns {boolean} True if it's a summary file
  */
 export function isSummaryFile(filePath) {
-  return filePath.endsWith('summary.md');
+  return filePath.endsWith('index.md');
 }
 
 /**

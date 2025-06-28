@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   // Get all conversation files (exclude summaries)
   const conversations = await Astro.glob('../../../content/**/*.md');
   const conversationFiles = conversations.filter(file => 
-    !file.file.endsWith('summary.md')
+    !file.file.endsWith('index.md')
   );
   
   return conversationFiles.map((conversation) => {
@@ -40,7 +40,7 @@ const allContent = await Astro.glob('../../../content/**/*.md');
 
 // Generate navigation context for conversation navigation (within same date)
 const sameDateConversations = allContent
-  .filter(file => file.file.includes(`/${date}/`) && !file.file.endsWith('summary.md'))
+  .filter(file => file.file.includes(`/${date}/`) && !file.file.endsWith('index.md'))
   .sort((a, b) => {
     const aNum = parseInt(a.file.split('/').pop()?.split('-')[0] || '0');
     const bNum = parseInt(b.file.split('/').pop()?.split('-')[0] || '0');

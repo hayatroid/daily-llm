@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Prompt from '../../components/Prompt.astro';
+import TagTree from '../../components/TagTree.astro';
 
 export async function getStaticPaths() {
   // Get all content files
@@ -10,7 +11,7 @@ export async function getStaticPaths() {
   // Extract all unique tags from frontmatter
   const allTags = new Set();
   allContent
-    .filter(file => !file.file.endsWith('summary.md')) // Only conversations have tags
+    .filter(file => !file.file.endsWith('index.md')) // Only conversations have tags
     .forEach(file => {
       if (file.frontmatter.tags && Array.isArray(file.frontmatter.tags)) {
         file.frontmatter.tags.forEach(tag => allTags.add(tag));
@@ -27,33 +28,7 @@ const { tag } = Astro.params;
 // Get all content files
 const allContent = await Astro.glob('../../../content/**/*.md');
 
-// Filter conversations that have this tag
-const taggedConversations = allContent.filter(file => 
-  !file.file.endsWith('summary.md') && 
-  file.frontmatter.tags && 
-  Array.isArray(file.frontmatter.tags) && 
-  file.frontmatter.tags.includes(tag)
-);
-
-// Group conversations by date (same logic as index.astro)
-const dateGroups = new Map();
-taggedConversations.forEach(file => {
-  const pathParts = file.file.split('/');
-  const dateFolder = pathParts[pathParts.length - 2];
-  
-  if (!dateGroups.has(dateFolder)) {
-    dateGroups.set(dateFolder, []);
-  }
-  dateGroups.get(dateFolder).push({
-    frontmatter: file.frontmatter,
-    slug: pathParts[pathParts.length - 1].replace('.md', '')
-  });
-});
-
-// Sort dates (newest first)
-const sortedDates = Array.from(dateGroups.keys()).sort((a, b) => 
-  new Date(b).getTime() - new Date(a).getTime()
-);
+// No additional processing needed - Tree component handles everything
 
 const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
 ---
@@ -74,40 +49,7 @@ const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
       </div>
       
       <div class="tree-output">
-        <div class="tree-level-0">
-          <a href={`/tags/${encodeURIComponent(tag)}/`} class="tree-link">#{tag}/</a>
-          <span class="tree-meta">{taggedConversations.length} conversations</span>
-        </div>
-        
-        {sortedDates.map((date) => {
-          const conversations = dateGroups.get(date);
-          
-          return (
-            <>
-              <div class="tree-level-1">
-                <a href={`/${date}/`} class="tree-link">{date}/</a>
-                <span class="tree-meta">{conversations.length} conversations</span>
-              </div>
-              
-              {conversations.map((conv) => (
-                <div class="tree-level-2">
-                  <a href={`/${date}/${conv.slug}`} class="tree-link">
-                    {conv.frontmatter.title}
-                  </a>
-                  {conv.frontmatter.time && (
-                    <span class="tree-meta">{conv.frontmatter.time}</span>
-                  )}
-                </div>
-              ))}
-            </>
-          );
-        })}
-        
-        {sortedDates.length === 0 && (
-          <div class="tree-level-1">
-            <span class="tree-meta">(no conversations found for this tag)</span>
-          </div>
-        )}
+        <TagTree mode="tag" tag={tag} />
       </div>
     </div>
 
@@ -119,21 +61,3 @@ const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
   </div>
 </BaseLayout>
 
-<style>
-  .tree-output {
-    line-height: var(--line-height-normal);
-  }
-
-  /* Responsive */
-  @media (max-width: var(--bp-mobile)) {
-    .tree-level-1,
-    .tree-level-2 {
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-    
-    .tree-meta {
-      margin-left: 0;
-    }
-  }
-</style>

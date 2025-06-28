@@ -1,0 +1,105 @@
+---
+export interface Props {
+  mode: 'index' | 'tag';
+  tag?: string;
+}
+
+const { mode, tag } = Astro.props;
+
+// Get all content files
+const allContent = await Astro.glob('../../content/**/*.md');
+
+let treeHtml = '';
+
+if (mode === 'index') {
+  // Extract all tags and count conversations for each
+  const tagCounts = new Map<string, number>();
+  
+  allContent
+    .filter(file => !file.file.endsWith('index.md'))
+    .forEach(file => {
+      if (file.frontmatter.tags && Array.isArray(file.frontmatter.tags)) {
+        file.frontmatter.tags.forEach((tag: string) => {
+          tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+        });
+      }
+    });
+
+  // Sort tags alphabetically
+  const sortedTags = Array.from(tagCounts.keys()).sort((a, b) => 
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
+
+  treeHtml = `<div class="tree-level-0"><a href="/tags/" class="tree-link">tags/</a></div>`;
+  
+  sortedTags.forEach(tagName => {
+    const count = tagCounts.get(tagName);
+    treeHtml += `<div class="tree-level-1">`;
+    treeHtml += `<a href="/tags/${encodeURIComponent(tagName)}/" class="tree-link">#${tagName}</a>`;
+    treeHtml += `<span class="tree-meta">${count} conversation${count !== 1 ? 's' : ''}</span>`;
+    treeHtml += `</div>`;
+  });
+
+  if (sortedTags.length === 0) {
+    treeHtml += `<div class="tree-level-1"><span class="tree-meta">(no tags found)</span></div>`;
+  }
+
+} else if (mode === 'tag' && tag) {
+  // Filter conversations that have this tag
+  const taggedConversations = allContent.filter(file => 
+    !file.file.endsWith('index.md') && 
+    file.frontmatter.tags && 
+    Array.isArray(file.frontmatter.tags) && 
+    file.frontmatter.tags.includes(tag)
+  );
+
+  // Group conversations by date
+  const dateGroups = new Map<string, any[]>();
+  taggedConversations.forEach(file => {
+    const pathParts = file.file.split('/');
+    const dateFolder = pathParts[pathParts.length - 2];
+    
+    if (!dateGroups.has(dateFolder)) {
+      dateGroups.set(dateFolder, []);
+    }
+    dateGroups.get(dateFolder)!.push({
+      frontmatter: file.frontmatter,
+      slug: pathParts[pathParts.length - 1].replace('.md', '')
+    });
+  });
+
+  // Sort dates (newest first)
+  const sortedDates = Array.from(dateGroups.keys()).sort((a, b) => 
+    new Date(b).getTime() - new Date(a).getTime()
+  );
+
+  treeHtml = `<div class="tree-level-0">`;
+  treeHtml += `<a href="/tags/${encodeURIComponent(tag)}/" class="tree-link">#${tag}/</a>`;
+  treeHtml += `<span class="tree-meta">${taggedConversations.length} conversations</span>`;
+  treeHtml += `</div>`;
+
+  sortedDates.forEach(date => {
+    const conversations = dateGroups.get(date)!;
+    
+    treeHtml += `<div class="tree-level-1">`;
+    treeHtml += `<a href="/${date}/" class="tree-link">${date}/</a>`;
+    treeHtml += `<span class="tree-meta">${conversations.length} conversations</span>`;
+    treeHtml += `</div>`;
+    
+    conversations.forEach(conv => {
+      treeHtml += `<div class="tree-level-2">`;
+      treeHtml += `<a href="/${date}/${conv.slug}" class="tree-link">${conv.frontmatter.title}</a>`;
+      if (conv.frontmatter.time) {
+        treeHtml += `<span class="tree-meta">${conv.frontmatter.time}</span>`;
+      }
+      treeHtml += `</div>`;
+    });
+  });
+
+  if (sortedDates.length === 0) {
+    treeHtml += `<div class="tree-level-1"><span class="tree-meta">(no conversations found for this tag)</span></div>`;
+  }
+}
+---
+
+<div class="tree-container" set:html={treeHtml}></div>
