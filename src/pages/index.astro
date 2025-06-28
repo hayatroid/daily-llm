@@ -4,14 +4,12 @@ import Pwd from '../components/Pwd.astro';
 import Prompt from '../components/Prompt.astro';
 import Tree from '../components/Tree.astro';
 
-// Get all content files for Pwd component
-const allContent = await Astro.glob('../../content/**/*.md');
 ---
 
 <BaseLayout title="Daily LLM Conversations">
   <div class="main-content">
     <div class="section-gap">
-      <Pwd currentPage="home" allContent={allContent} />
+      <Pwd path="/" />
     </div>
 
     <div class="terminal-session">

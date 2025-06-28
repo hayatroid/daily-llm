@@ -4,8 +4,6 @@ import Pwd from '../../components/Pwd.astro';
 import Prompt from '../../components/Prompt.astro';
 import TagTree from '../../components/TagTree.astro';
 
-// Get all content files for Pwd component
-const allContent = await Astro.glob('../../../content/**/*.md');
 
 const pageTitle = "Tags - Daily LLM Conversations";
 ---
@@ -13,10 +11,7 @@ const pageTitle = "Tags - Daily LLM Conversations";
 <BaseLayout title={pageTitle}>
   <div class="main-content">
     <div class="section-gap">
-      <Pwd 
-        currentPage="tags-index"
-        allContent={allContent}
-      />
+      <Pwd path="/tags" />
     </div>
 
     <div class="terminal-session">

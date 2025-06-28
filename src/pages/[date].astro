@@ -52,11 +52,7 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 <BaseLayout title={pageTitle}>
   <div class="main-content">
     <div class="section-gap">
-      <Pwd 
-        currentDate={date}
-        currentPage="date"
-        allContent={allContent}
-      />
+      <Pwd path={`/${date}`} />
     </div>
 
     <div class="tree-session section-gap">
@@ -77,9 +73,7 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
     {summary && (
       <Cat 
-        filename={date}
-        frontmatter={summary.frontmatter}
-        Content={summary.Content}
+        path={`/${date}/index.md`}
       >
         <div slot="title" class="title-nav">
           {navigationContext.previousDate ? (

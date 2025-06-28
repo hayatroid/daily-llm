@@ -60,19 +60,11 @@ const pageTitle = `${frontmatter.title} - ${date}`;
 <BaseLayout title={pageTitle}>
   <div class="main-content">
     <div class="section-gap">
-      <Pwd 
-        currentDate={date}
-        currentPage="conversation"
-        conversationSlug={conversationSlug}
-        conversationTitle={frontmatter.title}
-        allContent={allContent}
-      />
+      <Pwd path={`/${date}/${conversationSlug}.md`} />
     </div>
 
     <Cat 
-      filename={`${date}/${conversationSlug}`}
-      frontmatter={frontmatter}
-      Content={Content}
+      path={`/${date}/${conversationSlug}.md`}
     >
       <div slot="title" class="title-nav">
         {prevConversation ? (
