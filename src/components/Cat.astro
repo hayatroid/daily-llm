@@ -1,53 +1,57 @@
 ---
+/**
+ * Cat component - displays single content entry based on path
+ * Uses Content Collections internally for data access
+ */
+import { getEntry } from 'astro:content';
 import Prompt from './Prompt.astro';
-import { VirtualFS } from '../lib/filesystem';
 
 export interface Props {
-  path: string;
+  path: string; // "/2024-01-15/001-astro-setup" or "/2024-01-15/"
 }
 
 const { path } = Astro.props;
 
-// Get all content using Astro.glob
-const allContent = await Astro.glob('../../content/**/*.md');
-
-// Create filesystem instance
-const fs = new VirtualFS(allContent);
-
-// Read the file content
-const content = fs.read(path);
-
-if (!content) {
-  throw new Error(`File not found: ${path}`);
+// Convert path to slug for Content Collections
+// "/2024-01-15/001-astro-setup" → "2024-01-15/001-astro-setup"
+// "/2024-01-15/" → "2024-01-15"
+function pathToSlug(path: string): string {
+  const cleanPath = path.replace(/^\/|\/$/g, '');
+  return cleanPath || 'index';
 }
 
-const { metadata, Component } = content;
+const slug = pathToSlug(path);
+const entry = await getEntry('daily', slug);
 
-// Skip title and description fields (title is rendered as h1, description is internal metadata)
-const metaFields = Object.entries(metadata).filter(([key]) => key !== 'title' && key !== 'description');
+if (!entry) {
+  throw new Error(`Content not found for path: ${path} (slug: ${slug})`);
+}
 
-// Extract filename from path for display
-const filename = path.split('/').pop() || path;
+const { data } = entry;
+const { Content } = await entry.render();
+
+// Filter frontmatter for meta display (exclude title and description)
+const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
 ---
 
 <div class="cat-file-section">
   <div class="command-block">
-    <Prompt command={`cat ${filename}`} />
+    <Prompt command={`cat ${path}`} />
   </div>
   <div class="file-content">
     <slot name="title">
-      <h1>{metadata.title}</h1>
+      <h1>{data.title}</h1>
     </slot>
     <div class="meta">
       {metaFields.length > 0 && (
         <p class="meta-line">
           {metaFields.map(([key, value], index) => (
-            <span key={index}>
+            <span>
               {key === 'tags' && Array.isArray(value) ? (
                 <span class="tags-container">
                   {value.map((tag: string, tagIndex) => (
-                    <span key={tagIndex}>
-                      <a href={`/tags/${encodeURIComponent(tag)}`} class="tag-link">#{tag}</a>
+                    <span>
+                      <a href={`/tags/${encodeURIComponent(tag)}/`} class="tag-link">#{tag}</a>
                       {tagIndex < value.length - 1 && ' '}
                     </span>
                   ))}
@@ -61,7 +65,7 @@ const filename = path.split('/').pop() || path;
         </p>
       )}
     </div>
-    {Component && <Component />}
+    <Content />
   </div>
 </div>
 
@@ -79,7 +83,6 @@ const filename = path.split('/').pop() || path;
   .meta-line {
     margin: 0;
   }
-
 
   .file-content :global(h1) {
     font-size: var(--text-normal);
@@ -123,7 +126,6 @@ const filename = path.split('/').pop() || path;
     visibility: hidden;
   }
 
-
   .file-content {
     line-height: var(--line-height-normal);
   }
@@ -145,7 +147,6 @@ const filename = path.split('/').pop() || path;
     align-items: baseline;
   }
 
-
   .file-content :global(p) {
     margin: var(--space-sm) 0;
   }
@@ -160,7 +161,6 @@ const filename = path.split('/').pop() || path;
   .file-content :global(li) {
     margin-bottom: var(--space-xs);
   }
-
 </style>
 
 <script>
@@ -208,11 +208,11 @@ const filename = path.split('/').pop() || path;
       
       const link = document.createElement('a');
       link.href = absoluteUrl;
-      link.id = slug;
-      link.textContent = headingText;
+      link.id = slug || '';
+      link.textContent = headingText || '';
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        window.history.pushState(null, null, absoluteUrl);
+        window.history.pushState(null, '', absoluteUrl);
         heading.scrollIntoView({ 
           behavior: 'smooth',
           block: 'start'

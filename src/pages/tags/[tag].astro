@@ -2,19 +2,20 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Prompt from '../../components/Prompt.astro';
-import TagTree from '../../components/TagTree.astro';
+import Tree from '../../components/Tree.astro';
+import { getCollection } from 'astro:content';
+import { isConversationEntry } from '../../lib/entry-utils';
 
 export async function getStaticPaths() {
-  // Get all content files
-  const allContent = await Astro.glob('../../../content/**/*.md');
+  const allEntries = await getCollection('daily');
   
-  // Extract all unique tags from frontmatter
-  const allTags = new Set();
-  allContent
-    .filter(file => !file.file.endsWith('index.md')) // Only conversations have tags
-    .forEach(file => {
-      if (file.frontmatter.tags && Array.isArray(file.frontmatter.tags)) {
-        file.frontmatter.tags.forEach(tag => allTags.add(tag));
+  // Extract all unique tags from conversation entries
+  const allTags = new Set<string>();
+  allEntries
+    .filter(isConversationEntry)
+    .forEach(entry => {
+      if (entry.data.tags && Array.isArray(entry.data.tags)) {
+        entry.data.tags.forEach(tag => allTags.add(tag));
       }
     });
   
@@ -24,7 +25,6 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params;
-
 
 const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
 ---
@@ -41,7 +41,7 @@ const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
       </div>
       
       <div class="tree-output">
-        <TagTree mode="tag" tag={tag} />
+        <Tree path={`/tags/${tag}`} />
       </div>
     </div>
 
@@ -52,4 +52,3 @@ const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
     </div>
   </div>
 </BaseLayout>
-

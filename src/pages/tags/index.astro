@@ -2,13 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Prompt from '../../components/Prompt.astro';
-import TagTree from '../../components/TagTree.astro';
-
-
-const pageTitle = "Tags - Daily LLM Conversations";
+import Tree from '../../components/Tree.astro';
 ---
 
-<BaseLayout title={pageTitle}>
+<BaseLayout title="Tags - Daily LLM Conversations">
   <div class="main-content">
     <div class="section-gap">
       <Pwd path="/tags" />
@@ -16,11 +13,11 @@ const pageTitle = "Tags - Daily LLM Conversations";
 
     <div class="terminal-session">
       <div class="command-block">
-        <Prompt command="tree tags" />
+        <Prompt command="tree" />
       </div>
       
       <div class="tree-output">
-        <TagTree mode="index" />
+        <Tree path="/tags" />
       </div>
     </div>
 
@@ -30,4 +27,3 @@ const pageTitle = "Tags - Daily LLM Conversations";
     </div>
   </div>
 </BaseLayout>
-

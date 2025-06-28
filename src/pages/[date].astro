@@ -4,47 +4,19 @@ import Pwd from '../components/Pwd.astro';
 import Tree from '../components/Tree.astro';
 import Cat from '../components/Cat.astro';
 import Prompt from '../components/Prompt.astro';
-import { generateNavigationContext } from '../lib/navigation';
+import { getCollection } from 'astro:content';
+import { extractUniqueDates } from '../lib/entry-utils';
 
 export async function getStaticPaths() {
-  // Get all content directories
-  const summaries = await Astro.glob('../../content/**/index.md');
+  const allEntries = await getCollection('daily');
+  const dates = extractUniqueDates(allEntries);
   
-  return summaries.map((summary) => {
-    // Extract date from file path: content/2024-01-20/index.md -> 2024-01-20
-    const pathParts = summary.file.split('/');
-    const date = pathParts[pathParts.length - 2];
-    return {
-      params: { date }
-    };
-  });
+  return dates.map((date) => ({
+    params: { date }
+  }));
 }
 
 const { date } = Astro.params;
-
-// Get all content files and filter for this date
-const allContent = await Astro.glob('../../content/**/*.md');
-
-// Get the summary for this date
-const summary = allContent.find(file => 
-  file.file.includes(`/${date}/index.md`)
-);
-
-// Get all conversations for this date
-const conversations = allContent.filter(file => 
-  file.file.includes(`/${date}/`) && !file.file.endsWith('index.md')
-);
-
-// Sort conversations by filename
-const sortedConversations = conversations
-  .sort((a, b) => {
-    const aNum = parseInt(a.file.split('/').pop()?.split('-')[0] || '0');
-    const bNum = parseInt(b.file.split('/').pop()?.split('-')[0] || '0');
-    return aNum - bNum;
-  });
-
-// Generate navigation context for date navigation
-const navigationContext = generateNavigationContext(allContent, date);
 
 const pageTitle = `${date} - Daily LLM Conversations`;
 ---
@@ -65,35 +37,13 @@ const pageTitle = `${date} - Daily LLM Conversations`;
       </div>
     </div>
 
-    {sortedConversations.length === 0 && (
-      <div class="empty">
-        <p class="comment"># No conversations found for {date}</p>
+    <Cat path={`/${date}/`}>
+      <div slot="title" class="title-nav">
+        <span class="nav-arrow disabled">←</span>
+        <h1>Daily Summary</h1>
+        <span class="nav-arrow disabled">→</span>
       </div>
-    )}
-
-    {summary && (
-      <Cat 
-        path={`/${date}/index.md`}
-      >
-        <div slot="title" class="title-nav">
-          {navigationContext.previousDate ? (
-            <a href={`/${navigationContext.previousDate}/`} class="nav-arrow nav-prev" title={navigationContext.previousDate}>
-              ←
-            </a>
-          ) : (
-            <span class="nav-arrow disabled">←</span>
-          )}
-          <h1>{summary.frontmatter.title}</h1>
-          {navigationContext.nextDate ? (
-            <a href={`/${navigationContext.nextDate}/`} class="nav-arrow nav-next" title={navigationContext.nextDate}>
-              →
-            </a>
-          ) : (
-            <span class="nav-arrow disabled">→</span>
-          )}
-        </div>
-      </Cat>
-    )}
+    </Cat>
 
     <!-- Navigation Commands -->
     <div class="command-block">
@@ -103,7 +53,6 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 </BaseLayout>
 
 <style>
-
   .file-listing {
     margin-left: 0;
   }

@@ -3,95 +3,44 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Cat from '../../components/Cat.astro';
 import Prompt from '../../components/Prompt.astro';
-import { processConversation } from '../../lib/content';
-// Inline utility functions (replaced slugUtils.js)
-const extractSlugFromFile = (filePath: string) => filePath.split('/').pop()?.replace('.md', '') || '';
-const createDateUrl = (date: string) => `/${date}/`;
+import { getCollection } from 'astro:content';
+import { isConversationEntry, extractDate, extractFilename } from '../../lib/entry-utils';
 
 export async function getStaticPaths() {
-  // Get all conversation files (exclude summaries)
-  const conversations = await Astro.glob('../../../content/**/*.md');
-  const conversationFiles = conversations.filter(file => 
-    !file.file.endsWith('index.md')
-  );
+  const allEntries = await getCollection('daily');
+  const conversationEntries = allEntries.filter(isConversationEntry);
   
-  return conversationFiles.map((conversation) => {
-    const pathParts = conversation.file.split('/');
-    const date = pathParts[pathParts.length - 2]; // Get date from path
-    const filename = pathParts[pathParts.length - 1].replace('.md', ''); // Remove .md
-    
-    return {
-      params: { 
-        date: date,
-        conversation: filename
-      },
-      props: { conversation }
-    };
-  });
+  return conversationEntries.map((entry) => ({
+    params: { 
+      date: extractDate(entry),
+      conversation: extractFilename(entry)
+    }
+  }));
 }
 
-const { date, conversation: conversationSlug } = Astro.params;
-const { conversation } = Astro.props;
-const { frontmatter, Content, rawContent } = conversation;
+const { date, conversation } = Astro.params;
 
-// Process the conversation for metadata
-const processed = processConversation(rawContent());
-
-// Get all content for navigation context
-const allContent = await Astro.glob('../../../content/**/*.md');
-
-// Generate navigation context for conversation navigation (within same date)
-const sameDateConversations = allContent
-  .filter(file => file.file.includes(`/${date}/`) && !file.file.endsWith('index.md'))
-  .sort((a, b) => {
-    const aNum = parseInt(a.file.split('/').pop()?.split('-')[0] || '0');
-    const bNum = parseInt(b.file.split('/').pop()?.split('-')[0] || '0');
-    return aNum - bNum;
-  });
-
-const currentIndex = sameDateConversations.findIndex(conv => 
-  extractSlugFromFile(conv.file) === conversationSlug
-);
-
-const prevConversation = currentIndex > 0 ? sameDateConversations[currentIndex - 1] : null;
-const nextConversation = currentIndex < sameDateConversations.length - 1 ? sameDateConversations[currentIndex + 1] : null;
-
-const pageTitle = `${frontmatter.title} - ${date}`;
+const pageTitle = `${conversation} - ${date}`;
 ---
 
 <BaseLayout title={pageTitle}>
   <div class="main-content">
     <div class="section-gap">
-      <Pwd path={`/${date}/${conversationSlug}.md`} />
+      <Pwd path={`/${date}/${conversation}`} />
     </div>
 
-    <Cat 
-      path={`/${date}/${conversationSlug}.md`}
-    >
+    <Cat path={`/${date}/${conversation}`}>
       <div slot="title" class="title-nav">
-        {prevConversation ? (
-          <a href={`/${date}/${extractSlugFromFile(prevConversation.file)}/`} class="nav-arrow nav-prev" title={prevConversation.frontmatter.title}>
-            ←
-          </a>
-        ) : (
-          <span class="nav-arrow disabled">←</span>
-        )}
-        <h1>{frontmatter.title}</h1>
-        {nextConversation ? (
-          <a href={`/${date}/${extractSlugFromFile(nextConversation.file)}/`} class="nav-arrow nav-next" title={nextConversation.frontmatter.title}>
-            →
-          </a>
-        ) : (
-          <span class="nav-arrow disabled">→</span>
-        )}
+        <span class="nav-arrow disabled">←</span>
+        <h1>Conversation</h1>
+        <span class="nav-arrow disabled">→</span>
       </div>
     </Cat>
 
     <!-- Navigation Commands -->
     <div class="command-block">
-      <Prompt command="cd ../" clickable={true} href={createDateUrl(date)} />
+      <Prompt command="cd ../" clickable={true} href={`/${date}/`} />
       <Prompt command="cd ../../" clickable={true} href="/" />
     </div>
   </div>
 </BaseLayout>
-

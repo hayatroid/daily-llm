@@ -2,12 +2,11 @@
  * URL slug generation utilities for heading anchors
  * Handles Japanese/English text, removes special characters, ensures uniqueness
  */
-import type { SlugMap } from './types';
 
 /**
  * Convert text to URL-safe slug
  */
-export function generateSlug(text: string): string {
+function generateSlug(text: string): string {
   if (!text || typeof text !== 'string') {
     return 'heading';
   }
@@ -34,7 +33,7 @@ export function generateSlug(text: string): string {
 /**
  * Generate unique slug by appending number if duplicate exists
  */
-export function generateUniqueSlug(
+function generateUniqueSlug(
   baseSlug: string,
   existingSlugs: Set<string>
 ): string {
@@ -52,7 +51,9 @@ export function generateUniqueSlug(
 /**
  * Process all headings in content and generate unique slugs
  */
-export function processHeadingSlugs(headings: NodeListOf<Element>): SlugMap {
+export function processHeadingSlugs(
+  headings: NodeListOf<Element>
+): Map<Element, string> {
   const slugMap = new Map<Element, string>();
   const usedSlugs = new Set<string>();
 
