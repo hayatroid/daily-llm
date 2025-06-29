@@ -7,19 +7,5 @@ import Tree from '../../components/Tree.astro';
 
 <BaseLayout title="Tags - Daily LLM Conversations">
   <Pwd path="/tags" />
-
-  <div class="session">
-    <div class="command-block">
-      <Prompt command="tree" />
-    </div>
-    
-    <div class="tree">
-      <Tree path="/tags" />
-    </div>
-  </div>
-
-  <!-- Navigation Commands -->
-  <div class="command-block">
-    <Prompt command="cd ../" clickable={true} href="/" />
-  </div>
+  <Tree path="/tags" />
 </BaseLayout>

@@ -10,9 +10,9 @@ import { extractUniqueDates } from '../lib/entry-utils';
 export async function getStaticPaths() {
   const allEntries = await getCollection('daily');
   const dates = extractUniqueDates(allEntries);
-  
+
   return dates.map((date) => ({
-    params: { date }
+    params: { date },
   }));
 }
 
@@ -23,27 +23,6 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 
 <BaseLayout title={pageTitle}>
   <Pwd path={`/${date}`} />
-
-  <div class="session section-gap">
-    <div class="command-block">
-      <Prompt command="tree" />
-    </div>
-    
-    <div class="tree">
-      <Tree path={`/${date}`} />
-    </div>
-  </div>
-
   <Cat path={`/${date}/`} />
-
-  <!-- Navigation Commands -->
-  <div class="command-block">
-    <Prompt command="cd ../" clickable={true} href="/" />
-  </div>
+  <Tree path={`/${date}`} />
 </BaseLayout>
-
-<style>
-  .empty {
-    margin-top: var(--space-lg);
-  }
-</style>

@@ -4,12 +4,13 @@
  * Uses Content Collections internally for data access
  */
 import { getCollection } from 'astro:content';
-import { 
-  isConversationEntry, 
-  extractDate, 
-  createEntryUrl, 
-  sortConversationsByFilename 
+import {
+  isConversationEntry,
+  extractDate,
+  createEntryUrl,
+  sortConversationsByFilename,
 } from '../lib/entry-utils';
+import Prompt from './Prompt.astro';
 
 export interface Props {
   path: string; // "/" | "/2024-01-15/" | "/tags" | "/tags/react"
@@ -26,8 +27,8 @@ let html = '';
 if (path === '/') {
   // Home: Date-based conversation listing
   const entriesByDate = new Map<string, typeof allEntries>();
-  
-  allEntries.forEach(entry => {
+
+  allEntries.forEach((entry) => {
     const date = extractDate(entry);
     if (!entriesByDate.has(date)) {
       entriesByDate.set(date, []);
@@ -36,21 +37,21 @@ if (path === '/') {
   });
 
   const sortedDates = Array.from(entriesByDate.keys()).sort().reverse();
-  
+
   html += `<div class="tree-item" data-level="0"><a href="/" class="tree-link">Home/</a></div>`;
-  
-  sortedDates.forEach(date => {
+
+  sortedDates.forEach((date) => {
     const dateEntries = entriesByDate.get(date);
     const conversations = dateEntries.filter(isConversationEntry);
-    
+
     html += `<div class="tree-item" data-level="1">`;
     html += `<a href="/${date}/" class="tree-link">${date}/</a>`;
     if (conversations.length > 0) {
       html += `<span class="tree-meta">${conversations.length} conversations</span>`;
     }
     html += `</div>`;
-    
-    sortConversationsByFilename(conversations).forEach(entry => {
+
+    sortConversationsByFilename(conversations).forEach((entry) => {
       html += `<div class="tree-item" data-level="2">`;
       html += `<a href="${createEntryUrl(entry)}" class="tree-link">${entry.data.title}</a>`;
       if (entry.data.time) {
@@ -59,27 +60,26 @@ if (path === '/') {
       html += `</div>`;
     });
   });
-
 } else if (path === '/tags') {
   // Tags index: List all tags with counts
   const conversationEntries = allEntries.filter(isConversationEntry);
   const tagCounts = new Map<string, number>();
-  
-  conversationEntries.forEach(entry => {
+
+  conversationEntries.forEach((entry) => {
     if (entry.data.tags && Array.isArray(entry.data.tags)) {
-      entry.data.tags.forEach(tag => {
+      entry.data.tags.forEach((tag) => {
         tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
       });
     }
   });
 
-  const sortedTags = Array.from(tagCounts.keys()).sort((a, b) => 
+  const sortedTags = Array.from(tagCounts.keys()).sort((a, b) =>
     a.toLowerCase().localeCompare(b.toLowerCase())
   );
 
   html += `<div class="tree-item" data-level="0"><a href="/tags/" class="tree-link">tags/</a></div>`;
-  
-  sortedTags.forEach(tagName => {
+
+  sortedTags.forEach((tagName) => {
     const count = tagCounts.get(tagName);
     html += `<div class="tree-item" data-level="1">`;
     html += `<a href="/tags/${encodeURIComponent(tagName)}/" class="tree-link">#${tagName}</a>`;
@@ -90,19 +90,19 @@ if (path === '/') {
   if (sortedTags.length === 0) {
     html += `<div class="tree-item" data-level="1"><span class="tree-meta">(no tags found)</span></div>`;
   }
-
 } else if (path.startsWith('/tags/')) {
   // Specific tag: Show conversations with this tag grouped by date
   const tag = path.replace('/tags/', '').replace(/\/$/, '');
   const conversationEntries = allEntries.filter(isConversationEntry);
-  const taggedConversations = conversationEntries.filter(entry => 
-    entry.data.tags && 
-    Array.isArray(entry.data.tags) && 
-    entry.data.tags.includes(tag)
+  const taggedConversations = conversationEntries.filter(
+    (entry) =>
+      entry.data.tags &&
+      Array.isArray(entry.data.tags) &&
+      entry.data.tags.includes(tag)
   );
 
   const dateGroups = new Map<string, typeof allEntries>();
-  taggedConversations.forEach(entry => {
+  taggedConversations.forEach((entry) => {
     const date = extractDate(entry);
     if (!dateGroups.has(date)) {
       dateGroups.set(date, []);
@@ -110,8 +110,8 @@ if (path === '/') {
     dateGroups.get(date).push(entry);
   });
 
-  const sortedDates = Array.from(dateGroups.keys()).sort((a, b) => 
-    new Date(b).getTime() - new Date(a).getTime()
+  const sortedDates = Array.from(dateGroups.keys()).sort(
+    (a, b) => new Date(b).getTime() - new Date(a).getTime()
   );
 
   html += `<div class="tree-item" data-level="0">`;
@@ -119,15 +119,15 @@ if (path === '/') {
   html += `<span class="tree-meta">${taggedConversations.length} conversations</span>`;
   html += `</div>`;
 
-  sortedDates.forEach(date => {
+  sortedDates.forEach((date) => {
     const conversations = dateGroups.get(date);
-    
+
     html += `<div class="tree-item" data-level="1">`;
     html += `<a href="/${date}/" class="tree-link">${date}/</a>`;
     html += `<span class="tree-meta">${conversations.length} conversations</span>`;
     html += `</div>`;
-    
-    sortConversationsByFilename(conversations).forEach(entry => {
+
+    sortConversationsByFilename(conversations).forEach((entry) => {
       html += `<div class="tree-item" data-level="2">`;
       html += `<a href="${createEntryUrl(entry)}" class="tree-link">${entry.data.title}</a>`;
       if (entry.data.time) {
@@ -140,16 +140,17 @@ if (path === '/') {
   if (sortedDates.length === 0) {
     html += `<div class="tree-item" data-level="1"><span class="tree-meta">(no conversations found for this tag)</span></div>`;
   }
-
 } else {
   // Specific date: Show conversations in this date
   const targetDate = path.replace(/^\/|\/$/g, '');
-  const dateEntries = allEntries.filter(entry => extractDate(entry) === targetDate);
+  const dateEntries = allEntries.filter(
+    (entry) => extractDate(entry) === targetDate
+  );
   const conversations = dateEntries.filter(isConversationEntry);
-  
+
   html += `<div class="tree-item" data-level="0"><a href="/${targetDate}/" class="tree-link">${targetDate}/</a></div>`;
-  
-  sortConversationsByFilename(conversations).forEach(entry => {
+
+  sortConversationsByFilename(conversations).forEach((entry) => {
     html += `<div class="tree-item" data-level="1">`;
     html += `<a href="${createEntryUrl(entry)}" class="tree-link">${entry.data.title}</a>`;
     if (entry.data.time) {
@@ -160,4 +161,11 @@ if (path === '/') {
 }
 ---
 
-<div class="tree-container" set:html={html}></div>
+<div class="session">
+  <div class="command-block">
+    <Prompt command="tree" />
+  </div>
+  <div class="tree">
+    <div class="tree-container" set:html={html} />
+  </div>
+</div>

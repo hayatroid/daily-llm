@@ -4,17 +4,21 @@ import Pwd from '../../components/Pwd.astro';
 import Cat from '../../components/Cat.astro';
 import Prompt from '../../components/Prompt.astro';
 import { getCollection } from 'astro:content';
-import { isConversationEntry, extractDate, extractFilename } from '../../lib/entry-utils';
+import {
+  isConversationEntry,
+  extractDate,
+  extractFilename,
+} from '../../lib/entry-utils';
 
 export async function getStaticPaths() {
   const allEntries = await getCollection('daily');
   const conversationEntries = allEntries.filter(isConversationEntry);
-  
+
   return conversationEntries.map((entry) => ({
-    params: { 
+    params: {
       date: extractDate(entry),
-      conversation: extractFilename(entry)
-    }
+      conversation: extractFilename(entry),
+    },
   }));
 }
 
@@ -25,12 +29,5 @@ const pageTitle = `${conversation} - ${date}`;
 
 <BaseLayout title={pageTitle}>
   <Pwd path={`/${date}/${conversation}`} />
-
   <Cat path={`/${date}/${conversation}`} />
-
-  <!-- Navigation Commands -->
-  <div class="command-block">
-    <Prompt command="cd ../" clickable={true} href={`/${date}/`} />
-    <Prompt command="cd ../../" clickable={true} href="/" />
-  </div>
 </BaseLayout>
