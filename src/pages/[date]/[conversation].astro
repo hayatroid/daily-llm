@@ -3,22 +3,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Cat from '../../components/Cat.astro';
 import { getCollection } from 'astro:content';
-import {
-  isConversationEntry,
-  extractDate,
-  extractFilename,
-} from '../../lib/entry-utils';
+import { Entry } from '../../lib/util';
 
 export async function getStaticPaths() {
   const allEntries = await getCollection('daily');
-  const conversationEntries = allEntries.filter(isConversationEntry);
+  const conversations = allEntries.filter(Entry.isConversation);
 
-  return conversationEntries.map((entry) => ({
-    params: {
-      date: extractDate(entry),
-      conversation: extractFilename(entry),
-    },
-  }));
+  return conversations.map((entry) => {
+    const { date, filename } = Entry.parse(entry);
+    return {
+      params: {
+        date,
+        conversation: filename,
+      },
+    };
+  });
 }
 
 const { date, conversation } = Astro.params;

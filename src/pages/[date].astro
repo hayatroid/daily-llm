@@ -4,11 +4,11 @@ import Pwd from '../components/Pwd.astro';
 import Tree from '../components/Tree.astro';
 import Cat from '../components/Cat.astro';
 import { getCollection } from 'astro:content';
-import { extractUniqueDates } from '../lib/entry-utils';
+import { Entry } from '../lib/util';
 
 export async function getStaticPaths() {
   const allEntries = await getCollection('daily');
-  const dates = extractUniqueDates(allEntries);
+  const dates = Entry.getDates(allEntries);
 
   return dates.map((date) => ({
     params: { date },

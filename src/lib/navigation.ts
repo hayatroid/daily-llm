@@ -1,11 +1,5 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import {
-  isIndexEntry,
-  isConversationEntry,
-  extractDate,
-  extractFilename,
-  sortConversationsByFilename,
-} from './entry-utils';
+import { Entry } from './util';
 
 export interface NavigationContext {
   prevUrl?: string;
@@ -32,7 +26,7 @@ export async function getNavigationForPath(
 
   const allEntries = await getCollection('daily');
 
-  if (isIndexEntry(entry)) {
+  if (!Entry.isConversation(entry)) {
     // For index.md: navigate between directories
     return getDirectoryNavigation(entry, allEntries);
   } else {
@@ -45,24 +39,23 @@ function getDirectoryNavigation(
   currentEntry: CollectionEntry<'daily'>,
   allEntries: CollectionEntry<'daily'>[]
 ): NavigationContext {
-  // Get all directory representatives (index.md files)
-  const indexEntries = allEntries.filter(isIndexEntry);
-  const sortedByDate = indexEntries.sort((a, b) =>
-    extractDate(a).localeCompare(extractDate(b))
+  const indexEntries = allEntries.filter(
+    (entry) => !Entry.isConversation(entry)
   );
+  const sorted = Entry.sort(indexEntries);
 
-  const currentIndex = sortedByDate.findIndex(
+  const currentIndex = sorted.findIndex(
     (entry) => entry.slug === currentEntry.slug
   );
 
   return {
     prevUrl:
       currentIndex > 0
-        ? `/${extractDate(sortedByDate[currentIndex - 1])}/`
+        ? `/${Entry.parse(sorted[currentIndex - 1]).date}/`
         : undefined,
     nextUrl:
-      currentIndex < sortedByDate.length - 1
-        ? `/${extractDate(sortedByDate[currentIndex + 1])}/`
+      currentIndex < sorted.length - 1
+        ? `/${Entry.parse(sorted[currentIndex + 1]).date}/`
         : undefined,
     parentUrl: '/',
   };
@@ -72,27 +65,26 @@ function getWithinDirectoryNavigation(
   currentEntry: CollectionEntry<'daily'>,
   allEntries: CollectionEntry<'daily'>[]
 ): NavigationContext {
-  const parentDirectory = extractDate(currentEntry);
+  const { date: parentDirectory } = Entry.parse(currentEntry);
 
-  // Get all content files in same directory (excluding index.md)
-  const siblings = allEntries.filter(
-    (entry) =>
-      extractDate(entry) === parentDirectory && isConversationEntry(entry)
-  );
+  const siblings = allEntries.filter((entry) => {
+    const { date } = Entry.parse(entry);
+    return date === parentDirectory && Entry.isConversation(entry);
+  });
 
-  const sortedSiblings = sortConversationsByFilename(siblings);
-  const currentIndex = sortedSiblings.findIndex(
+  const sorted = Entry.sort(siblings);
+  const currentIndex = sorted.findIndex(
     (entry) => entry.slug === currentEntry.slug
   );
 
   return {
     prevUrl:
       currentIndex > 0
-        ? `/${parentDirectory}/${extractFilename(sortedSiblings[currentIndex - 1])}/`
+        ? `/${parentDirectory}/${Entry.parse(sorted[currentIndex - 1]).filename}/`
         : undefined,
     nextUrl:
-      currentIndex < sortedSiblings.length - 1
-        ? `/${parentDirectory}/${extractFilename(sortedSiblings[currentIndex + 1])}/`
+      currentIndex < sorted.length - 1
+        ? `/${parentDirectory}/${Entry.parse(sorted[currentIndex + 1]).filename}/`
         : undefined,
     parentUrl: `/${parentDirectory}/`,
   };

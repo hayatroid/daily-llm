@@ -4,12 +4,7 @@
  * Uses Content Collections internally for data access
  */
 import { getCollection } from 'astro:content';
-import {
-  isConversationEntry,
-  extractDate,
-  createEntryUrl,
-  sortConversationsByFilename,
-} from '../lib/entry-utils';
+import { Entry } from '../lib/util';
 import Prompt from './Prompt.astro';
 
 export interface Props {
@@ -36,7 +31,7 @@ if (path === '/') {
   const entriesByDate = new Map<string, typeof allEntries>();
 
   allEntries.forEach((entry) => {
-    const date = extractDate(entry);
+    const { date } = Entry.parse(entry);
     if (!entriesByDate.has(date)) {
       entriesByDate.set(date, []);
     }
@@ -53,7 +48,7 @@ if (path === '/') {
 
   sortedDates.forEach((date) => {
     const dateEntries = entriesByDate.get(date);
-    const conversations = dateEntries.filter(isConversationEntry);
+    const conversations = dateEntries.filter(Entry.isConversation);
 
     treeItems.push({
       level: 1,
@@ -62,17 +57,17 @@ if (path === '/') {
       meta: conversations.length > 0 ? `${conversations.length} conversations` : undefined,
     });
 
-    sortConversationsByFilename(conversations).forEach((entry) => {
+    Entry.sort(conversations).forEach((entry) => {
       treeItems.push({
         level: 2,
-        href: createEntryUrl(entry),
+        href: `/${entry.slug}/`,
         text: entry.data.title,
       });
     });
   });
 } else if (path === '/tags') {
   // Tags index: List all tags with counts
-  const conversationEntries = allEntries.filter(isConversationEntry);
+  const conversationEntries = allEntries.filter(Entry.isConversation);
   const tagCounts = new Map<string, number>();
 
   conversationEntries.forEach((entry) => {
@@ -83,9 +78,7 @@ if (path === '/') {
     }
   });
 
-  const sortedTags = Array.from(tagCounts.keys()).sort((a, b) =>
-    a.toLowerCase().localeCompare(b.toLowerCase())
-  );
+  const sortedTags = Array.from(tagCounts.keys()).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
   treeItems.push({
     level: 0,
@@ -105,7 +98,7 @@ if (path === '/') {
 } else if (path.startsWith('/tags/')) {
   // Specific tag: Show conversations with this tag grouped by date
   const tag = path.replace('/tags/', '').replace(/\/$/, '');
-  const conversationEntries = allEntries.filter(isConversationEntry);
+  const conversationEntries = allEntries.filter(Entry.isConversation);
   const taggedConversations = conversationEntries.filter(
     (entry) =>
       entry.data.tags &&
@@ -115,16 +108,14 @@ if (path === '/') {
 
   const dateGroups = new Map<string, typeof allEntries>();
   taggedConversations.forEach((entry) => {
-    const date = extractDate(entry);
+    const { date } = Entry.parse(entry);
     if (!dateGroups.has(date)) {
       dateGroups.set(date, []);
     }
     dateGroups.get(date).push(entry);
   });
 
-  const sortedDates = Array.from(dateGroups.keys()).sort(
-    (a, b) => new Date(b).getTime() - new Date(a).getTime()
-  );
+  const sortedDates = Array.from(dateGroups.keys()).sort().reverse();
 
   treeItems.push({
     level: 0,
@@ -143,10 +134,10 @@ if (path === '/') {
       meta: `${conversations.length} conversations`,
     });
 
-    sortConversationsByFilename(conversations).forEach((entry) => {
+    Entry.sort(conversations).forEach((entry) => {
       treeItems.push({
         level: 2,
-        href: createEntryUrl(entry),
+        href: `/${entry.slug}/`,
         text: entry.data.title,
       });
     });
@@ -154,10 +145,11 @@ if (path === '/') {
 } else {
   // Specific date: Show conversations in this date
   const targetDate = path.replace(/^\/|\/$/g, '');
-  const dateEntries = allEntries.filter(
-    (entry) => extractDate(entry) === targetDate
-  );
-  const conversations = dateEntries.filter(isConversationEntry);
+  const dateEntries = allEntries.filter((entry) => {
+    const { date } = Entry.parse(entry);
+    return date === targetDate;
+  });
+  const conversations = dateEntries.filter(Entry.isConversation);
 
   treeItems.push({
     level: 0,
@@ -165,10 +157,10 @@ if (path === '/') {
     text: `${targetDate}/`,
   });
 
-  sortConversationsByFilename(conversations).forEach((entry) => {
+  Entry.sort(conversations).forEach((entry) => {
     treeItems.push({
       level: 1,
-      href: createEntryUrl(entry),
+      href: `/${entry.slug}/`,
       text: entry.data.title,
     });
   });
