@@ -176,9 +176,7 @@ if (path === '/') {
 ---
 
 <div class="session">
-  <div class="command-block">
-    <Prompt command="tree" />
-  </div>
+  <Prompt command="tree" />
   <div class="tree">
     {treeItems.map((item) => (
       <div class="tree-item" data-level={item.level}>

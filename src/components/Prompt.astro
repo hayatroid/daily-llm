@@ -8,18 +8,59 @@ export interface Props {
 const { command, clickable = false, href } = Astro.props;
 ---
 
-<span class="prompt">$</span>{clickable && href ? (
-  <a href={href} class="command clickable-command">{command}</a>
-) : (
-  <span class="command">{command}</span>
-)}
+<div class="command-block">
+  <span class="prompt">$</span>{clickable && href ? (
+    <a href={href} class="command clickable-command">{command}</a>
+  ) : (
+    <span class="command">{command}</span>
+  )}
+</div>
 
 <style>
+  .command-block {
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+  }
+
   .prompt {
-    margin-right: var(--prompt-spacing);
+    color: var(--term-green);
+    text-decoration: none;
   }
 
   .command {
     font-family: var(--font-mono);
+  }
+
+  /* Interactive elements (clickable commands - green text) */
+  .clickable-command {
+    color: var(--term-green);
+    text-decoration: none;
+  }
+
+  /* Display elements (non-interactive commands - green text) */
+  .command:not(.clickable-command) {
+    color: var(--term-green);
+    text-decoration: none;
+  }
+
+  /* Cursor animations */
+  .clickable-command::after {
+    content: '█';
+    animation: blink var(--duration-blink) infinite;
+    color: var(--term-green);
+    margin-left: var(--char-offset);
+  }
+
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    51%,
+    100% {
+      opacity: 0;
+    }
   }
 </style>

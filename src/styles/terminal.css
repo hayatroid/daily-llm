@@ -121,26 +121,6 @@ h6 {
   text-decoration: none;
 }
 
-/* Interactive elements (clickable commands - green text) */
-.clickable-command {
-  color: var(--term-green);
-  text-decoration: none;
-}
-
-/* Display elements (non-interactive commands - green text) */
-.command:not(.clickable-command) {
-  color: var(--term-green);
-  text-decoration: none;
-}
-
-/* Decorative elements (green but non-interactive) */
-.prompt {
-  color: var(--term-green);
-  text-decoration: none;
-  display: inline-block;
-  margin-right: 1ch;
-}
-
 /* Heading markers - consistent with prompt styling */
 .heading-marker {
   color: var(--term-text);
@@ -245,25 +225,6 @@ ol {
   font-size: var(--text-small);
 }
 
-/* Cursor animations */
-.clickable-command::after {
-  content: '█';
-  animation: blink var(--duration-blink) infinite;
-  color: var(--term-green);
-  margin-left: var(--char-offset);
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
 .tree {
   font-size: var(--text-normal);
   line-height: var(--line-height-normal);
@@ -298,12 +259,11 @@ ol {
 /* Session containers */
 .session {
   font-family: var(--font-mono);
+  margin-top: var(--space-section);
   margin-bottom: var(--space-lg);
-}
-
-/* Command blocks */
-.command-block {
-  font-family: var(--font-mono);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 /* Responsive */
@@ -335,10 +295,6 @@ ol {
 }
 
 /* Unified spacing utility classes */
-.command-block {
-  margin-top: var(--space-section);
-  margin-bottom: var(--space-sm);
-}
 
 .section-gap {
   margin-bottom: var(--space-lg);

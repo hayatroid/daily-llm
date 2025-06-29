@@ -40,9 +40,7 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
 ---
 
 <div class="session">
-  <div class="command-block">
-    <Prompt command={`cat ${path}`} />
-  </div>
+  <Prompt command={`cat ${path}`} />
   <div class="file-content">
     <div class="pager-nav">
       <h1>{data.title}</h1>
