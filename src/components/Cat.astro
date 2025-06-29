@@ -150,45 +150,34 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
 </style>
 
 <script>
-  import slugify from 'slugify';
+  // Generate commit-hash style ID from text
+  async function generateHashId(text: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text || 'heading');
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex.substring(0, 7);
+  }
 
   // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     // Get all headings in the file content
     const headings = document.querySelectorAll('.file-content h1, .file-content h2, .file-content h3');
     
     if (headings.length === 0) return;
     
-    // Generate unique slugs for all headings
-    const usedSlugs = new Set();
-    const slugMap = new Map();
-    
-    headings.forEach(heading => {
-      const text = heading.textContent || '';
-      let baseSlug = slugify(text, { lower: true, strict: true }) || 'heading';
-      
-      // Ensure uniqueness
-      let slug = baseSlug;
-      let counter = 1;
-      while (usedSlugs.has(slug)) {
-        slug = `${baseSlug}-${counter}`;
-        counter++;
-      }
-      
-      slugMap.set(heading, slug);
-      usedSlugs.add(slug);
-    });
-    
     // Apply anchor functionality to each heading
-    headings.forEach(heading => {
-      const slug = slugMap.get(heading);
+    for (const heading of headings) {
+      const text = heading.textContent || '';
+      const id = await generateHashId(text);
       
       // Generate absolute URL for anchor
       const protocol = window.location.protocol;
       const host = window.location.host;
       const pathname = window.location.pathname;
       const cleanPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
-      const absoluteUrl = `${protocol}//${host}${cleanPath}#${slug}`;
+      const absoluteUrl = `${protocol}//${host}${cleanPath}#${id}`;
       
       // Get heading text content
       const headingText = heading.textContent;
@@ -211,7 +200,7 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
       
       const link = document.createElement('a');
       link.href = absoluteUrl;
-      link.id = slug || '';
+      link.id = id || '';
       link.textContent = headingText || '';
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -226,7 +215,7 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
       heading.innerHTML = '';
       heading.appendChild(markerSpan);
       heading.appendChild(link);
-    });
+    }
     
     // Handle direct anchor links on page load
     if (window.location.hash) {

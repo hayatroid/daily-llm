@@ -15,8 +15,7 @@
   },
   "dependencies": {
     "astro": "^4.15.12",
-    "reset-css": "^5.0.2",
-    "slugify": "^1.6.6"
+    "reset-css": "^5.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.35.0",
