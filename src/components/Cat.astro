@@ -39,7 +39,7 @@ const navigation = await getNavigationForPath(path);
 const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
 ---
 
-<div class="cat-file-section">
+<div class="session">
   <div class="command-block">
     <Prompt command={`cat ${path}`} />
   </div>
@@ -49,27 +49,15 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
       <Pager {...navigation} />
     </div>
     <div class="meta">
-      {metaFields.length > 0 && (
-        <p class="meta-line">
-          {metaFields.map(([key, value], index) => (
-            <span>
-              {key === 'tags' && Array.isArray(value) ? (
-                <span class="tags-container">
-                  {value.map((tag: string, tagIndex) => (
-                    <span>
-                      <a href={`/tags/${encodeURIComponent(tag)}/`} class="tag-link">#{tag}</a>
-                      {tagIndex < value.length - 1 && ' '}
-                    </span>
-                  ))}
-                </span>
-              ) : (
-                value
-              )}
-              {index < metaFields.length - 1 && ' | '}
-            </span>
-          ))}
-        </p>
-      )}
+      {metaFields.map(([key, value]) => (
+        key === 'tags' && Array.isArray(value) ? (
+          value.map((tag: string) => (
+            <a href={`/tags/${encodeURIComponent(tag)}/`} class="tag">#{tag}</a>
+          ))
+        ) : (
+          <span class="meta-item">{key}: {value}</span>
+        )
+      ))}
     </div>
     <Content />
   </div>
@@ -86,8 +74,12 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     line-height: var(--line-height-normal);
   }
 
-  .meta-line {
-    margin: 0;
+  .tag {
+    margin-right: var(--space-sm);
+  }
+
+  .meta-item {
+    margin-right: var(--space-md);
   }
 
   .file-content :global(h1) {

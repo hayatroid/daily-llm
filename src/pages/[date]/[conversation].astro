@@ -24,17 +24,13 @@ const pageTitle = `${conversation} - ${date}`;
 ---
 
 <BaseLayout title={pageTitle}>
-  <div class="main-content">
-    <div class="section-gap">
-      <Pwd path={`/${date}/${conversation}`} />
-    </div>
+  <Pwd path={`/${date}/${conversation}`} />
 
-    <Cat path={`/${date}/${conversation}`} />
+  <Cat path={`/${date}/${conversation}`} />
 
-    <!-- Navigation Commands -->
-    <div class="command-block">
-      <Prompt command="cd ../" clickable={true} href={`/${date}/`} />
-      <Prompt command="cd ../../" clickable={true} href="/" />
-    </div>
+  <!-- Navigation Commands -->
+  <div class="command-block">
+    <Prompt command="cd ../" clickable={true} href={`/${date}/`} />
+    <Prompt command="cd ../../" clickable={true} href="/" />
   </div>
 </BaseLayout>

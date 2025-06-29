@@ -56,7 +56,7 @@ const breadcrumbs = createBreadcrumbs(path);
 ---
 
 <nav class="nav">
-  <div class="cmd">
+  <div class="command-block">
     <Prompt command="pwd" />
   </div>
   <div class="breadcrumb">
@@ -80,23 +80,15 @@ const breadcrumbs = createBreadcrumbs(path);
     margin-bottom: var(--space-lg);
   }
 
-  .cmd {
-    margin-bottom: var(--space-xs);
-  }
-
   .breadcrumb {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--gap-default);
+    gap: var(--space-xs);
     font-family: var(--font-mono);
   }
 
   .path-link {
     transition: color var(--duration-fast) ease;
-  }
-
-  .path-separator {
-    margin: 0 calc(var(--char-offset) * var(--char-multiplier));
   }
 </style>

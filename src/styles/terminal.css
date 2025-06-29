@@ -207,6 +207,9 @@ pre {
 
 .tree {
   line-height: var(--line-height-compact);
+}
+
+.tree-container {
   white-space: pre;
 }
 
@@ -261,7 +264,7 @@ ol {
   }
 }
 
-.tree-output {
+.tree {
   font-size: var(--text-normal);
   line-height: var(--line-height-normal);
 }
@@ -293,9 +296,14 @@ ol {
 }
 
 /* Session containers */
-[class$='-session'] {
+.session {
   font-family: var(--font-mono);
   margin-bottom: var(--space-lg);
+}
+
+/* Command blocks */
+.command-block {
+  font-family: var(--font-mono);
 }
 
 /* Responsive */

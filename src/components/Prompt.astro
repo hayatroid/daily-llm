@@ -8,19 +8,13 @@ export interface Props {
 const { command, clickable = false, href } = Astro.props;
 ---
 
-<div class="command-line">
-  <span class="prompt">$</span>{clickable && href ? (
-    <a href={href} class="command clickable-command">{command}</a>
-  ) : (
-    <span class="command">{command}</span>
-  )}
-</div>
+<span class="prompt">$</span>{clickable && href ? (
+  <a href={href} class="command clickable-command">{command}</a>
+) : (
+  <span class="command">{command}</span>
+)}
 
 <style>
-  .command-line {
-    font-family: var(--font-mono);
-  }
-
   .prompt {
     margin-right: var(--prompt-spacing);
   }
@@ -28,5 +22,4 @@ const { command, clickable = false, href } = Astro.props;
   .command {
     font-family: var(--font-mono);
   }
-
 </style>

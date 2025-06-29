@@ -22,35 +22,27 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 ---
 
 <BaseLayout title={pageTitle}>
-  <div class="main-content">
-    <div class="section-gap">
-      <Pwd path={`/${date}`} />
-    </div>
+  <Pwd path={`/${date}`} />
 
-    <div class="tree-session section-gap">
-      <div class="command-block">
-        <Prompt command="tree" />
-      </div>
-      
-      <div class="file-listing">
-        <Tree path={`/${date}`} />
-      </div>
-    </div>
-
-    <Cat path={`/${date}/`} />
-
-    <!-- Navigation Commands -->
+  <div class="session section-gap">
     <div class="command-block">
-      <Prompt command="cd ../" clickable={true} href="/" />
+      <Prompt command="tree" />
     </div>
+    
+    <div class="tree">
+      <Tree path={`/${date}`} />
+    </div>
+  </div>
+
+  <Cat path={`/${date}/`} />
+
+  <!-- Navigation Commands -->
+  <div class="command-block">
+    <Prompt command="cd ../" clickable={true} href="/" />
   </div>
 </BaseLayout>
 
 <style>
-  .file-listing {
-    margin-left: 0;
-  }
-
   .empty {
     margin-top: var(--space-lg);
   }

@@ -30,25 +30,21 @@ const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
 ---
 
 <BaseLayout title={pageTitle}>
-  <div class="main-content">
-    <div class="section-gap">
-      <Pwd path={`/tags/${tag}`} />
-    </div>
+  <Pwd path={`/tags/${tag}`} />
 
-    <div class="terminal-session">
-      <div class="command-block">
-        <Prompt command="tree" />
-      </div>
-      
-      <div class="tree-output">
-        <Tree path={`/tags/${tag}`} />
-      </div>
-    </div>
-
-    <!-- Navigation Commands -->
+  <div class="session">
     <div class="command-block">
-      <Prompt command="cd ../" clickable={true} href="/tags/" />
-      <Prompt command="cd ../../" clickable={true} href="/" />
+      <Prompt command="tree" />
     </div>
+    
+    <div class="tree">
+      <Tree path={`/tags/${tag}`} />
+    </div>
+  </div>
+
+  <!-- Navigation Commands -->
+  <div class="command-block">
+    <Prompt command="cd ../" clickable={true} href="/tags/" />
+    <Prompt command="cd ../../" clickable={true} href="/" />
   </div>
 </BaseLayout>
