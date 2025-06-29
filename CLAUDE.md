@@ -95,3 +95,21 @@ description: '[Overview of the day's discussions and main topics covered]'
 - 例: `API設計` → `API 設計`
 
 **Core Principle:** Core first, adventure later! 🚀
+
+## 🤖 Claude Commands
+
+**コンテンツ作成:**
+
+```bash
+/new "Topic"        # 新しい会話を作成
+/summarize [date]   # 日次サマリーを生成
+```
+
+**クイックワークフロー:**
+
+1. `/new "Database Optimization"` → `003-database-optimization.md` を作成
+2. 会話の本質を抽出・再構築して記録
+3. `/summarize` → AI サマリーで `index.md` を作成・更新
+4. 上記ルールに従って format & commit
+
+**Command Details:** See `.claude/commands/README.md`
