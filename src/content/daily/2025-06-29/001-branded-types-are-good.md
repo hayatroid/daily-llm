@@ -1,5 +1,5 @@
 ---
-title: 'branded types はいいぞ'
+title: 'Branded Types がいいらしい'
 tags:
   [
     'typescript',
