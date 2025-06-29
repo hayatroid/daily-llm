@@ -9,7 +9,7 @@ const { path } = Astro.props;
 
 // Create breadcrumbs from path
 function createBreadcrumbs(path: string) {
-  const breadcrumbs = [];
+  const breadcrumbs: Array<{ label: string; href: string; current: boolean }> = [];
   
   // Always start with Home
   breadcrumbs.push({ label: 'Home', href: '/', current: path === '/' });
@@ -55,47 +55,40 @@ function createBreadcrumbs(path: string) {
 const breadcrumbs = createBreadcrumbs(path);
 ---
 
-<nav class="cli-nav">
-  <div class="pwd command-block">
+<nav class="nav">
+  <div class="cmd">
     <Prompt command="pwd" />
   </div>
-  <div class="path">
-    <div class="breadcrumb">
-      {breadcrumbs.map((item, index) => (
-        <>
-          <a href={item.href || '#'} class:list={['path-link', { current: item.current }]}>
-            {item.label}
-          </a>
-          {index < breadcrumbs.length - 1 && (
-            <span class="path-separator">/</span>
-          )}
-        </>
-      ))}
-    </div>
+  <div class="breadcrumb">
+    {breadcrumbs.map((item, index) => (
+      <>
+        <a href={item.href || '#'} class:list={['path-link', { current: item.current }]}>
+          {item.label}
+        </a>
+        {index < breadcrumbs.length - 1 && (
+          <span class="path-separator">/</span>
+        )}
+      </>
+    ))}
   </div>
 </nav>
 
 <style>
-  .cli-nav {
+  .nav {
     font-family: var(--font-mono);
     font-size: var(--text-normal);
+    margin-bottom: var(--space-lg);
   }
 
-  .pwd {
-    display: flex;
-    gap: var(--gap-default);
+  .cmd {
     margin-bottom: var(--space-xs);
-  }
-
-  .path {
-    margin-bottom: var(--space-sm);
   }
 
   .breadcrumb {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--gap-none);
+    gap: var(--gap-default);
     font-family: var(--font-mono);
   }
 
@@ -106,6 +99,4 @@ const breadcrumbs = createBreadcrumbs(path);
   .path-separator {
     margin: 0 calc(var(--char-offset) * var(--char-multiplier));
   }
-
-
 </style>
