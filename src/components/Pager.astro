@@ -1,0 +1,23 @@
+---
+export interface Props {
+  prevUrl?: string;
+  nextUrl?: string;
+  parentUrl: string;
+}
+
+const { prevUrl, nextUrl, parentUrl } = Astro.props;
+---
+
+<div class="pager-controls">
+  {prevUrl ? (
+    <a href={prevUrl} class="nav-button">[p]rev</a>
+  ) : (
+    <span class="nav-button disabled">[p]rev</span>
+  )}
+  {nextUrl ? (
+    <a href={nextUrl} class="nav-button">[n]ext</a>
+  ) : (
+    <span class="nav-button disabled">[n]ext</span>
+  )}
+  <a href={parentUrl} class="nav-button">[..]</a>
+</div>

@@ -37,13 +37,7 @@ const pageTitle = `${date} - Daily LLM Conversations`;
       </div>
     </div>
 
-    <Cat path={`/${date}/`}>
-      <div slot="title" class="title-nav">
-        <span class="nav-arrow disabled">←</span>
-        <h1>Daily Summary</h1>
-        <span class="nav-arrow disabled">→</span>
-      </div>
-    </Cat>
+    <Cat path={`/${date}/`} />
 
     <!-- Navigation Commands -->
     <div class="command-block">

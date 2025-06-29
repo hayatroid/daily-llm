@@ -5,6 +5,8 @@
  */
 import { getEntry } from 'astro:content';
 import Prompt from './Prompt.astro';
+import Pager from './Pager.astro';
+import { getNavigationForPath } from '../lib/navigation';
 
 export interface Props {
   path: string; // "/2024-01-15/001-astro-setup" or "/2024-01-15/"
@@ -30,6 +32,9 @@ if (!entry) {
 const { data } = entry;
 const { Content } = await entry.render();
 
+// Get navigation automatically based on directory structure
+const navigation = await getNavigationForPath(path);
+
 // Filter frontmatter for meta display (exclude title and description)
 const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
 ---
@@ -39,9 +44,10 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     <Prompt command={`cat ${path}`} />
   </div>
   <div class="file-content">
-    <slot name="title">
+    <div class="pager-nav">
       <h1>{data.title}</h1>
-    </slot>
+      <Pager {...navigation} />
+    </div>
     <div class="meta">
       {metaFields.length > 0 && (
         <p class="meta-line">
@@ -93,38 +99,28 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     align-items: baseline;
   }
 
-  /* Title navigation styles for slot usage */
-  .file-content :global(.title-nav) {
+  /* Pager navigation styles for slot usage */
+  .file-content :global(.pager-nav) {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: baseline;
     margin: 0;
     position: relative;
   }
 
-  .file-content :global(.title-nav h1) {
+  .file-content :global(.pager-nav h1) {
     font-size: var(--text-normal);
     font-weight: var(--text-weight-bold);
     margin: 0;
     font-family: var(--font-mono);
-    flex: 1;
+  }
+
+  .file-content :global(.pager-controls) {
     display: flex;
+    gap: var(--space-sm);
     align-items: baseline;
-    justify-content: center;
   }
 
-  .file-content :global(.nav-arrow) {
-    font-size: var(--text-normal);
-    line-height: var(--line-height-tight);
-    transition: opacity var(--duration-fast) ease;
-    user-select: none;
-    display: block;
-    padding: var(--space-xs);
-  }
-
-  .file-content :global(.nav-arrow.disabled) {
-    visibility: hidden;
-  }
 
   .file-content {
     line-height: var(--line-height-normal);

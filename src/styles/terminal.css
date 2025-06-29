@@ -171,6 +171,19 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Navigation - authentic CLI text styling */
+.nav-button {
+  /* Inherits color: var(--term-link) and text-decoration: none from 'a' */
+  white-space: nowrap;
+  margin-right: var(--space-sm);
+}
+
+.nav-button.disabled {
+  color: var(--term-text);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .container {
   max-width: var(--container-width);
   margin: 0 auto;

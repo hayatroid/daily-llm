@@ -29,13 +29,7 @@ const pageTitle = `${conversation} - ${date}`;
       <Pwd path={`/${date}/${conversation}`} />
     </div>
 
-    <Cat path={`/${date}/${conversation}`}>
-      <div slot="title" class="title-nav">
-        <span class="nav-arrow disabled">←</span>
-        <h1>Conversation</h1>
-        <span class="nav-arrow disabled">→</span>
-      </div>
-    </Cat>
+    <Cat path={`/${date}/${conversation}`} />
 
     <!-- Navigation Commands -->
     <div class="command-block">
