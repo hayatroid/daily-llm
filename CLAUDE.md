@@ -1,115 +1,61 @@
-# 🤖 Claude Development Guide
+# 🤖 Daily LLM Development Guide
 
-## 📋 Quick Rules
+## プロジェクト概要
 
-**Code Quality (MANDATORY):**
+AI との対話を構造化された学習記事に変換し、ターミナル風の見た目で表示する静的サイト。
+
+## 設計思想 🎯
+
+### シンプルさの追求 ✨
+
+リファクタリングによる負債解消を最優先とする。複雑さを低く保ち続けることがプロジェクト成功の鍵。
+
+- 複雑になったら機能を削る 🔪
+- 足すのではなく引く ➖
+- 定期的にコードベース全体を見直し、不要な部分を削除 🧹
+- 基本的に機能追加は行わない 🚫
+
+### CLI ファースト 💻
+
+ターミナルの美学と操作感を重視した設計。
+
+- 装飾ではなくタイポグラフィで表現 📝
+- ボーダー、カード型レイアウトは使わない 🚷
+- ターミナル的でない見た目は採用しない ⚡
+- コンポーネントは Cat, Prompt, Pwd, Tree の4つのみ 🎲
+
+### 協働的価値創造 🤝
+
+- 会話ログをそのまま保存するのではなく、本質を抽出して記事に再構築 🔄
+- タイトルなどの重要な決定はユーザーと一緒に行う 👥
+- 段階的なプロセスで再現性を確保 📋
+
+## 開発ルール 📏
+
+### コード品質 🏆
 
 ```bash
 npm run format && npm run lint
 ```
 
-Must pass before every commit. **This includes documentation changes** - always run formatter even for .md file edits.
+全ての変更前に必ず実行。ドキュメント変更でも例外なし。 ⚠️
 
-**Directory Structure:**
+### コンポーネント制限 🔒
 
-- `content/YYYY-MM-DD/` - Daily conversations
-- `docs/` - Project specifications
-- Files: `001-topic.md`, `002-topic.md`, `summary.md`
+使用可能なコンポーネントは以下の4つのみ：
 
-**Commit Messages:**
+- **Cat**: ファイル内容の表示 🐱
+- **Prompt**: 入力待機状態の表現 ⌨️
+- **Pwd**: 現在位置の表示 📍
+- **Tree**: ディレクトリ構造の表示 🌳
 
-- `feat:` new features
-- `fix:` bug fixes
-- `docs:` documentation
-- `refactor:` code restructuring
+新しいコンポーネントは作らない。 🚨
 
-## 🔄 PIR Workflow (Complex Features)
+## 使い方 🚀
 
-**📋 Planning → 🛠️ Implementation → 📊 Review**
+### コマンド 🎮
 
-1. **Plan:** Create `docs/XXX-feature-plan.md` with Goals/Non-Goals
-2. **Implement:** Use TodoWrite, follow plan systematically
-3. **Review:** Update plan with `[x]` completed items + metrics
+- `/new [トピック]` - 対話から構造化記事を作成 ✍️
+- `/summarize [日付]` - 日次サマリーを協働で作成 📊
 
-**Commit Convention:**
-
-```bash
-docs(plan): add [feature] implementation plan
-feat(planned): implement [feature] as documented
-docs(review): update [feature] plan with results
-```
-
-## 📝 Documentation Pattern
-
-Every `docs/` file starts with:
-
-```markdown
-## 🎯 Goals
-
-- What to build now
-- Core requirements
-
-## 🚫 Non-Goals
-
-- What to defer
-- Future enhancements
-```
-
-Convert to checklists during implementation:
-
-- `[x]` completed
-- `[ ]` pending/deferred
-
-## 🚀 Content Templates
-
-**Conversation:**
-
-```markdown
----
-title: '[Topic]'
-tags: ['tag1', 'tag2']
-description: '[Brief description of the conversation topic and approach]'
----
-```
-
-**Summary:**
-
-```markdown
----
-title: '[Summary title]'
-tags: ['tag1', 'tag2']
-description: '[Overview of the day's discussions and main topics covered]'
----
-```
-
-**Frontmatter Strategy:**
-
-- ✅ **Core fields:** `title`, `tags`, `description` for all content
-- 📍 **Rationale:** Provides context for discovery and understanding while keeping structure simple
-
-**日英混在文の書式ルール:**
-
-- 英単語の前後に半角スペースを必ず挿入
-- 例: `Reactアプリケーション` → `React アプリケーション`
-- 例: `Dockerコンテナ` → `Docker コンテナ`
-- 例: `API設計` → `API 設計`
-
-**Core Principle:** Core first, adventure later! 🚀
-
-## 🤖 Claude Commands
-
-**コンテンツ作成:**
-
-```bash
-/new "Topic"        # 新しい会話を作成
-/summarize [date]   # 日次サマリーを生成
-```
-
-**クイックワークフロー:**
-
-1. `/new "Database Optimization"` → `003-database-optimization.md` を作成
-2. 会話の本質を抽出・再構築して記録
-3. `/summarize` → AI サマリーで `index.md` を作成・更新
-4. 上記ルールに従って format & commit
-
-**Command Details:** See `.claude/commands/README.md`
+詳細は `.claude/commands/` を参照。 📚
