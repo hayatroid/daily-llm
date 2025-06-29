@@ -11,12 +11,14 @@ tags:
     'scala',
     'programming-languages',
   ]
-description: 'Branded types の実用性から各言語の実装哲学まで。実行時コストゼロの型安全性、言語別の ergonomics 比較、そして次世代言語への理想を語る。'
+description: 'Branded types の実用性から各言語の実装哲学まで。コンパイルタイムでの型安全性、言語別の ergonomics 比較、そして次世代言語への理想を語る。'
 ---
 
-Branded types は型レベルプログラミングの素晴らしい例で、**実行時コストゼロで堅牢性を大幅に向上**させられる技術だ。
+ユーザは Branded types について調べていた。型レベルプログラミングの例として、コンパイル時に型チェックして安全性を高められることに注目していた。
 
-## Branded Types の威力
+## Branded Types の使い方
+
+ユーザは、ID の混同を防ぐ基本的な使い方から確認していた。
 
 ```typescript
 // 危険: 値の混同が起きやすい
@@ -34,15 +36,15 @@ function transferMoney(from: UserId, to: AccountId, amount: Amount) {
 }
 ```
 
-**実際の価値**:
+特に気に入っていたポイント:
 
-- 🛡️ **実行時コストゼロ**: JavaScript にコンパイルされると普通の string/number
-- 🎯 **意図の明確化**: コードが自己文書化される
-- 🚫 **バグの根絶**: 値の混同によるバグを型レベルで防止
+- コンパイル時型チェック: JavaScript にコンパイルされると普通の string/number
+- 意図の明確化: コードが自己文書化される
+- バグの根絶: 値の混同によるバグを型レベルで防止
 
-## 活用場面
+## いろいろな使い方
 
-大規模データでの ID 混同防止はもちろん、他にも様々な場面で威力を発揮する。
+ユーザは、ID の混同防止以外にも、いろいろな場面で使えることを考えていた。
 
 ### 単位系の管理
 
@@ -84,22 +86,22 @@ function publish(draft: DraftPost): PublishedPost {
 }
 ```
 
-## コンパイルタイムで弾く哲学
+## コンパイル時にエラーを防ぐ考え方
 
-**コンパイルタイムで弾けるものは弾く**、これが型レベルプログラミングの本質だ。ランタイムエラーは致命的：
+ユーザは、「コンパイル時に防げるものは防ぐ」というのが型レベルプログラミングの基本だと言っていた。実行時エラーの問題を挙げていた：
 
-- **本番環境でのクラッシュ** 💥
-- **データ破損** 🗃️💀
-- **セキュリティホール** 🔓
-- **デバッグの困難さ** 🐛❓
+- 本番環境でのクラッシュ
+- データ破損
+- セキュリティホール
+- デバッグの困難さ
 
-型レベルで防げるなら、開発者体験も向上し、リファクタリングも安全になる。
+型レベルで防げるなら、開発者体験も向上し、リファクタリングも安全になると言っていた。
 
-## 言語別実装哲学の違い
+## 各言語でのやり方の違い
 
-各言語で branded types の実装方法と哲学が大きく異なる。
+ユーザは、各言語で branded types の実装方法や考え方が異なることを比較していた。
 
-**TypeScript**: **「漸進的移行」哲学**
+TypeScript: 「漸進的移行」哲学
 
 ```typescript
 type UserId = string & { _brand: 'UserId' };
@@ -108,7 +110,7 @@ type UserId = string & { _brand: 'UserId' };
 - JavaScript との互換性最優先
 - 開発時だけの恩恵、ランタイムは素の JavaScript
 
-**Rust**: **「ゼロコスト安全性」哲学**
+Rust: 「ゼロコスト安全性」哲学
 
 ```rust
 struct UserId(String); // type UserId = String はただのエイリアス
@@ -117,7 +119,7 @@ struct UserId(String); // type UserId = String はただのエイリアス
 - パフォーマンスを犠牲にしない安全性
 - 厳格だが `user_id.0` でのアクセスが億劫
 
-**Go**: **「実用主義」哲学**
+Go: 「実用主義」哲学
 
 ```go
 type UserId string
@@ -126,7 +128,7 @@ type UserId string
 - シンプルイズベスト
 - underlying type のメソッドが使える絶妙なバランス
 
-**F#**: **「関数型エレガンス」哲学**
+F#: 「関数型エレガンス」哲学
 
 ```fsharp
 type UserId = UserId of string
@@ -135,7 +137,7 @@ type UserId = UserId of string
 - パターンマッチで自然に扱える `let processUser (UserId id) = ...`
 - 簡潔な構文で型推論も強力
 
-**Scala**: **「表現力重視」哲学**
+Scala: 「表現力重視」哲学
 
 ```scala
 opaque type UserId = String
@@ -144,15 +146,15 @@ opaque type UserId = String
 - 複数の実装方法を提供
 - 強力だが複雑になりがち
 
-## 次世代言語への展望
+## 今後の言語に期待すること
 
-これからの時代、**コンパイルタイムでエラーを防ぐガードレール**が重要になる：
+ユーザは、これからの言語ではコンパイル時のエラー防止がもっと重要になると考えていた：
 
 - コードの複雑化 → より多くのガードレールが必要
 - チーム開発の増加 → 暗黙知の型レベル表現が重要
 - AI コード生成の普及 → 型制約で AI の間違いも防げる
 
-次世代言語は **branded types が書きやすい** 設計になるはずだ：
+次世代言語は branded types を書きやすくするだろうと言っていた：
 
 - **Zig** → `const UserId = distinct []u8`
 - **Nim** → `type UserId = distinct string`
@@ -160,7 +162,7 @@ opaque type UserId = String
 
 ## 理想の branded types
 
-**薄いラップ**が理想的だ。Rust の `.0` アクセスは億劫：
+ユーザは、薄いラップが理想的だと言っていた。Rust の `.0` アクセスは面倒だと感じていた：
 
 ```rust
 user_id.0 // なんか冗長...
@@ -177,12 +179,13 @@ println!("{}", userId) // .0 不要
 let length = userId.length() // String のメソッドがそのまま
 processUser(userId) // 型チェックは効く
 processProduct(userId) // ❌ でもこれはエラー
+
 ```
 
-**次世代言語の理想**：
+次世代言語の理想：
 
 - 型安全性は Rust レベル
 - エルゴノミクスは Go レベル
 - パターンマッチは F# レベル
 
-**「透明だけど安全」**、これが次世代 branded types の目指すべき姿だ。型レベルプログラミングが「特殊技術」から「当たり前の作法」になる時代が来る。
+「透明だけど安全」が次世代 branded types の目指すべき姿だと言っていた。型レベルプログラミングが特殊な技術から当たり前のやり方になる時代が来るだろうと言っていた。
