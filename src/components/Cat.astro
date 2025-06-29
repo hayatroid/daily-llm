@@ -152,7 +152,7 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
 </style>
 
 <script>
-  import { processHeadingSlugs } from '../lib/slug';
+  import slugify from 'slugify';
 
   // Wait for DOM to be ready
   document.addEventListener('DOMContentLoaded', () => {
@@ -162,7 +162,24 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     if (headings.length === 0) return;
     
     // Generate unique slugs for all headings
-    const slugMap = processHeadingSlugs(headings);
+    const usedSlugs = new Set();
+    const slugMap = new Map();
+    
+    headings.forEach(heading => {
+      const text = heading.textContent || '';
+      let baseSlug = slugify(text, { lower: true, strict: true }) || 'heading';
+      
+      // Ensure uniqueness
+      let slug = baseSlug;
+      let counter = 1;
+      while (usedSlugs.has(slug)) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+      
+      slugMap.set(heading, slug);
+      usedSlugs.add(slug);
+    });
     
     // Apply anchor functionality to each heading
     headings.forEach(heading => {
