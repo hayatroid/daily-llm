@@ -33,6 +33,21 @@
 2. **コミット作成** - 適切なメッセージで commit 📝
 3. **プッシュ実行** - 安全にリモートへプッシュ 🚀
 
+### `/commit-fast [概要]` ⚡
+
+品質チェックを省略した高速コミット：
+
+1. **現状確認** - git status, git diff で変更確認 🔍
+2. **コミット作成** - 適切なメッセージで即座に commit 📝
+
+### `/push-fast [概要]` ⚡
+
+品質チェックを省略した高速プッシュ：
+
+1. **現状確認** - git status, git diff で変更確認 🔍
+2. **コミット作成** - 適切なメッセージで即座に commit 📝
+3. **プッシュ実行** - 即座にリモートへプッシュ 🚀
+
 ## 基本ワークフロー 🔄
 
 ```bash
@@ -51,6 +66,14 @@
 # 4. またはコミット→プッシュを一気に
 /push "記事追加とコマンド改善"
 # → 品質チェック → コミット → プッシュ
+
+# 4a. 開発中の高速版（品質チェック省略）
+/commit-fast "nav gap 調整"
+# → 現状確認 → 即座にコミット
+
+# 4b. 高速プッシュ（品質チェック省略）
+/push-fast "nav gap 調整"
+# → 現状確認 → 即座にコミット → 即座にプッシュ
 
 # 5. 一日の終わりにサマリー
 /summarize
@@ -85,11 +108,25 @@ src/content/daily/YYYY-MM-DD/
 
 全工程で `npm run format && npm run lint` を自動実行
 
+## コマンド使い分け 🚀
+
+### 本格運用コマンド
+
+- `/commit` - 品質チェック付きの安全なコミット
+- `/push` - 品質チェック付きの安全なプッシュ
+
+### 開発・反復作業コマンド ⚡
+
+- `/commit-fast` - 品質チェック省略の高速コミット
+- `/push-fast` - 品質チェック省略の高速プッシュ
+
 ## 詳細ドキュメント 📚
 
 - `/new` の詳細: [new.md](./new.md)
 - `/summarize` の詳細: [summarize.md](./summarize.md)
 - `/commit` の詳細: [commit.md](./commit.md)
 - `/push` の詳細: [push.md](./push.md)
+- `/commit-fast` の詳細: [commit-fast.md](./commit-fast.md)
+- `/push-fast` の詳細: [push-fast.md](./push-fast.md)
 
 各コマンドの具体的な実行手順、判断基準、成功の基準などは個別ファイルを参照してください。
