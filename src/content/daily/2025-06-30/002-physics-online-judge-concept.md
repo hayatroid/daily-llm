@@ -2,14 +2,14 @@
 title: '物理版オンラインジャッジの構想'
 tags:
   [
-    '物理教育',
-    'オンラインジャッジ',
-    'F#',
-    'Units of Measure',
-    '型システム',
-    '記号計算',
-    'Wolfram',
-    '自動採点',
+    'physics-education',
+    'online-judge',
+    'fsharp',
+    'units-of-measure',
+    'type-system',
+    'symbolic-computation',
+    'wolfram',
+    'automated-scoring',
   ]
 description: '高校物理の求値問題において、単位の整合性・極限値の妥当性・式の等価性を段階的に判定する自動採点システムの構想'
 ---

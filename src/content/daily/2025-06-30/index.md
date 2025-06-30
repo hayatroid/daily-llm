@@ -2,14 +2,14 @@
 title: '今日は型'
 tags:
   [
-    'TypeScript',
-    'Rust',
-    'Go',
-    'F#',
-    '型システム',
-    '型安全性',
-    '物理教育',
-    '設計パターン',
+    'typescript',
+    'rust',
+    'go',
+    'fsharp',
+    'type-system',
+    'type-safety',
+    'physics-education',
+    'design-pattern',
   ]
 description: '型システムを活用した設計意図の表現と、教育分野への応用可能性を探求'
 ---

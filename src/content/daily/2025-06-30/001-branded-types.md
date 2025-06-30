@@ -2,13 +2,13 @@
 title: 'Branded Types を考える'
 tags:
   [
-    'TypeScript',
-    'Rust',
-    'Go',
-    '型システム',
-    'Branded Types',
-    '設計パターン',
-    '型安全性',
+    'typescript',
+    'rust',
+    'go',
+    'type-system',
+    'branded-types',
+    'design-pattern',
+    'type-safety',
   ]
 description: 'Branded Types の実装コストと各言語でのアプローチを探り、型システムが設計意図を表現する言語として進化している現状を考察'
 ---
