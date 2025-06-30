@@ -55,9 +55,9 @@ function createBreadcrumbs(path: string) {
 const breadcrumbs = createBreadcrumbs(path);
 ---
 
-<nav class="nav">
+<div class="session">
   <Prompt command="pwd" />
-  <div class="breadcrumb">
+  <nav class="breadcrumb">
     {breadcrumbs.map((item, index) => (
       <>
         <a href={item.href || '#'} class:list={['path-link', { current: item.current }]}>
@@ -68,19 +68,10 @@ const breadcrumbs = createBreadcrumbs(path);
         )}
       </>
     ))}
-  </div>
-</nav>
+  </nav>
+</div>
 
 <style>
-  .nav {
-    font-family: var(--font-mono);
-    font-size: var(--text-normal);
-    margin-top: var(--space-section);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
   .breadcrumb {
     display: flex;
     align-items: center;
