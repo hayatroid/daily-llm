@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "preset-ai-writing": true,
+    "preset-ja-spacing": {
+      "ja-space-around-code": true,
+      "ja-space-around-link": true,
+      "ja-space-between-half-and-full-width": false
+    }
+  }
+}

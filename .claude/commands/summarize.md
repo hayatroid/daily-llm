@@ -72,9 +72,12 @@
    - 日英混在の自然な文章（CLAUDE.md ルール準拠）
    - **日英混在文の書式確認**: 英単語の前後に半角スペースを必ず挿入
 
-3. **ファイル作成・フォーマット**:
+3. **ファイル作成・品質チェック**:
    - `src/content/daily/YYYY-MM-DD/index.md` に書き込み
-   - `npm run format && npm run lint` 実行 (CLAUDE.md 必須ルール)
+   - 品質チェック実行 (CLAUDE.md 必須ルール)
+     - `npm run format && npm run lint` - コードフォーマット・lint
+     - `npm run textlint [ファイルパス]` - 日本語文章品質チェック
+     - textlint エラーがある場合は修正して再チェック
 
 ## 判断基準 🎯
 
@@ -124,7 +127,9 @@ description: '[その日の議論と主要トピックの1文概要]'
 
 # 出力
 src/content/daily/2025-06-29/index.md
-フォーマット: npm run format && npm run lint (正常完了)
+品質チェック:
+   - npm run format && npm run lint (正常完了)
+   - npm run textlint src/content/daily/2025-06-29/index.md (正常完了)
 ```
 
 ## エラーハンドリング 🛡️
@@ -143,5 +148,6 @@ src/content/daily/2025-06-29/index.md
 - ✅ サマリーが標準テンプレートに従っている
 - ✅ 日英混在文で英単語の前後に半角スペースが正しく挿入されている
 - ✅ `npm run format && npm run lint` が正常完了
+- ✅ `npm run textlint` が正常完了（警告なし）
 - ✅ CLAUDE.md フォーマットルールに準拠
 - ✅ 後から読み返して価値のあるサマリーになっている
