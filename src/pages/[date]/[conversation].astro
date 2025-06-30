@@ -1,7 +1,7 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Pwd from '../../components/Pwd.astro';
-import Cat from '../../components/Cat.astro';
+import Layout from '../../components/lv3-layout/Layout.astro';
+import Pwd from '../../components/lv2-commands/Pwd.astro';
+import Cat from '../../components/lv2-commands/Cat.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Entry } from '../../lib/util';
 
@@ -25,7 +25,7 @@ const { date, conversation } = Astro.params;
 const pageTitle = `${conversation} - ${date}`;
 ---
 
-<BaseLayout title={pageTitle}>
+<Layout title={pageTitle}>
   <Pwd path={`/${date}/${conversation}`} />
   <Cat path={`/${date}/${conversation}`} />
-</BaseLayout>
+</Layout>

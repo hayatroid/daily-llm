@@ -21,3 +21,27 @@ const { prevUrl, nextUrl, parentUrl } = Astro.props;
   )}
   <a href={parentUrl} class="nav-button">[..]</a>
 </div>
+
+<style>
+  .pager-controls {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: baseline;
+  }
+
+  .nav-button {
+    color: var(--term-link);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-button.disabled {
+    color: var(--term-text);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .nav-button:hover:not(.disabled) {
+    text-decoration: underline;
+  }
+</style>

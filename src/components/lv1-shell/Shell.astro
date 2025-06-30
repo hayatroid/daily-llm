@@ -1,0 +1,31 @@
+---
+import Prompt from '../lv0-atoms/Prompt.astro';
+
+export interface Props {
+  command: string;
+}
+
+const { command } = Astro.props;
+---
+
+<div class="session">
+  <Prompt {command} />
+  <div class="session-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .session {
+    font-family: var(--font-mono);
+    margin-top: var(--space-section);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .session-content {
+    /* Content container within session */
+  }
+</style>

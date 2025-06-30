@@ -107,7 +107,6 @@ body {
 
 /* Interactive elements (clickable links - white/black text) */
 a,
-.tree-link,
 .nav-arrow,
 .path-link,
 .tag-link,
@@ -134,7 +133,6 @@ h6 {
 /* Text elements (muted text) */
 .meta,
 .comment,
-.tree-meta,
 .empty,
 .empty-tree,
 .file-content,
@@ -151,28 +149,8 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Navigation - authentic CLI text styling */
-.nav-button {
-  /* Inherits color: var(--term-link) and text-decoration: none from 'a' */
-  white-space: nowrap;
-  margin-right: var(--space-sm);
-}
-
-.nav-button.disabled {
-  color: var(--term-text);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.container {
-  max-width: var(--container-width);
-  margin: 0 auto;
-}
-
-/* Code & Tree */
-pre,
-.tree,
-.tree-output {
+/* Code */
+pre {
   font-family: var(--font-mono);
   margin: var(--space-sm) 0;
 }
@@ -183,14 +161,6 @@ pre {
   overflow-x: auto;
   font-size: var(--text-small);
   border-radius: var(--border-radius);
-}
-
-.tree {
-  line-height: var(--line-height-compact);
-}
-
-.tree-container {
-  white-space: pre;
 }
 
 code {
@@ -225,47 +195,6 @@ ol {
   font-size: var(--text-small);
 }
 
-.tree {
-  font-size: var(--text-normal);
-  line-height: var(--line-height-normal);
-}
-
-/* Tree structure - simplified with data attributes */
-.tree-item {
-  display: flex;
-  align-items: baseline;
-  gap: var(--gap-default);
-  margin-bottom: calc((1.6 - 1) * var(--space-md) / 2);
-}
-
-.tree-item[data-level='0'] {
-  margin-left: calc(0 * var(--tree-indent));
-}
-.tree-item[data-level='1'] {
-  margin-left: calc(1 * var(--tree-indent));
-}
-.tree-item[data-level='2'] {
-  margin-left: calc(2 * var(--tree-indent));
-}
-.tree-item[data-level='3'] {
-  margin-left: calc(3 * var(--tree-indent));
-}
-
-.tree-meta {
-  color: var(--term-text);
-  font-size: var(--text-small);
-}
-
-/* Session containers */
-.session {
-  font-family: var(--font-mono);
-  margin-top: var(--space-section);
-  margin-bottom: var(--space-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
 /* Responsive */
 @media (max-width: var(--bp-mobile)) {
   body {
@@ -279,18 +208,6 @@ ol {
   h2,
   h3 {
     font-size: var(--text-small);
-  }
-
-  /* Tree responsive layout */
-  .tree-item[data-level='1'],
-  .tree-item[data-level='2'],
-  .tree-item[data-level='3'] {
-    flex-direction: column;
-    gap: var(--space-xs);
-  }
-
-  .tree-meta {
-    margin-left: 0;
   }
 }
 

@@ -4,9 +4,9 @@
  * Uses Content Collections internally for data access
  */
 import { getEntry } from 'astro:content';
-import Prompt from './Prompt.astro';
-import Pager from './Pager.astro';
-import { getNavigationForPath } from '../lib/navigation';
+import Shell from '../lv1-shell/Shell.astro';
+import Pager from '../lv0-atoms/Pager.astro';
+import { getNavigationForPath } from '../../lib/navigation';
 
 export interface Props {
   path: string; // "/2024-01-15/001-astro-setup" or "/2024-01-15/"
@@ -39,8 +39,7 @@ const navigation = await getNavigationForPath(path);
 const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
 ---
 
-<div class="session">
-  <Prompt command={`cat ${path}`} />
+<Shell command={`cat ${path}`}>
   <div class="file-content">
     <div class="pager-nav">
       <h1>{data.title}</h1>
@@ -59,7 +58,7 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     </div>
     <Content />
   </div>
-</div>
+</Shell>
 
 <style>
   .file-content {
@@ -105,18 +104,13 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     font-family: var(--font-mono);
   }
 
-  .file-content :global(.pager-controls) {
-    display: flex;
-    gap: var(--space-xs);
-    align-items: baseline;
-  }
 
 
   .file-content {
     line-height: var(--line-height-normal);
   }
 
-  /* Content styling for markdown - CLI heading structure */
+  /* Content styling for markdown */
   .file-content :global(h2) {
     margin-top: var(--space-md);
     margin-bottom: var(--space-sm);

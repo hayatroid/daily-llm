@@ -1,5 +1,5 @@
 ---
-import Prompt from './Prompt.astro';
+import Shell from '../lv1-shell/Shell.astro';
 
 export interface Props {
   path: string;
@@ -55,8 +55,7 @@ function createBreadcrumbs(path: string) {
 const breadcrumbs = createBreadcrumbs(path);
 ---
 
-<div class="session">
-  <Prompt command="pwd" />
+<Shell command="pwd">
   <nav class="breadcrumb">
     {breadcrumbs.map((item, index) => (
       <>
@@ -69,7 +68,7 @@ const breadcrumbs = createBreadcrumbs(path);
       </>
     ))}
   </nav>
-</div>
+</Shell>
 
 <style>
   .breadcrumb {

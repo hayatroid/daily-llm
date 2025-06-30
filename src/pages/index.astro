@@ -1,10 +1,10 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Pwd from '../components/Pwd.astro';
-import Tree from '../components/Tree.astro';
+import Layout from '../components/lv3-layout/Layout.astro';
+import Pwd from '../components/lv2-commands/Pwd.astro';
+import Tree from '../components/lv2-commands/Tree.astro';
 ---
 
-<BaseLayout title="Daily LLM Conversations">
+<Layout title="Daily LLM Conversations">
   <Pwd path="/" />
   <Tree path="/" />
-</BaseLayout>
+</Layout>

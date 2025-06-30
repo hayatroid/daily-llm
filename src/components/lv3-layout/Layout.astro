@@ -1,9 +1,9 @@
 ---
 import 'reset-css';
-import '../styles/terminal.css';
-import '../styles/syntax-highlighting.css';
-import Prompt from '../components/Prompt.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import '../../styles/terminal.css';
+import '../../styles/syntax-highlighting.css';
+import Prompt from '../lv0-atoms/Prompt.astro';
+import Switch from '../lv0-atoms/Switch.astro';
 
 export interface Props {
   title: string;
@@ -35,7 +35,7 @@ const { title, description = "Daily conversations with AI" } = Astro.props;
             </h1>
             <p class="comment"># Daily conversations with AI</p>
           </div>
-          <ThemeToggle />
+          <Switch />
         </div>
       </header>
       
@@ -70,6 +70,11 @@ const { title, description = "Daily conversations with AI" } = Astro.props;
     </script>
     
     <style>
+      .container {
+        max-width: var(--container-width);
+        margin: 0 auto;
+      }
+
       header {
         margin-bottom: var(--space-xl);
       }

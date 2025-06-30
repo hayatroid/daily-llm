@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Pwd from '../components/Pwd.astro';
-import Tree from '../components/Tree.astro';
-import Cat from '../components/Cat.astro';
+import Layout from '../components/lv3-layout/Layout.astro';
+import Pwd from '../components/lv2-commands/Pwd.astro';
+import Tree from '../components/lv2-commands/Tree.astro';
+import Cat from '../components/lv2-commands/Cat.astro';
 import { getCollection } from 'astro:content';
 import { Entry } from '../lib/util';
 
@@ -20,8 +20,8 @@ const { date } = Astro.params;
 const pageTitle = `${date} - Daily LLM Conversations`;
 ---
 
-<BaseLayout title={pageTitle}>
+<Layout title={pageTitle}>
   <Pwd path={`/${date}`} />
   <Cat path={`/${date}/`} />
   <Tree path={`/${date}`} />
-</BaseLayout>
+</Layout>
