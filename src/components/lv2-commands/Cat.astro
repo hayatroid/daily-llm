@@ -9,37 +9,29 @@ import Pager from '../lv0-atoms/Pager.astro';
 import { getNavigationForPath } from '../../lib/nav';
 
 export interface Props {
-  path: string; // "/2024-01-15/001-astro-setup" or "/2024-01-15/"
+  slug: string; // "2024-01-15/001-astro-setup" or "2024-01-15"
 }
 
-const { path } = Astro.props;
+const { slug } = Astro.props;
 
-// Convert path to slug for Content Collections
-// "/2024-01-15/001-astro-setup" → "2024-01-15/001-astro-setup"
-// "/2024-01-15/" → "2024-01-15"
-function pathToSlug(path: string): string {
-  const cleanPath = path.replace(/^\/|\/$/g, '');
-  return cleanPath || 'index';
-}
-
-const slug = pathToSlug(path);
+// Direct slug access - no conversion needed
 const entry = await getEntry('daily', slug);
 
 if (!entry) {
-  throw new Error(`Content not found for path: ${path} (slug: ${slug})`);
+  throw new Error(`Content not found for slug: ${slug}`);
 }
 
 const { data } = entry;
 const { Content } = await entry.render();
 
 // Get navigation automatically based on directory structure
-const navigation = await getNavigationForPath(path);
+const navigation = await getNavigationForPath(slug);
 
 // Filter frontmatter for meta display (exclude title and description)
 const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
 ---
 
-<Shell command={`cat ${path}`}>
+<Shell command={`cat /${slug === 'index' ? '' : slug + '/'}`}>
   <div class="file-content">
     <div class="pager-nav">
       <h1>{data.title}</h1>

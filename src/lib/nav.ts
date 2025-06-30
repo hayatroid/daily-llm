@@ -7,21 +7,14 @@ export interface NavigationContext {
   parentUrl: string;
 }
 
-// Convert path to slug for Content Collections
-function pathToSlug(path: string): string {
-  const cleanPath = path.replace(/^\/|\/$/g, '');
-  return cleanPath || 'index';
-}
-
 // Royal road navigation: automatically determine navigation based on directory structure
 export async function getNavigationForPath(
-  path: string
+  slug: string
 ): Promise<NavigationContext> {
-  const slug = pathToSlug(path);
   const entry = await getEntry('daily', slug);
 
   if (!entry) {
-    throw new Error(`Content not found for path: ${path} (slug: ${slug})`);
+    throw new Error(`Content not found for slug: ${slug}`);
   }
 
   const allEntries = await getCollection('daily');
