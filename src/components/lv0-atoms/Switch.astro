@@ -1,9 +1,9 @@
 ---
+
 ---
 
 <div class="theme-toggle-container">
-  <button id="theme-toggle" type="button" aria-label="Toggle theme">
-  </button>
+  <button id="theme-toggle" type="button" aria-label="Toggle theme"> </button>
 </div>
 
 <style lang="scss">
@@ -47,8 +47,6 @@
     transform: translateX(var(--toggle-travel)) translateY(-50%);
   }
 
-
-
   /* Mobile responsive */
   @media (max-width: var(--bp-mobile)) {
     #theme-toggle {
@@ -67,36 +65,30 @@
     :global([data-theme='light']) #theme-toggle::before {
       transform: translateX(calc(var(--toggle-travel) * 0.8)) translateY(-50%);
     }
-
   }
 </style>
 
-<script is:inline>
-  // Theme toggle functionality
+<script>
+  import { ThemeManager } from '../../lib/theme';
+
   function initThemeToggle() {
     const toggle = document.getElementById('theme-toggle');
-    
+
     if (toggle && !toggle.hasAttribute('data-initialized')) {
       toggle.setAttribute('data-initialized', 'true');
-      
-      toggle.addEventListener('click', function() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme') || 'dark';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+      toggle.addEventListener('click', () => {
+        ThemeManager.toggleTheme();
       });
     }
   }
-  
-  // Initialize immediately
+
+  // Handle all initialization scenarios
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initThemeToggle);
   } else {
     initThemeToggle();
   }
-  
-  // Also initialize on Astro page loads
+
+  // Handle Astro page navigation
   document.addEventListener('astro:page-load', initThemeToggle);
 </script>

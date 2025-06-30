@@ -9,16 +9,24 @@ const { prevUrl, nextUrl, parentUrl } = Astro.props;
 ---
 
 <div class="pager-controls">
-  {prevUrl ? (
-    <a href={prevUrl} class="nav-button">[←]</a>
-  ) : (
-    <span class="nav-button disabled">[←]</span>
-  )}
-  {nextUrl ? (
-    <a href={nextUrl} class="nav-button">[→]</a>
-  ) : (
-    <span class="nav-button disabled">[→]</span>
-  )}
+  {
+    prevUrl ? (
+      <a href={prevUrl} class="nav-button">
+        [←]
+      </a>
+    ) : (
+      <span class="nav-button disabled">[←]</span>
+    )
+  }
+  {
+    nextUrl ? (
+      <a href={nextUrl} class="nav-button">
+        [→]
+      </a>
+    ) : (
+      <span class="nav-button disabled">[→]</span>
+    )
+  }
   <a href={parentUrl} class="nav-button">[..]</a>
 </div>
 

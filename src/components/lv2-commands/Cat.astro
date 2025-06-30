@@ -22,7 +22,9 @@ const { Content } = await entry.render();
 
 const navigation = await getNavigationForPath(slug);
 
-const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
+const metaFields = Object.entries(data).filter(
+  ([key]) => key !== 'title' && key !== 'description'
+);
 ---
 
 <Shell command={`cat /${slug === 'index' ? '' : slug + '/'}`}>
@@ -32,15 +34,21 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
       <Pager {...navigation} />
     </div>
     <div class="meta">
-      {metaFields.map(([key, value]) => (
-        key === 'tags' && Array.isArray(value) ? (
-          value.map((tag: string) => (
-            <a href={`/tags/${encodeURIComponent(tag)}/`} class="tag">#{tag}</a>
-          ))
-        ) : (
-          <span class="meta-item">{key}: {value}</span>
+      {
+        metaFields.map(([key, value]) =>
+          key === 'tags' && Array.isArray(value) ? (
+            value.map((tag: string) => (
+              <a href={`/tags/${encodeURIComponent(tag)}/`} class="tag">
+                #{tag}
+              </a>
+            ))
+          ) : (
+            <span class="meta-item">
+              {key}: {value}
+            </span>
+          )
         )
-      ))}
+      }
     </div>
     <Content />
   </div>
@@ -91,9 +99,6 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     font-family: var(--font-mono);
   }
 
-
-
-
   /* Content styling for markdown */
   .file-content :global(h2) {
     margin-top: var(--space-md);
@@ -134,48 +139,54 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
     const data = encoder.encode(text || 'heading');
     const hashBuffer = await crypto.subtle.digest('SHA-1', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
     return hashHex.substring(0, 7);
   }
 
   // Wait for DOM to be ready
   document.addEventListener('DOMContentLoaded', async () => {
     // Get all headings in the file content
-    const headings = document.querySelectorAll('.file-content h1, .file-content h2, .file-content h3');
-    
+    const headings = document.querySelectorAll(
+      '.file-content h1, .file-content h2, .file-content h3'
+    );
+
     if (headings.length === 0) return;
-    
+
     // Apply anchor functionality to each heading
     for (const heading of headings) {
       const text = heading.textContent || '';
       const id = await generateHashId(text);
-      
+
       // Generate absolute URL for anchor
       const protocol = window.location.protocol;
       const host = window.location.host;
       const pathname = window.location.pathname;
-      const cleanPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+      const cleanPath = pathname.endsWith('/')
+        ? pathname.slice(0, -1)
+        : pathname;
       const absoluteUrl = `${protocol}//${host}${cleanPath}#${id}`;
-      
+
       // Get heading text content
       const headingText = heading.textContent;
-      
+
       // Determine heading marker based on tag name
       const markers = {
-        'H1': '# ',
-        'H2': '## ', 
-        'H3': '### ',
-        'H4': '#### ',
-        'H5': '##### ',
-        'H6': '###### '
+        H1: '# ',
+        H2: '## ',
+        H3: '### ',
+        H4: '#### ',
+        H5: '##### ',
+        H6: '###### ',
       };
       const marker = markers[heading.tagName] || '';
-      
+
       // Create new structure: <h2><span class="heading-marker">## </span><a>text</a></h2>
       const markerSpan = document.createElement('span');
       markerSpan.className = 'heading-marker';
       markerSpan.textContent = marker;
-      
+
       const link = document.createElement('a');
       link.href = absoluteUrl;
       link.id = id || '';
@@ -183,28 +194,28 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
       link.addEventListener('click', (e) => {
         e.preventDefault();
         window.history.pushState(null, '', absoluteUrl);
-        heading.scrollIntoView({ 
+        heading.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'start',
         });
       });
-      
+
       // Replace heading content with marker + link
       heading.innerHTML = '';
       heading.appendChild(markerSpan);
       heading.appendChild(link);
     }
-    
+
     // Handle direct anchor links on page load
     if (window.location.hash) {
       const targetId = window.location.hash.substring(1);
       const targetHeading = document.getElementById(targetId);
-      
+
       if (targetHeading) {
         setTimeout(() => {
-          targetHeading.scrollIntoView({ 
+          targetHeading.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'start',
           });
         }, 100);
       }

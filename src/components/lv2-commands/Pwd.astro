@@ -9,46 +9,47 @@ const { path } = Astro.props;
 
 // Create breadcrumbs from path
 function createBreadcrumbs(path: string) {
-  const breadcrumbs: Array<{ label: string; href: string; current: boolean }> = [];
-  
+  const breadcrumbs: Array<{ label: string; href: string; current: boolean }> =
+    [];
+
   // Always start with Home
   breadcrumbs.push({ label: 'Home', href: '/', current: path === '/' });
-  
+
   if (path === '/') {
     return breadcrumbs;
   }
-  
+
   const parts = path.split('/').filter(Boolean);
   let currentPath = '';
-  
+
   for (let i = 0; i < parts.length; i++) {
     currentPath += '/' + parts[i];
     const isLast = i === parts.length - 1;
-    
+
     // Handle special paths
     if (parts[i] === 'tags') {
-      breadcrumbs.push({ 
-        label: 'tags', 
-        href: '/tags/', 
-        current: isLast 
+      breadcrumbs.push({
+        label: 'tags',
+        href: '/tags/',
+        current: isLast,
       });
     } else if (parts[0] === 'tags' && i === 1) {
       // Tag name after /tags/
-      breadcrumbs.push({ 
-        label: parts[i], 
-        href: `/tags/${encodeURIComponent(parts[i])}/`, 
-        current: isLast 
+      breadcrumbs.push({
+        label: parts[i],
+        href: `/tags/${encodeURIComponent(parts[i])}/`,
+        current: isLast,
       });
     } else {
       // Date or other paths
-      breadcrumbs.push({ 
-        label: parts[i], 
-        href: currentPath + '/', 
-        current: isLast 
+      breadcrumbs.push({
+        label: parts[i],
+        href: currentPath + '/',
+        current: isLast,
       });
     }
   }
-  
+
   return breadcrumbs;
 }
 
@@ -57,16 +58,21 @@ const breadcrumbs = createBreadcrumbs(path);
 
 <Shell command="pwd">
   <nav class="breadcrumb">
-    {breadcrumbs.map((item, index) => (
-      <>
-        <a href={item.href || '#'} class:list={['path-link', { current: item.current }]}>
-          {item.label}
-        </a>
-        {index < breadcrumbs.length - 1 && (
-          <span class="path-separator">/</span>
-        )}
-      </>
-    ))}
+    {
+      breadcrumbs.map((item, index) => (
+        <>
+          <a
+            href={item.href || '#'}
+            class:list={['path-link', { current: item.current }]}
+          >
+            {item.label}
+          </a>
+          {index < breadcrumbs.length - 1 && (
+            <span class="path-separator">/</span>
+          )}
+        </>
+      ))
+    }
   </nav>
 </Shell>
 

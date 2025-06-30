@@ -1,177 +1,31 @@
 ---
 // Tree: display directory structure
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { Entry } from '../../lib/utils';
+import { getCollection } from 'astro:content';
+import { buildTree } from '../../lib/tree';
 import Shell from '../lv1-shell/Shell.astro';
 
 export interface Props {
   path: string; // "/" | "/2024-01-15/" | "/tags" | "/tags/react"
 }
 
-interface TreeItem {
-  level: number;
-  href: string;
-  text: string;
-  meta?: string;
-}
-
 const { path } = Astro.props;
 
-// Load all entries
 const allEntries = await getCollection('daily');
-
-let treeItems: TreeItem[] = [];
-
-// Determine view type from path
-if (path === '/') {
-  // Home: Date-based conversation listing
-  const entriesByDate = new Map<string, typeof allEntries>();
-
-  allEntries.forEach((entry: CollectionEntry<'daily'>) => {
-    const { date } = Entry.parse(entry);
-    if (!entriesByDate.has(date)) {
-      entriesByDate.set(date, []);
-    }
-    entriesByDate.get(date).push(entry);
-  });
-
-  const sortedDates = Array.from(entriesByDate.keys()).sort().reverse();
-
-  treeItems.push({
-    level: 0,
-    href: '/',
-    text: 'Home/',
-  });
-
-  sortedDates.forEach((date) => {
-    const dateEntries = entriesByDate.get(date);
-    const conversations = dateEntries.filter(Entry.isConversation);
-
-    treeItems.push({
-      level: 1,
-      href: `/${date}/`,
-      text: `${date}/`,
-      meta: conversations.length > 0 ? `${conversations.length} conversations` : undefined,
-    });
-
-    Entry.sort(conversations).forEach((entry) => {
-      treeItems.push({
-        level: 2,
-        href: `/${entry.slug}/`,
-        text: entry.data.title,
-      });
-    });
-  });
-} else if (path === '/tags') {
-  // Tags index: List all tags with counts
-  const conversationEntries = allEntries.filter(Entry.isConversation);
-  const tagCounts = new Map<string, number>();
-
-  conversationEntries.forEach((entry: CollectionEntry<'daily'>) => {
-    if (entry.data.tags && Array.isArray(entry.data.tags)) {
-      entry.data.tags.forEach((tag: string) => {
-        tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-      });
-    }
-  });
-
-  const sortedTags = Array.from(tagCounts.keys()).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-
-  treeItems.push({
-    level: 0,
-    href: '/tags/',
-    text: 'tags/',
-  });
-
-  sortedTags.forEach((tagName) => {
-    const count = tagCounts.get(tagName);
-    treeItems.push({
-      level: 1,
-      href: `/tags/${encodeURIComponent(tagName)}/`,
-      text: `#${tagName}`,
-      meta: `${count} conversation${count !== 1 ? 's' : ''}`,
-    });
-  });
-} else if (path.startsWith('/tags/')) {
-  // Specific tag: Show conversations with this tag grouped by date
-  const tag = path.replace('/tags/', '').replace(/\/$/, '');
-  const conversationEntries = allEntries.filter(Entry.isConversation);
-  const taggedConversations = conversationEntries.filter(
-    (entry: CollectionEntry<'daily'>) =>
-      entry.data.tags &&
-      Array.isArray(entry.data.tags) &&
-      entry.data.tags.includes(tag)
-  );
-
-  const dateGroups = new Map<string, typeof allEntries>();
-  taggedConversations.forEach((entry: CollectionEntry<'daily'>) => {
-    const { date } = Entry.parse(entry);
-    if (!dateGroups.has(date)) {
-      dateGroups.set(date, []);
-    }
-    dateGroups.get(date).push(entry);
-  });
-
-  const sortedDates = Array.from(dateGroups.keys()).sort().reverse();
-
-  treeItems.push({
-    level: 0,
-    href: `/tags/${encodeURIComponent(tag)}/`,
-    text: `#${tag}/`,
-    meta: `${taggedConversations.length} conversations`,
-  });
-
-  sortedDates.forEach((date) => {
-    const conversations = dateGroups.get(date);
-
-    treeItems.push({
-      level: 1,
-      href: `/${date}/`,
-      text: `${date}/`,
-      meta: `${conversations.length} conversations`,
-    });
-
-    Entry.sort(conversations).forEach((entry) => {
-      treeItems.push({
-        level: 2,
-        href: `/${entry.slug}/`,
-        text: entry.data.title,
-      });
-    });
-  });
-} else {
-  // Specific date: Show conversations in this date
-  const targetDate = path.replace(/^\/|\/$/g, '');
-  const dateEntries = allEntries.filter((entry: CollectionEntry<'daily'>) => {
-    const { date } = Entry.parse(entry);
-    return date === targetDate;
-  });
-  const conversations = dateEntries.filter(Entry.isConversation);
-
-  treeItems.push({
-    level: 0,
-    href: `/${targetDate}/`,
-    text: `${targetDate}/`,
-  });
-
-  Entry.sort(conversations).forEach((entry) => {
-    treeItems.push({
-      level: 1,
-      href: `/${entry.slug}/`,
-      text: entry.data.title,
-    });
-  });
-}
+const treeItems = buildTree({ entries: allEntries, path });
 ---
 
 <Shell command="tree">
   <div class="tree">
-    {treeItems.map((item) => (
-      <div class="tree-item" data-level={item.level}>
-        <a href={item.href} class="tree-link">{item.text}</a>
-        {item.meta && <span class="tree-meta">{item.meta}</span>}
-      </div>
-    ))}
+    {
+      treeItems.map((item) => (
+        <div class="tree-item" data-level={item.level}>
+          <a href={item.href} class="tree-link">
+            {item.text}
+          </a>
+          {item.meta && <span class="tree-meta">{item.meta}</span>}
+        </div>
+      ))
+    }
   </div>
 </Shell>
 
@@ -179,8 +33,7 @@ if (path === '/') {
   .tree {
     font-family: var(--font-mono);
     font-size: var(--text-normal);
-    line-height: var(--line-height-normal);
-    margin: var(--space-sm) 0;
+    line-height: var(--line-height-compact);
   }
 
   .tree-item {
@@ -188,7 +41,7 @@ if (path === '/') {
     align-items: baseline;
     gap: var(--gap-default);
     margin-bottom: calc((1.6 - 1) * var(--space-md) / 2);
-    
+
     &[data-level='0'] {
       margin-left: calc(0 * var(--tree-indent));
     }
@@ -204,8 +57,8 @@ if (path === '/') {
   }
 
   .tree-meta {
-    color: var(--term-text);
     font-size: var(--text-small);
+    color: var(--term-text);
   }
 
   /* Mobile responsive */
@@ -220,7 +73,7 @@ if (path === '/') {
     }
 
     .tree-meta {
-      margin-left: 0;
+      margin-left: var(--space-sm);
     }
   }
 </style>

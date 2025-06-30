@@ -9,11 +9,15 @@ const { command, clickable = false, href } = Astro.props;
 ---
 
 <div class="command-block">
-  <span class="prompt">$</span>{clickable && href ? (
-    <a href={href} class="command clickable-command">{command}</a>
-  ) : (
-    <span class="command">{command}</span>
-  )}
+  <span class="prompt">$</span>{
+    clickable && href ? (
+      <a href={href} class="command clickable-command">
+        {command}
+      </a>
+    ) : (
+      <span class="command">{command}</span>
+    )
+  }
 </div>
 
 <style lang="scss">
