@@ -65,7 +65,13 @@
 
 3. **ファイル作成**: `src/content/daily/YYYY-MM-DD/NNN-slug.md`
 
-4. **品質チェック実行**: 以下を順次実行 (CLAUDE.md 必須ルール)
+4. **ダミーサマリー作成**: その日の最初の記事の場合
+
+   - `src/content/daily/YYYY-MM-DD/index.md` が存在しない場合のみ作成
+   - ダミーサマリーテンプレートを使用してプレースホルダーを配置
+   - ビルドエラーを防止し、後で `/summarize` による上書きを前提とする
+
+5. **品質チェック実行**: 以下を順次実行 (CLAUDE.md 必須ルール)
    - `npm run format && npm run lint` - コードフォーマット・lint
    - `npm run textlint [ファイルパス]` - 日本語文章品質チェック
    - textlint エラーがある場合は修正して再チェック
@@ -96,6 +102,8 @@
 - ✅ 後から読み返して学びのある記事になっている
 
 ## ファイルテンプレート 📄
+
+### 記事テンプレート
 
 ````markdown
 ---
@@ -131,6 +139,18 @@ description: '[アイデア + アプローチ + 結果の1文要約]'
 
 ````
 
+### ダミーサマリーテンプレート
+
+```markdown
+---
+title: 'Summary not yet created'
+tags: []
+description: 'Summary not yet created'
+---
+
+Use `/summarize` to generate a daily summary.
+```
+
 ## 実行例 💫
 
 ```bash
@@ -144,6 +164,7 @@ description: '[アイデア + アプローチ + 結果の1文要約]'
 
 # 出力
 src/content/daily/2025-06-29/002-test-driven-entrance-exam-physics.md
+src/content/daily/2025-06-29/index.md (ダミーサマリー自動作成)
 4. 品質チェック:
    - npm run format && npm run lint (正常完了)
    - npm run textlint src/content/daily/2025-06-29/002-test-driven-entrance-exam-physics.md (正常完了)
@@ -157,6 +178,7 @@ src/content/daily/2025-06-29/002-test-driven-entrance-exam-physics.md
 - ✅ タイトルが基準を満たしている
 - ✅ 記事が標準テンプレートに従っている
 - ✅ 日英混在文で英単語の前後に半角スペースが正しく挿入されている
+- ✅ その日の最初の記事の場合、ダミーサマリーが適切に作成されている
 - ✅ `npm run format && npm run lint` が正常完了
 - ✅ `npm run textlint` が正常完了（警告なし）
 - ✅ CLAUDE.md フォーマットルールに準拠
