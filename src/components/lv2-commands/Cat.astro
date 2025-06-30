@@ -60,9 +60,10 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
   </div>
 </Shell>
 
-<style>
+<style lang="scss">
   .file-content {
     margin-left: 0;
+    line-height: var(--line-height-normal);
   }
 
   .meta {
@@ -106,9 +107,6 @@ const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key
 
 
 
-  .file-content {
-    line-height: var(--line-height-normal);
-  }
 
   /* Content styling for markdown */
   .file-content :global(h2) {

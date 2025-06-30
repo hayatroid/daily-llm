@@ -178,7 +178,7 @@ if (path === '/') {
   </div>
 </Shell>
 
-<style>
+<style lang="scss">
   .tree {
     font-family: var(--font-mono);
     font-size: var(--text-normal);
@@ -191,19 +191,19 @@ if (path === '/') {
     align-items: baseline;
     gap: var(--gap-default);
     margin-bottom: calc((1.6 - 1) * var(--space-md) / 2);
-  }
-
-  .tree-item[data-level='0'] {
-    margin-left: calc(0 * var(--tree-indent));
-  }
-  .tree-item[data-level='1'] {
-    margin-left: calc(1 * var(--tree-indent));
-  }
-  .tree-item[data-level='2'] {
-    margin-left: calc(2 * var(--tree-indent));
-  }
-  .tree-item[data-level='3'] {
-    margin-left: calc(3 * var(--tree-indent));
+    
+    &[data-level='0'] {
+      margin-left: calc(0 * var(--tree-indent));
+    }
+    &[data-level='1'] {
+      margin-left: calc(1 * var(--tree-indent));
+    }
+    &[data-level='2'] {
+      margin-left: calc(2 * var(--tree-indent));
+    }
+    &[data-level='3'] {
+      margin-left: calc(3 * var(--tree-indent));
+    }
   }
 
   .tree-meta {
@@ -213,11 +213,13 @@ if (path === '/') {
 
   /* Mobile responsive */
   @media (max-width: var(--bp-mobile)) {
-    .tree-item[data-level='1'],
-    .tree-item[data-level='2'],
-    .tree-item[data-level='3'] {
-      flex-direction: column;
-      gap: var(--space-xs);
+    .tree-item {
+      &[data-level='1'],
+      &[data-level='2'],
+      &[data-level='3'] {
+        flex-direction: column;
+        gap: var(--space-xs);
+      }
     }
 
     .tree-meta {

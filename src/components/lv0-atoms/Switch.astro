@@ -6,7 +6,7 @@
   </button>
 </div>
 
-<style>
+<style lang="scss">
   .theme-toggle-container {
     display: flex;
     align-items: center;
@@ -27,20 +27,20 @@
     justify-content: center;
     transition: opacity var(--duration-fast) ease-in-out;
     overflow: hidden;
-  }
 
-  #theme-toggle::before {
-    content: '';
-    position: absolute;
-    width: var(--toggle-slider-size);
-    height: var(--toggle-slider-size);
-    background: var(--term-link);
-    border-radius: 50%;
-    left: var(--toggle-padding);
-    top: 50%;
-    transform: translateY(-50%);
-    transition: transform var(--duration-fast) ease-in-out;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    &::before {
+      content: '';
+      position: absolute;
+      width: var(--toggle-slider-size);
+      height: var(--toggle-slider-size);
+      background: var(--term-link);
+      border-radius: 50%;
+      left: var(--toggle-padding);
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform var(--duration-fast) ease-in-out;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
   }
 
   :global([data-theme='light']) #theme-toggle::before {

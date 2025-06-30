@@ -22,7 +22,7 @@ const { prevUrl, nextUrl, parentUrl } = Astro.props;
   <a href={parentUrl} class="nav-button">[..]</a>
 </div>
 
-<style>
+<style lang="scss">
   .pager-controls {
     display: flex;
     gap: var(--space-xs);
@@ -33,15 +33,15 @@ const { prevUrl, nextUrl, parentUrl } = Astro.props;
     color: var(--term-link);
     text-decoration: none;
     white-space: nowrap;
-  }
 
-  .nav-button.disabled {
-    color: var(--term-text);
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+    &.disabled {
+      color: var(--term-text);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
 
-  .nav-button:hover:not(.disabled) {
-    text-decoration: underline;
+    &:hover:not(.disabled) {
+      text-decoration: underline;
+    }
   }
 </style>

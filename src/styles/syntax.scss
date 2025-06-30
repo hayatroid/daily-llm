@@ -1,4 +1,4 @@
-/* One Half Dark */
+// One Half Dark
 :root {
   --astro-code-color-text: #dcdfe4;
   --astro-code-color-background: var(--bg-code-dark);
@@ -13,7 +13,7 @@
   --astro-code-token-link: #56b6c2;
 }
 
-/* One Half Light */
+// One Half Light
 [data-theme='light'] {
   --astro-code-color-text: #383a42;
   --astro-code-color-background: var(--bg-code-dark);

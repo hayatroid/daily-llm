@@ -1,13 +1,13 @@
-/* Dark theme (default) - One Half Dark palette */
+// Dark theme (default) - One Half Dark palette
 :root {
-  /* Terminal colors */
+  // Terminal colors
   --term-green: #98c379;
   --term-blue: #61afef;
   --term-bg: #282c34;
   --term-link: #dcdfe4;
   --term-text: #8b949e;
 
-  /* Spacing */
+  // Spacing
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -15,7 +15,7 @@
   --space-xl: 2rem;
   --space-section: 2.5rem;
 
-  /* Typography */
+  // Typography
   --text-normal: 1rem;
   --text-small: 0.875rem;
   --text-lg: 1.5rem;
@@ -26,7 +26,7 @@
   --line-height-tight: 1;
   --font-mono: 'Fira Code', monospace;
 
-  /* Layout */
+  // Layout
   --gap-default: 1ch;
   --min-width-small: 4ch;
   --container-width: 80ch;
@@ -37,12 +37,12 @@
   --prompt-spacing: 1ch;
   --opacity-hover: 0.7;
 
-  /* Animation & backgrounds */
+  // Animation & backgrounds
   --duration-fast: 0.2s;
   --duration-blink: 1s;
   --bg-code-dark: rgba(255, 255, 255, 0.05);
 
-  /* Theme toggle */
+  // Theme toggle
   --toggle-width: calc(var(--space-lg) + var(--space-md));
   --toggle-height: calc(var(--space-md) + var(--space-sm));
   --toggle-padding: calc(var(--space-xs) - 1px);
@@ -54,42 +54,31 @@
       (var(--toggle-padding) * 2)
   );
 
-  /* Responsive */
+  // Responsive
   --bp-mobile: 767px;
 }
 
-/* Light theme - One Half Light palette */
+// Light theme - One Half Light palette
 [data-theme='light'] {
-  /* Terminal colors */
+  // Terminal colors
   --term-green: #50a14f;
   --term-blue: #0184bc;
   --term-bg: #fafafa;
   --term-link: #383a42;
   --term-text: #6c7680;
 
-  /* Code backgrounds */
+  // Code backgrounds
   --bg-code-dark: rgba(0, 0, 0, 0.03);
 }
 
-/* Theme transition */
+// Theme transition
 html {
-  transition: background-color var(--duration-fast) ease-in-out;
-}
-
-body {
-  transition:
-    background-color var(--duration-fast) ease-in-out,
-    color var(--duration-fast) ease-in-out;
-}
-
-html {
-  /* Modern solution: Reserve space for scrollbar without always showing it */
+  // Modern solution: Reserve space for scrollbar without always showing it
   scrollbar-gutter: stable;
-}
+  transition: background-color var(--duration-fast) ease-in-out;
 
-/* Fallback for older browsers */
-@supports not (scrollbar-gutter: stable) {
-  html {
+  // Fallback for older browsers
+  @supports not (scrollbar-gutter: stable) {
     margin-left: calc(100vw - 100%);
   }
 }
@@ -101,15 +90,31 @@ body {
   font-family: var(--font-mono);
   line-height: var(--line-height-normal);
   font-size: var(--text-normal);
+  transition:
+    background-color var(--duration-fast) ease-in-out,
+    color var(--duration-fast) ease-in-out;
+
+  @media (max-width: var(--bp-mobile)) {
+    padding: var(--space-sm);
+    font-size: var(--text-small);
+  }
 }
 
-/* Global color system - role-based styling */
+// Global color system - role-based styling
 
-/* Interactive elements (clickable links - white/black text) */
+// Interactive elements (clickable links - white/black text)
 a,
 .nav-arrow,
 .path-link,
-.tag-link,
+.tag-link {
+  color: var(--term-link);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -118,9 +123,20 @@ h5,
 h6 {
   color: var(--term-link);
   text-decoration: none;
+
+  @media (max-width: var(--bp-mobile)) {
+    h1 {
+      font-size: var(--text-normal);
+    }
+
+    h2,
+    h3 {
+      font-size: var(--text-small);
+    }
+  }
 }
 
-/* Heading markers - consistent with prompt styling */
+// Heading markers - consistent with prompt styling
 .heading-marker {
   color: var(--term-text);
   margin-right: 1ch;
@@ -130,7 +146,7 @@ h6 {
   color: var(--term-text);
 }
 
-/* Text elements (muted text) */
+// Text elements (muted text)
 .meta,
 .comment,
 .empty,
@@ -139,23 +155,25 @@ h6 {
 ul,
 ol,
 li,
-p,
-code {
+p {
   color: var(--term-text);
 }
 
-/* Hover effects - all links get underline in their text color */
-a:hover {
-  text-decoration: underline;
+// Code styling
+code {
+  font-family: var(--font-mono);
+  color: var(--term-text);
+
+  // Inline code in paragraphs and lists
+  p &,
+  li & {
+    color: var(--term-blue);
+  }
 }
 
-/* Code */
 pre {
   font-family: var(--font-mono);
   margin: var(--space-sm) 0;
-}
-
-pre {
   padding: var(--space-sm);
   background: var(--bg-code-dark);
   overflow-x: auto;
@@ -163,26 +181,7 @@ pre {
   border-radius: var(--border-radius);
 }
 
-code {
-  font-family: var(--font-mono);
-  color: var(--term-text);
-}
-
-p code,
-li code {
-  color: var(--term-blue);
-}
-
-/* Text content defaults */
-ul,
-ol,
-li,
-p,
-.meta,
-.comment {
-  color: var(--term-text);
-}
-
+// Lists
 ul {
   list-style-type: disc;
 }
@@ -191,28 +190,12 @@ ol {
   list-style-type: decimal;
 }
 
+// Meta information
 .meta {
   font-size: var(--text-small);
 }
 
-/* Responsive */
-@media (max-width: var(--bp-mobile)) {
-  body {
-    padding: var(--space-sm);
-    font-size: var(--text-small);
-  }
-
-  h1 {
-    font-size: var(--text-normal);
-  }
-  h2,
-  h3 {
-    font-size: var(--text-small);
-  }
-}
-
-/* Unified spacing utility classes */
-
+// Unified spacing utility classes
 .section-gap {
   margin-bottom: var(--space-lg);
 }

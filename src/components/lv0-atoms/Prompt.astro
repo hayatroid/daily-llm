@@ -16,7 +16,7 @@ const { command, clickable = false, href } = Astro.props;
   )}
 </div>
 
-<style>
+<style lang="scss">
   .command-block {
     font-family: var(--font-mono);
     display: flex;
@@ -31,26 +31,26 @@ const { command, clickable = false, href } = Astro.props;
 
   .command {
     font-family: var(--font-mono);
+
+    /* Display elements (non-interactive commands - green text) */
+    &:not(.clickable-command) {
+      color: var(--term-green);
+      text-decoration: none;
+    }
   }
 
   /* Interactive elements (clickable commands - green text) */
   .clickable-command {
     color: var(--term-green);
     text-decoration: none;
-  }
 
-  /* Display elements (non-interactive commands - green text) */
-  .command:not(.clickable-command) {
-    color: var(--term-green);
-    text-decoration: none;
-  }
-
-  /* Cursor animations */
-  .clickable-command::after {
-    content: '█';
-    animation: blink var(--duration-blink) infinite;
-    color: var(--term-green);
-    margin-left: var(--char-offset);
+    /* Cursor animations */
+    &::after {
+      content: '█';
+      animation: blink var(--duration-blink) infinite;
+      color: var(--term-green);
+      margin-left: var(--char-offset);
+    }
   }
 
   @keyframes blink {
