@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pwd from '../../components/Pwd.astro';
 import Tree from '../../components/Tree.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { Entry } from '../../lib/util';
 
 export async function getStaticPaths() {
@@ -10,9 +10,9 @@ export async function getStaticPaths() {
 
   // Extract all unique tags from conversation entries
   const allTags = new Set<string>();
-  allEntries.filter(Entry.isConversation).forEach((entry) => {
+  allEntries.filter(Entry.isConversation).forEach((entry: CollectionEntry<'daily'>) => {
     if (entry.data.tags && Array.isArray(entry.data.tags)) {
-      entry.data.tags.forEach((tag) => allTags.add(tag));
+      entry.data.tags.forEach((tag: string) => allTags.add(tag));
     }
   });
 
