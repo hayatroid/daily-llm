@@ -1,7 +1,7 @@
 /* One Half Dark */
 :root {
   --astro-code-color-text: #dcdfe4;
-  --astro-code-color-background: transparent;
+  --astro-code-color-background: var(--bg-code-dark);
   --astro-code-token-constant: #61afef;
   --astro-code-token-string: #98c379;
   --astro-code-token-comment: #5c6370;
@@ -16,7 +16,7 @@
 /* One Half Light */
 [data-theme='light'] {
   --astro-code-color-text: #383a42;
-  --astro-code-color-background: transparent;
+  --astro-code-color-background: var(--bg-code-dark);
   --astro-code-token-constant: #0184bc;
   --astro-code-token-string: #50a14f;
   --astro-code-token-comment: #a0a1a7;
