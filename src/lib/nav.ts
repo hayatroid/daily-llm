@@ -1,5 +1,5 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { Entry } from './util';
+import { Entry } from './utils';
 
 export interface NavigationContext {
   prevUrl?: string;

@@ -3,7 +3,7 @@ import Layout from '../../components/lv3-layout/Layout.astro';
 import Pwd from '../../components/lv2-commands/Pwd.astro';
 import Cat from '../../components/lv2-commands/Cat.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { Entry } from '../../lib/util';
+import { Entry } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const allEntries = await getCollection('daily');

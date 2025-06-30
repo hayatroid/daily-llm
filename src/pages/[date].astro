@@ -4,7 +4,7 @@ import Pwd from '../components/lv2-commands/Pwd.astro';
 import Tree from '../components/lv2-commands/Tree.astro';
 import Cat from '../components/lv2-commands/Cat.astro';
 import { getCollection } from 'astro:content';
-import { Entry } from '../lib/util';
+import { Entry } from '../lib/utils';
 
 export async function getStaticPaths() {
   const allEntries = await getCollection('daily');
