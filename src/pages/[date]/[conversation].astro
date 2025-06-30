@@ -2,22 +2,10 @@
 import Layout from '../../components/lv3-layout/Layout.astro';
 import Pwd from '../../components/lv2-commands/Pwd.astro';
 import Cat from '../../components/lv2-commands/Cat.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { Entry } from '../../lib/utils';
+import { StaticPaths } from '../../lib/data';
 
 export async function getStaticPaths() {
-  const allEntries = await getCollection('daily');
-  const conversations = allEntries.filter(Entry.isConversation);
-
-  return conversations.map((entry: CollectionEntry<'daily'>) => {
-    const { date, filename } = Entry.parse(entry);
-    return {
-      params: {
-        date,
-        conversation: filename,
-      },
-    };
-  });
+  return await StaticPaths.getConversations();
 }
 
 const { date, conversation } = Astro.params;

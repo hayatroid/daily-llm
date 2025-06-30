@@ -3,16 +3,10 @@ import Layout from '../components/lv3-layout/Layout.astro';
 import Pwd from '../components/lv2-commands/Pwd.astro';
 import Tree from '../components/lv2-commands/Tree.astro';
 import Cat from '../components/lv2-commands/Cat.astro';
-import { getCollection } from 'astro:content';
-import { Entry } from '../lib/utils';
+import { StaticPaths } from '../lib/data';
 
 export async function getStaticPaths() {
-  const allEntries = await getCollection('daily');
-  const dates = Entry.getDates(allEntries);
-
-  return dates.map((date) => ({
-    params: { date },
-  }));
+  return await StaticPaths.getDates();
 }
 
 const { date } = Astro.params;

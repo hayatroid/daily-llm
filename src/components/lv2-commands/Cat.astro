@@ -1,8 +1,5 @@
 ---
-/**
- * Cat component - displays single content entry based on path
- * Uses Content Collections internally for data access
- */
+// Cat: display content entry
 import { getEntry } from 'astro:content';
 import Shell from '../lv1-shell/Shell.astro';
 import Pager from '../lv0-atoms/Pager.astro';
@@ -14,7 +11,6 @@ export interface Props {
 
 const { slug } = Astro.props;
 
-// Direct slug access - no conversion needed
 const entry = await getEntry('daily', slug);
 
 if (!entry) {
@@ -24,10 +20,8 @@ if (!entry) {
 const { data } = entry;
 const { Content } = await entry.render();
 
-// Get navigation automatically based on directory structure
 const navigation = await getNavigationForPath(slug);
 
-// Filter frontmatter for meta display (exclude title and description)
 const metaFields = Object.entries(data).filter(([key]) => key !== 'title' && key !== 'description');
 ---
 

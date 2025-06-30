@@ -7,7 +7,7 @@ export interface NavigationContext {
   parentUrl: string;
 }
 
-// Royal road navigation: automatically determine navigation based on directory structure
+// Determine navigation based on directory structure
 export async function getNavigationForPath(
   slug: string
 ): Promise<NavigationContext> {
@@ -20,10 +20,10 @@ export async function getNavigationForPath(
   const allEntries = await getCollection('daily');
 
   if (!Entry.isConversation(entry)) {
-    // For index.md: navigate between directories
+    // Navigate between directories
     return getDirectoryNavigation(entry, allEntries);
   } else {
-    // For content files: navigate within directory siblings
+    // Navigate within directory
     return getWithinDirectoryNavigation(entry, allEntries);
   }
 }

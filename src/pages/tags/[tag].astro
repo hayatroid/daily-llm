@@ -2,23 +2,10 @@
 import Layout from '../../components/lv3-layout/Layout.astro';
 import Pwd from '../../components/lv2-commands/Pwd.astro';
 import Tree from '../../components/lv2-commands/Tree.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { Entry } from '../../lib/utils';
+import { StaticPaths } from '../../lib/data';
 
 export async function getStaticPaths() {
-  const allEntries = await getCollection('daily');
-
-  // Extract all unique tags from conversation entries
-  const allTags = new Set<string>();
-  allEntries.filter(Entry.isConversation).forEach((entry: CollectionEntry<'daily'>) => {
-    if (entry.data.tags && Array.isArray(entry.data.tags)) {
-      entry.data.tags.forEach((tag: string) => allTags.add(tag));
-    }
-  });
-
-  return Array.from(allTags).map((tag) => ({
-    params: { tag },
-  }));
+  return await StaticPaths.getTags();
 }
 
 const { tag } = Astro.params;
