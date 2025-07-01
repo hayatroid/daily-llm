@@ -73,7 +73,7 @@ impl Email {
 }
 ```
 
-Go では defined type と struct のラップという2つの選択肢がある。
+Go では defined type と struct のラップという 2 つの選択肢がある。
 
 ```go
 // defined type - 型の区別はできるが、不正な値の作成は防げない
