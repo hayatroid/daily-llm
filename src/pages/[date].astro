@@ -3,7 +3,7 @@ import Layout from '../components/lv3-layout/Layout.astro';
 import Pwd from '../components/lv2-commands/Pwd.astro';
 import Tree from '../components/lv2-commands/Tree.astro';
 import Cat from '../components/lv2-commands/Cat.astro';
-import { StaticPaths } from '../lib/data';
+import { StaticPaths } from '../lib/content';
 
 export async function getStaticPaths() {
   return await StaticPaths.getDates();
@@ -15,7 +15,7 @@ const pageTitle = `${date} - Daily LLM Conversations`;
 ---
 
 <Layout title={pageTitle}>
-  <Pwd path={`/${date}`} />
+  <Pwd slug={date} />
   <Cat slug={date} />
-  <Tree path={`/${date}`} />
+  <Tree slug={date} />
 </Layout>

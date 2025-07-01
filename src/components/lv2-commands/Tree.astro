@@ -1,17 +1,17 @@
 ---
 // Tree: display directory structure
 import { getCollection } from 'astro:content';
-import { buildTree } from '../../lib/tree';
+import { Tree as TreeLib } from '../../lib/navigation';
 import Shell from '../lv1-shell/Shell.astro';
 
 export interface Props {
-  path: string; // "/" | "/2024-01-15/" | "/tags" | "/tags/react"
+  slug: string; // "" | "2024-01-15" | "tags" | "tags/react"
 }
 
-const { path } = Astro.props;
+const { slug } = Astro.props;
 
 const allEntries = await getCollection('daily');
-const treeItems = buildTree({ entries: allEntries, path });
+const treeItems = TreeLib.build(allEntries, slug);
 ---
 
 <Shell command="tree">

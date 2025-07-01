@@ -3,7 +3,7 @@
 import { getEntry } from 'astro:content';
 import Shell from '../lv1-shell/Shell.astro';
 import Pager from '../lv0-atoms/Pager.astro';
-import { getNavigationForPath } from '../../lib/nav';
+import { Navigation } from '../../lib/navigation';
 
 export interface Props {
   slug: string; // "2024-01-15/001-astro-setup" or "2024-01-15"
@@ -20,7 +20,7 @@ if (!entry) {
 const { data } = entry;
 const { Content } = await entry.render();
 
-const navigation = await getNavigationForPath(slug);
+const navigation = await Navigation.getContext(slug);
 
 const metaFields = Object.entries(data).filter(
   ([key]) => key !== 'title' && key !== 'description'
@@ -133,92 +133,6 @@ const metaFields = Object.entries(data).filter(
 </style>
 
 <script>
-  // Generate commit-hash style ID from text
-  async function generateHashId(text: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text || 'heading');
-    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-    return hashHex.substring(0, 7);
-  }
-
-  // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', async () => {
-    // Get all headings in the file content
-    const headings = document.querySelectorAll(
-      '.file-content h1, .file-content h2, .file-content h3'
-    );
-
-    if (headings.length === 0) return;
-
-    // Apply anchor functionality to each heading
-    for (const heading of headings) {
-      const text = heading.textContent || '';
-      const id = await generateHashId(text);
-
-      // Generate absolute URL for anchor
-      const protocol = window.location.protocol;
-      const host = window.location.host;
-      const pathname = window.location.pathname;
-      const cleanPath = pathname.endsWith('/')
-        ? pathname.slice(0, -1)
-        : pathname;
-      const absoluteUrl = `${protocol}//${host}${cleanPath}#${id}`;
-
-      // Get heading text content
-      const headingText = heading.textContent;
-
-      // Determine heading marker based on tag name
-      const markers = {
-        H1: '# ',
-        H2: '## ',
-        H3: '### ',
-        H4: '#### ',
-        H5: '##### ',
-        H6: '###### ',
-      };
-      const marker = markers[heading.tagName] || '';
-
-      // Create new structure: <h2><span class="heading-marker">## </span><a>text</a></h2>
-      const markerSpan = document.createElement('span');
-      markerSpan.className = 'heading-marker';
-      markerSpan.textContent = marker;
-
-      const link = document.createElement('a');
-      link.href = absoluteUrl;
-      link.id = id || '';
-      link.textContent = headingText || '';
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.history.pushState(null, '', absoluteUrl);
-        heading.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      });
-
-      // Replace heading content with marker + link
-      heading.innerHTML = '';
-      heading.appendChild(markerSpan);
-      heading.appendChild(link);
-    }
-
-    // Handle direct anchor links on page load
-    if (window.location.hash) {
-      const targetId = window.location.hash.substring(1);
-      const targetHeading = document.getElementById(targetId);
-
-      if (targetHeading) {
-        setTimeout(() => {
-          targetHeading.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          });
-        }, 100);
-      }
-    }
-  });
+  import { ContentAnchors } from '../../lib/content';
+  ContentAnchors.init('.file-content');
 </script>

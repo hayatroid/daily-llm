@@ -3,7 +3,7 @@
 ---
 
 <div class="theme-toggle-container">
-  <button id="theme-toggle" type="button" aria-label="Toggle theme"> </button>
+  <button id="theme-toggle" type="button" aria-label="Toggle theme"></button>
 </div>
 
 <style lang="scss">
@@ -70,25 +70,5 @@
 
 <script>
   import { ThemeManager } from '../../lib/theme';
-
-  function initThemeToggle() {
-    const toggle = document.getElementById('theme-toggle');
-
-    if (toggle && !toggle.hasAttribute('data-initialized')) {
-      toggle.setAttribute('data-initialized', 'true');
-      toggle.addEventListener('click', () => {
-        ThemeManager.toggleTheme();
-      });
-    }
-  }
-
-  // Handle all initialization scenarios
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initThemeToggle);
-  } else {
-    initThemeToggle();
-  }
-
-  // Handle Astro page navigation
-  document.addEventListener('astro:page-load', initThemeToggle);
+  ThemeManager.init();
 </script>

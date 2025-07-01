@@ -2,7 +2,7 @@
 import Layout from '../../components/lv3-layout/Layout.astro';
 import Pwd from '../../components/lv2-commands/Pwd.astro';
 import Tree from '../../components/lv2-commands/Tree.astro';
-import { StaticPaths } from '../../lib/data';
+import { StaticPaths } from '../../lib/content';
 
 export async function getStaticPaths() {
   return await StaticPaths.getTags();
@@ -14,6 +14,6 @@ const pageTitle = `Tag: ${tag} - Daily LLM Conversations`;
 ---
 
 <Layout title={pageTitle}>
-  <Pwd path={`/tags/${tag}`} />
-  <Tree path={`/tags/${tag}`} />
+  <Pwd slug={`tags/${tag}`} />
+  <Tree slug={`tags/${tag}`} />
 </Layout>

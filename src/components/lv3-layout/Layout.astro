@@ -49,22 +49,17 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
       <footer>
         <p class="comment">
           # Generated with Astro | <a
-            href="https://github.com/hayatroid/daily-llm">Source</a>
+            href="https://github.com/hayatroid/daily-llm"
+          >
+            Source
+          </a>
         </p>
       </footer>
     </div>
 
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem('theme');
-        const theme =
-          stored === 'light' || stored === 'dark'
-            ? stored
-            : window.matchMedia?.('(prefers-color-scheme: light)').matches
-              ? 'light'
-              : 'dark';
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
+    <script>
+      import { ThemeManager } from '../../lib/theme';
+      ThemeManager.init();
     </script>
 
     <style lang="scss">

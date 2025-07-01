@@ -1,59 +1,14 @@
 ---
+import { Breadcrumbs } from '../../lib/navigation';
 import Shell from '../lv1-shell/Shell.astro';
 
 export interface Props {
-  path: string;
+  slug: string;
 }
 
-const { path } = Astro.props;
-
-// Create breadcrumbs from path
-function createBreadcrumbs(path: string) {
-  const breadcrumbs: Array<{ label: string; href: string; current: boolean }> =
-    [];
-
-  // Always start with Home
-  breadcrumbs.push({ label: 'Home', href: '/', current: path === '/' });
-
-  if (path === '/') {
-    return breadcrumbs;
-  }
-
-  const parts = path.split('/').filter(Boolean);
-  let currentPath = '';
-
-  for (let i = 0; i < parts.length; i++) {
-    currentPath += '/' + parts[i];
-    const isLast = i === parts.length - 1;
-
-    // Handle special paths
-    if (parts[i] === 'tags') {
-      breadcrumbs.push({
-        label: 'tags',
-        href: '/tags/',
-        current: isLast,
-      });
-    } else if (parts[0] === 'tags' && i === 1) {
-      // Tag name after /tags/
-      breadcrumbs.push({
-        label: parts[i],
-        href: `/tags/${encodeURIComponent(parts[i])}/`,
-        current: isLast,
-      });
-    } else {
-      // Date or other paths
-      breadcrumbs.push({
-        label: parts[i],
-        href: currentPath + '/',
-        current: isLast,
-      });
-    }
-  }
-
-  return breadcrumbs;
-}
-
-const breadcrumbs = createBreadcrumbs(path);
+const { slug } = Astro.props;
+const path = slug ? `/${slug}/` : '/';
+const breadcrumbs = Breadcrumbs.create(path);
 ---
 
 <Shell command="pwd">

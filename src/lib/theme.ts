@@ -1,48 +1,40 @@
-// Centralized theme management utilities
-
+// ========== TYPES ==========
 export type Theme = 'light' | 'dark';
 
+// ========== THEME MANAGER ==========
 export const ThemeManager = {
-  // Get theme from localStorage or system preference
-  getTheme(): Theme {
+  getTheme: (): Theme => {
     if (typeof window === 'undefined') return 'dark';
 
-    // Check localStorage first
     const stored = localStorage.getItem('theme');
     if (stored === 'light' || stored === 'dark') return stored;
 
-    // Fall back to system preference
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: light)').matches
-    ) {
-      return 'light';
-    }
-
-    return 'dark';
+    return window.matchMedia?.('(prefers-color-scheme: light)').matches
+      ? 'light'
+      : 'dark';
   },
 
-  // Set theme and persist to localStorage
-  setTheme(theme: Theme): void {
+  setTheme: (theme: Theme): void => {
     if (typeof window === 'undefined') return;
 
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   },
 
-  // Toggle between light and dark themes
-  toggleTheme(): Theme {
-    const currentTheme = this.getCurrentTheme();
-    const newTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
-    this.setTheme(newTheme);
+  toggle: (): Theme => {
+    const current = ThemeManager.getTheme();
+    const newTheme: Theme = current === 'light' ? 'dark' : 'light';
+    ThemeManager.setTheme(newTheme);
     return newTheme;
   },
 
-  // Get current theme from DOM
-  getCurrentTheme(): Theme {
-    if (typeof window === 'undefined') return 'dark';
-    return (
-      (document.documentElement.getAttribute('data-theme') as Theme) || 'dark'
-    );
+  init: (): void => {
+    if (typeof window === 'undefined') return;
+
+    ThemeManager.setTheme(ThemeManager.getTheme());
+
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      ThemeManager.toggle();
+    });
   },
 };
