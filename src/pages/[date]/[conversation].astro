@@ -2,6 +2,7 @@
 import Layout from '../../components/lv3-layout/Layout.astro';
 import Pwd from '../../components/lv2-commands/Pwd.astro';
 import Cat from '../../components/lv2-commands/Cat.astro';
+import Tree from '../../components/lv2-commands/Tree.astro';
 import { StaticPaths } from '../../lib/content';
 import { createRoute, routeToSlug } from '../../lib/routes';
 
@@ -23,4 +24,5 @@ const pageTitle = `${conversation} - ${date}`;
 <Layout title={pageTitle}>
   <Pwd slug={slug} />
   <Cat slug={slug} />
+  <Tree slug={slug} />
 </Layout>
