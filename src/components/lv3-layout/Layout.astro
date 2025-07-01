@@ -46,16 +46,13 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
     <div class="container">
       <header>
         <div class="header-content">
-          <div class="header-main">
-            <h1>
-              <Prompt
-                command="daily-llm"
-                clickable={true}
-                href={routeToUrl(createRoute.root())}
-              />
-            </h1>
-            <p class="comment"># Daily conversations with AI</p>
-          </div>
+          <h1>
+            <Prompt
+              command="daily-llm"
+              clickable={true}
+              href={routeToUrl(createRoute.root())}
+            />
+          </h1>
           <Switch />
         </div>
       </header>
@@ -92,18 +89,13 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
         gap: var(--space-md);
       }
 
-      .header-main {
-        flex: 1;
-
+      .header-content {
         h1 {
           margin: 0;
           font-size: var(--text-lg);
           font-weight: var(--text-weight-normal);
           text-align: left;
-        }
-
-        .comment {
-          margin-top: var(--space-sm);
+          flex: 1;
         }
       }
 

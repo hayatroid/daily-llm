@@ -8,17 +8,21 @@ export interface Props {
 const { command, clickable = false, href } = Astro.props;
 ---
 
-<div class="command-block">
-  <span class="prompt">$</span>{
-    clickable && href ? (
+{
+  clickable && href ? (
+    <div class="command-block">
+      <span class="prompt">$</span>
       <a href={href} class="command clickable-command">
         {command}
       </a>
-    ) : (
+    </div>
+  ) : (
+    <div class="command-block">
+      <span class="prompt">$</span>
       <span class="command">{command}</span>
-    )
-  }
-</div>
+    </div>
+  )
+}
 
 <style lang="scss">
   .command-block {
