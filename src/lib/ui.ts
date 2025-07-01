@@ -6,7 +6,7 @@ export const ContentAnchors = {
     const generateHashId = async (text: string): Promise<string> => {
       if (!window.crypto?.subtle) return 'heading';
 
-      const data = new TextEncoder().encode(text || 'heading');
+      const data = new TextEncoder().encode(text);
       const hashBuffer = await crypto.subtle.digest('SHA-1', data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
 
@@ -22,7 +22,7 @@ export const ContentAnchors = {
     );
 
     for (const heading of headings) {
-      const text = heading.textContent || '';
+      const text = heading.textContent ?? '';
       const id = await generateHashId(text);
       const level = parseInt(heading.tagName[1] || '1') - 1;
       const marker = markers[level] || '';

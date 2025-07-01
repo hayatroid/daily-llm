@@ -29,9 +29,7 @@ export const parseSlug = (slug: string): Route =>
     .with(P.string.startsWith('tags/'), (s) => createRoute.tag(s.slice(5)))
     .with(P.string.includes('/'), (s) => {
       const parts = s.split('/');
-      const date = parts[0] || '';
-      const conversation = parts[1] || '';
-      return createRoute.conversation(date, conversation);
+      return createRoute.conversation(parts[0]!, parts[1]!);
     })
     .otherwise((s) => createRoute.date(s));
 
@@ -71,6 +69,15 @@ export const getParentUrl = (route: Route): string =>
     .with({ type: 'conversation' }, ({ date }) => `/${date}/`)
     .with({ type: 'tags' }, () => '/')
     .with({ type: 'tag' }, () => '/tags/')
+    .exhaustive();
+
+export const routeToTreeText = (route: Route): string =>
+  match(route)
+    .with({ type: 'root' }, () => 'Home/')
+    .with({ type: 'date' }, ({ date }) => `${date}/`)
+    .with({ type: 'conversation' }, ({ conversation }) => conversation)
+    .with({ type: 'tags' }, () => 'tags/')
+    .with({ type: 'tag' }, ({ tag }) => `#${tag}`)
     .exhaustive();
 
 // ========== TYPE GUARDS ==========

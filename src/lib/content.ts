@@ -36,7 +36,7 @@ export const StaticPaths = {
     return R.pipe(
       entries,
       R.filter((entry) => hasDateField(parseSlug(entry.slug))),
-      R.flatMap((entry) => entry.data.tags || []),
+      R.flatMap((entry) => entry.data.tags),
       R.unique(),
       R.map((tag) => ({ params: { tag } }))
     );

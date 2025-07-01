@@ -9,6 +9,7 @@ import {
   isDateRoute,
   hasDateField,
   createRoute,
+  routeToTreeText,
 } from './routes';
 
 // ========== TYPES ==========
@@ -160,7 +161,7 @@ export const Tree = {
           items.push({
             level,
             href: routeToUrl(convRoute),
-            text: conv.data.title || convRoute.conversation,
+            text: conv.data.title,
           });
         }
       });
@@ -169,7 +170,11 @@ export const Tree = {
     return match(route)
       .with({ type: 'root' }, () => {
         const items: TreeItem[] = [
-          { level: 0, href: routeToUrl(createRoute.root()), text: 'Home/' },
+          {
+            level: 0,
+            href: routeToUrl(createRoute.root()),
+            text: routeToTreeText(createRoute.root()),
+          },
         ];
         const entriesByDate = groupByDate(entries);
 
@@ -182,7 +187,7 @@ export const Tree = {
             items.push({
               level: 1,
               href: routeToUrl(createRoute.date(date)),
-              text: `${date}/`,
+              text: routeToTreeText(createRoute.date(date)),
               meta:
                 conversations.length > 0
                   ? `${conversations.length} conversations`
@@ -194,14 +199,18 @@ export const Tree = {
       })
       .with({ type: 'tags' }, () => {
         const items: TreeItem[] = [
-          { level: 0, href: routeToUrl(createRoute.tags()), text: 'tags/' },
+          {
+            level: 0,
+            href: routeToUrl(createRoute.tags()),
+            text: routeToTreeText(createRoute.tags()),
+          },
         ];
         const tagCounts = new Map<string, number>();
 
         entries
           .filter((entry) => isConversationRoute(parseSlug(entry.slug)))
           .forEach((entry) => {
-            entry.data.tags?.forEach((tag: string) => {
+            entry.data.tags.forEach((tag: string) => {
               tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
             });
           });
@@ -212,7 +221,7 @@ export const Tree = {
             items.push({
               level: 1,
               href: routeToUrl(createRoute.tag(tag)),
-              text: `${tag}/`,
+              text: routeToTreeText(createRoute.tag(tag)),
               meta: `${tagCounts.get(tag)} conversations`,
             });
           });
@@ -223,13 +232,13 @@ export const Tree = {
           {
             level: 0,
             href: routeToUrl(createRoute.tag(tag)),
-            text: `tags/${tag}/`,
+            text: routeToTreeText(createRoute.tag(tag)),
           },
         ];
         const taggedEntries = entries.filter((entry) => {
           const entryRoute = parseSlug(entry.slug);
           return (
-            isConversationRoute(entryRoute) && entry.data.tags?.includes(tag)
+            isConversationRoute(entryRoute) && entry.data.tags.includes(tag)
           );
         });
         const taggedEntriesByDate = groupByDate(taggedEntries);
@@ -241,7 +250,7 @@ export const Tree = {
             items.push({
               level: 1,
               href: routeToUrl(createRoute.date(date)),
-              text: `${date}/`,
+              text: routeToTreeText(createRoute.date(date)),
               meta: `${conversations.length} conversations`,
             });
             addConversations(items, conversations, 2);
@@ -253,7 +262,7 @@ export const Tree = {
           {
             level: 0,
             href: routeToUrl(createRoute.date(date)),
-            text: `${date}/`,
+            text: routeToTreeText(createRoute.date(date)),
           },
         ];
         const conversations = entries.filter((entry) => {
@@ -268,7 +277,7 @@ export const Tree = {
           {
             level: 0,
             href: routeToUrl(createRoute.date(date)),
-            text: `${date}/`,
+            text: routeToTreeText(createRoute.date(date)),
           },
         ];
         const conversations = entries.filter((entry) => {
