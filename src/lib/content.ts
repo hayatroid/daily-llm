@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import * as R from 'remeda';
 
 // ========== TYPES ==========
 interface EntryPath {
@@ -18,33 +19,36 @@ export const Entry = {
 export const StaticPaths = {
   getDates: async () => {
     const entries = await getCollection('daily');
-    return [
-      ...new Set(
-        entries
-          .filter((entry) => !entry.slug.includes('/'))
-          .map((entry) => entry.slug)
-      ),
-    ].map((date) => ({ params: { date } }));
+    return R.pipe(
+      entries,
+      R.filter((entry) => !entry.slug.includes('/')),
+      R.map((entry) => entry.slug),
+      R.unique(),
+      R.map((date) => ({ params: { date } }))
+    );
   },
 
   getConversations: async () => {
     const entries = await getCollection('daily');
-    return [
-      ...new Set(
-        entries
-          .filter((entry) => entry.slug.includes('/'))
-          .map((entry) => entry.slug)
-      ),
-    ].map((slug) => {
-      const [date, conversation] = slug.split('/');
-      return { params: { date, conversation } };
-    });
+    return R.pipe(
+      entries,
+      R.filter((entry) => entry.slug.includes('/')),
+      R.map((entry) => entry.slug),
+      R.unique(),
+      R.map((slug) => {
+        const [date, conversation] = slug.split('/');
+        return { params: { date, conversation } };
+      })
+    );
   },
 
   getTags: async () => {
     const entries = await getCollection('daily');
-    return [...new Set(entries.flatMap((entry) => entry.data.tags || []))].map(
-      (tag) => ({ params: { tag } })
+    return R.pipe(
+      entries,
+      R.flatMap((entry) => entry.data.tags || []),
+      R.unique(),
+      R.map((tag) => ({ params: { tag } }))
     );
   },
 };
