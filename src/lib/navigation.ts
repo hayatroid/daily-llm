@@ -1,96 +1,35 @@
-import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { type CollectionEntry } from 'astro:content';
 import { match } from 'ts-pattern';
 import {
   parseSlug,
   parseUrlPath,
   routeToUrl,
-  getParentUrl,
   isConversationRoute,
-  isDateRoute,
   hasDateField,
   createRoute,
   routeToTreeText,
 } from './routes';
 
 // ========== TYPES ==========
-export interface NavigationContext {
-  prevUrl?: string;
-  nextUrl?: string;
-  parentUrl: string;
-}
-
 export interface Breadcrumb {
-  label: string;
+  text: string;
   href: string;
-  current: boolean;
 }
 
-export interface TreeItem {
+export interface TreeNode {
   level: number;
-  href: string;
   text: string;
+  href: string;
   meta?: string;
 }
-
-// ========== NAVIGATION ==========
-export const Navigation = {
-  getContext: async (slug: string): Promise<NavigationContext> => {
-    const entry = await getEntry('daily', slug);
-    if (!entry) throw new Error(`Content not found for slug: ${slug}`);
-
-    const allEntries = await getCollection('daily');
-    const currentRoute = parseSlug(entry.slug);
-
-    const { filteredEntries, parentUrl, urlBuilder } = match(currentRoute)
-      .with({ type: 'conversation' }, (route) => ({
-        filteredEntries: allEntries.filter((e) => {
-          const entryRoute = parseSlug(e.slug);
-          return (
-            isConversationRoute(entryRoute) && entryRoute.date === route.date
-          );
-        }),
-        parentUrl: getParentUrl(route),
-        urlBuilder: (e: CollectionEntry<'daily'>) =>
-          routeToUrl(parseSlug(e.slug)),
-      }))
-      .with({ type: 'date' }, (route) => ({
-        filteredEntries: allEntries.filter((e) =>
-          isDateRoute(parseSlug(e.slug))
-        ),
-        parentUrl: getParentUrl(route),
-        urlBuilder: (e: CollectionEntry<'daily'>) =>
-          routeToUrl(parseSlug(e.slug)),
-      }))
-      .otherwise((route) => ({
-        filteredEntries: [] as CollectionEntry<'daily'>[],
-        parentUrl: getParentUrl(route),
-        urlBuilder: (e: CollectionEntry<'daily'>) =>
-          routeToUrl(parseSlug(e.slug)),
-      }));
-
-    const sorted = filteredEntries.sort((a, b) => a.slug.localeCompare(b.slug));
-    const currentIndex = sorted.findIndex((e) => e.slug === entry.slug);
-
-    const prevEntry = currentIndex > 0 ? sorted[currentIndex - 1] : undefined;
-    const nextEntry =
-      currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : undefined;
-
-    return {
-      prevUrl: prevEntry ? urlBuilder(prevEntry) : undefined,
-      nextUrl: nextEntry ? urlBuilder(nextEntry) : undefined,
-      parentUrl,
-    };
-  },
-};
 
 // ========== BREADCRUMBS ==========
 export const Breadcrumbs = {
   create: (path: string): Breadcrumb[] => {
     const route = parseUrlPath(path);
     const homeBreadcrumb = {
-      label: 'Home',
+      text: 'Home',
       href: routeToUrl(createRoute.root()),
-      current: route.type === 'root',
     };
 
     return match(route)
@@ -98,35 +37,31 @@ export const Breadcrumbs = {
       .with({ type: 'date' }, ({ date }) => [
         homeBreadcrumb,
         {
-          label: date,
+          text: date,
           href: routeToUrl(createRoute.date(date)),
-          current: true,
         },
       ])
       .with({ type: 'conversation' }, ({ date, conversation }) => [
         homeBreadcrumb,
         {
-          label: date,
+          text: date,
           href: routeToUrl(createRoute.date(date)),
-          current: false,
         },
         {
-          label: conversation,
+          text: conversation,
           href: routeToUrl(createRoute.conversation(date, conversation)),
-          current: true,
         },
       ])
       .with({ type: 'tags' }, () => [
         homeBreadcrumb,
-        { label: 'tags', href: routeToUrl(createRoute.tags()), current: true },
+        { text: 'tags', href: routeToUrl(createRoute.tags()) },
       ])
       .with({ type: 'tag' }, ({ tag }) => [
         homeBreadcrumb,
-        { label: 'tags', href: routeToUrl(createRoute.tags()), current: false },
+        { text: 'tags', href: routeToUrl(createRoute.tags()) },
         {
-          label: tag,
+          text: tag,
           href: routeToUrl(createRoute.tag(tag)),
-          current: true,
         },
       ])
       .exhaustive();
@@ -135,7 +70,7 @@ export const Breadcrumbs = {
 
 // ========== TREE ==========
 export const Tree = {
-  build: (entries: CollectionEntry<'daily'>[], slug: string): TreeItem[] => {
+  build: (entries: CollectionEntry<'daily'>[], slug: string): TreeNode[] => {
     const route = parseSlug(slug);
 
     const groupByDate = (entries: CollectionEntry<'daily'>[]) => {
@@ -151,7 +86,7 @@ export const Tree = {
     };
 
     const addConversations = (
-      items: TreeItem[],
+      items: TreeNode[],
       conversations: CollectionEntry<'daily'>[],
       level: number
     ) => {
@@ -160,8 +95,8 @@ export const Tree = {
         if (isConversationRoute(convRoute)) {
           items.push({
             level,
-            href: routeToUrl(convRoute),
             text: conv.data.title,
+            href: routeToUrl(convRoute),
           });
         }
       });
@@ -169,11 +104,11 @@ export const Tree = {
 
     return match(route)
       .with({ type: 'root' }, () => {
-        const items: TreeItem[] = [
+        const items: TreeNode[] = [
           {
             level: 0,
-            href: routeToUrl(createRoute.root()),
             text: routeToTreeText(createRoute.root()),
+            href: routeToUrl(createRoute.root()),
           },
         ];
         const entriesByDate = groupByDate(entries);
@@ -186,8 +121,8 @@ export const Tree = {
               .filter((entry) => isConversationRoute(parseSlug(entry.slug)));
             items.push({
               level: 1,
-              href: routeToUrl(createRoute.date(date)),
               text: routeToTreeText(createRoute.date(date)),
+              href: routeToUrl(createRoute.date(date)),
               meta:
                 conversations.length > 0
                   ? `${conversations.length} conversations`
@@ -198,11 +133,11 @@ export const Tree = {
         return items;
       })
       .with({ type: 'tags' }, () => {
-        const items: TreeItem[] = [
+        const items: TreeNode[] = [
           {
             level: 0,
-            href: routeToUrl(createRoute.tags()),
             text: routeToTreeText(createRoute.tags()),
+            href: routeToUrl(createRoute.tags()),
           },
         ];
         const tagCounts = new Map<string, number>();
@@ -220,19 +155,19 @@ export const Tree = {
           .forEach((tag) => {
             items.push({
               level: 1,
-              href: routeToUrl(createRoute.tag(tag)),
               text: routeToTreeText(createRoute.tag(tag)),
+              href: routeToUrl(createRoute.tag(tag)),
               meta: `${tagCounts.get(tag)} conversations`,
             });
           });
         return items;
       })
       .with({ type: 'tag' }, ({ tag }) => {
-        const items: TreeItem[] = [
+        const items: TreeNode[] = [
           {
             level: 0,
-            href: routeToUrl(createRoute.tag(tag)),
             text: routeToTreeText(createRoute.tag(tag)),
+            href: routeToUrl(createRoute.tag(tag)),
           },
         ];
         const taggedEntries = entries.filter((entry) => {
@@ -249,8 +184,8 @@ export const Tree = {
             const conversations = taggedEntriesByDate.get(date)!;
             items.push({
               level: 1,
-              href: routeToUrl(createRoute.date(date)),
               text: routeToTreeText(createRoute.date(date)),
+              href: routeToUrl(createRoute.date(date)),
               meta: `${conversations.length} conversations`,
             });
             addConversations(items, conversations, 2);
@@ -258,11 +193,11 @@ export const Tree = {
         return items;
       })
       .with({ type: 'date' }, ({ date }) => {
-        const items: TreeItem[] = [
+        const items: TreeNode[] = [
           {
             level: 0,
-            href: routeToUrl(createRoute.date(date)),
             text: routeToTreeText(createRoute.date(date)),
+            href: routeToUrl(createRoute.date(date)),
           },
         ];
         const conversations = entries.filter((entry) => {
@@ -273,11 +208,11 @@ export const Tree = {
         return items;
       })
       .with({ type: 'conversation' }, ({ date }) => {
-        const items: TreeItem[] = [
+        const items: TreeNode[] = [
           {
             level: 0,
-            href: routeToUrl(createRoute.date(date)),
             text: routeToTreeText(createRoute.date(date)),
+            href: routeToUrl(createRoute.date(date)),
           },
         ];
         const conversations = entries.filter((entry) => {

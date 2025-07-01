@@ -62,15 +62,6 @@ export const routeToSlug = (route: Route): string =>
     .with({ type: 'tag' }, ({ tag }) => `tags/${tag}`)
     .exhaustive();
 
-export const getParentUrl = (route: Route): string =>
-  match(route)
-    .with({ type: 'root' }, () => '/')
-    .with({ type: 'date' }, () => '/')
-    .with({ type: 'conversation' }, ({ date }) => `/${date}/`)
-    .with({ type: 'tags' }, () => '/')
-    .with({ type: 'tag' }, () => '/tags/')
-    .exhaustive();
-
 export const routeToTreeText = (route: Route): string =>
   match(route)
     .with({ type: 'root' }, () => 'Home/')

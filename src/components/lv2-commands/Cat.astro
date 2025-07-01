@@ -2,9 +2,12 @@
 // Cat: display content entry
 import { getEntry } from 'astro:content';
 import Shell from '../lv1-shell/Shell.astro';
-import Pager from '../lv0-atoms/Pager.astro';
-import { Navigation } from '../../lib/navigation';
-import { routeToUrl, parseSlug } from '../../lib/routes';
+import {
+  routeToUrl,
+  parseSlug,
+  routeToTreeText,
+  createRoute,
+} from '../../lib/routes';
 
 export interface Props {
   slug: string; // "2024-01-15/001-astro-setup" or "2024-01-15"
@@ -21,37 +24,22 @@ if (!entry) {
 const { data } = entry;
 const { Content } = await entry.render();
 
-const navigation = await Navigation.getContext(slug);
-
 const route = parseSlug(slug);
 const displayPath = routeToUrl(route);
 
-const metaFields = Object.entries(data).filter(
-  ([key]) => key !== 'title' && key !== 'description'
-);
+const tags = data.tags;
 ---
 
 <Shell command={`cat ${displayPath}`}>
   <div class="file-content">
-    <div class="pager-nav">
-      <h1>{data.title}</h1>
-      <Pager {...navigation} />
-    </div>
-    <div class="meta">
+    <h1>{data.title}</h1>
+    <div class="tags">
       {
-        metaFields.map(([key, value]) =>
-          key === 'tags' && Array.isArray(value) ? (
-            value.map((tag: string) => (
-              <a href={routeToUrl({ type: 'tag', tag })} class="tag">
-                #{tag}
-              </a>
-            ))
-          ) : (
-            <span class="meta-item">
-              {key}: {value}
-            </span>
-          )
-        )
+        tags.map((tag: string) => (
+          <a href={routeToUrl({ type: 'tag', tag })} class="tag">
+            {routeToTreeText(createRoute.tag(tag))}
+          </a>
+        ))
       }
     </div>
     <Content />
@@ -64,7 +52,7 @@ const metaFields = Object.entries(data).filter(
     line-height: var(--line-height-normal);
   }
 
-  .meta {
+  .tags {
     font-size: var(--text-small);
     margin: var(--space-sm) 0 var(--space-md) 0;
     line-height: var(--line-height-normal);
@@ -72,10 +60,6 @@ const metaFields = Object.entries(data).filter(
 
   .tag {
     margin-right: var(--space-sm);
-  }
-
-  .meta-item {
-    margin-right: var(--space-md);
   }
 
   .file-content :global(h1) {

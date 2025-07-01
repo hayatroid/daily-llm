@@ -11,13 +11,13 @@ export interface Props {
 const { slug } = Astro.props;
 
 const allEntries = await getCollection('daily');
-const treeItems = TreeLib.build(allEntries, slug);
+const TreeNodes = TreeLib.build(allEntries, slug);
 ---
 
 <Shell command="tree">
   <div class="tree">
     {
-      treeItems.map((item) => (
+      TreeNodes.map((item) => (
         <div class="tree-item" data-level={item.level}>
           <a href={item.href} class="tree-link">
             {item.text}

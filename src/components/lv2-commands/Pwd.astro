@@ -18,11 +18,8 @@ const breadcrumbs = Breadcrumbs.create(path);
     {
       breadcrumbs.map((item, index) => (
         <>
-          <a
-            href={item.href || '#'}
-            class:list={['path-link', { current: item.current }]}
-          >
-            {item.label}
+          <a href={item.href} class="path-link">
+            {item.text}
           </a>
           {index < breadcrumbs.length - 1 && (
             <span class="path-separator">/</span>
