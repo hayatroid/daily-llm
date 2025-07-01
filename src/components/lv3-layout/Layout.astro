@@ -27,6 +27,19 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
       rel="stylesheet"
     />
     <title>{title}</title>
+    <script is:inline>
+      // FOUC prevention - Set theme before CSS loads
+      (function () {
+        const getTheme = () => {
+          const stored = localStorage.getItem('theme');
+          if (stored === 'light' || stored === 'dark') return stored;
+          return window.matchMedia?.('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        };
+        document.documentElement.setAttribute('data-theme', getTheme());
+      })();
+    </script>
   </head>
   <body>
     <div class="container">
@@ -56,11 +69,6 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
         </p>
       </footer>
     </div>
-
-    <script>
-      import { ThemeManager } from '../../lib/theme';
-      ThemeManager.init();
-    </script>
 
     <style lang="scss">
       .container {
