@@ -33,8 +33,19 @@ export const ThemeManager = {
 
     ThemeManager.setTheme(ThemeManager.getTheme());
 
+    // Handle both old and new theme switcher formats
     document.getElementById('theme-toggle')?.addEventListener('click', () => {
       ThemeManager.toggle();
+    });
+
+    // Handle flag-based theme switcher
+    document.querySelectorAll('.flag').forEach((button) => {
+      button.addEventListener('click', () => {
+        const theme = button.getAttribute('data-theme') as Theme;
+        if (theme) {
+          ThemeManager.setTheme(theme);
+        }
+      });
     });
   },
 };
