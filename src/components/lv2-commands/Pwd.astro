@@ -1,5 +1,6 @@
 ---
 import { Breadcrumbs } from '../../lib/navigation';
+import { parseSlug, routeToUrl } from '../../lib/routes';
 import Shell from '../lv1-shell/Shell.astro';
 
 export interface Props {
@@ -7,7 +8,8 @@ export interface Props {
 }
 
 const { slug } = Astro.props;
-const path = slug ? `/${slug}/` : '/';
+const route = parseSlug(slug);
+const path = routeToUrl(route);
 const breadcrumbs = Breadcrumbs.create(path);
 ---
 

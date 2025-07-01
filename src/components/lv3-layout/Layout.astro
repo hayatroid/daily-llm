@@ -4,6 +4,7 @@ import '../../styles/global.scss';
 import '../../styles/syntax.scss';
 import Prompt from '../lv0-atoms/Prompt.astro';
 import Switch from '../lv0-atoms/Switch.astro';
+import { createRoute, routeToUrl } from '../../lib/routes';
 
 export interface Props {
   title: string;
@@ -47,7 +48,11 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
         <div class="header-content">
           <div class="header-main">
             <h1>
-              <Prompt command="daily-llm" clickable={true} href="/" />
+              <Prompt
+                command="daily-llm"
+                clickable={true}
+                href={routeToUrl(createRoute.root())}
+              />
             </h1>
             <p class="comment"># Daily conversations with AI</p>
           </div>

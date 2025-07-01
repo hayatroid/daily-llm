@@ -4,6 +4,7 @@ import { getEntry } from 'astro:content';
 import Shell from '../lv1-shell/Shell.astro';
 import Pager from '../lv0-atoms/Pager.astro';
 import { Navigation } from '../../lib/navigation';
+import { routeToUrl, parseSlug } from '../../lib/routes';
 
 export interface Props {
   slug: string; // "2024-01-15/001-astro-setup" or "2024-01-15"
@@ -22,12 +23,15 @@ const { Content } = await entry.render();
 
 const navigation = await Navigation.getContext(slug);
 
+const route = parseSlug(slug);
+const displayPath = routeToUrl(route);
+
 const metaFields = Object.entries(data).filter(
   ([key]) => key !== 'title' && key !== 'description'
 );
 ---
 
-<Shell command={`cat /${slug === 'index' ? '' : slug + '/'}`}>
+<Shell command={`cat ${displayPath}`}>
   <div class="file-content">
     <div class="pager-nav">
       <h1>{data.title}</h1>
@@ -38,7 +42,7 @@ const metaFields = Object.entries(data).filter(
         metaFields.map(([key, value]) =>
           key === 'tags' && Array.isArray(value) ? (
             value.map((tag: string) => (
-              <a href={`/tags/${encodeURIComponent(tag)}/`} class="tag">
+              <a href={routeToUrl({ type: 'tag', tag })} class="tag">
                 #{tag}
               </a>
             ))
@@ -133,6 +137,6 @@ const metaFields = Object.entries(data).filter(
 </style>
 
 <script>
-  import { ContentAnchors } from '../../lib/content';
+  import { ContentAnchors } from '../../lib/ui';
   ContentAnchors.init('.file-content');
 </script>

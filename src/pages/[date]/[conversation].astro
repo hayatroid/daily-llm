@@ -3,6 +3,7 @@ import Layout from '../../components/lv3-layout/Layout.astro';
 import Pwd from '../../components/lv2-commands/Pwd.astro';
 import Cat from '../../components/lv2-commands/Cat.astro';
 import { StaticPaths } from '../../lib/content';
+import { createRoute, routeToSlug } from '../../lib/routes';
 
 export async function getStaticPaths() {
   return await StaticPaths.getConversations();
@@ -10,10 +11,16 @@ export async function getStaticPaths() {
 
 const { date, conversation } = Astro.params;
 
+// Route型を使ってslugを構築
+const route =
+  date && conversation
+    ? createRoute.conversation(date, conversation)
+    : createRoute.root();
+const slug = routeToSlug(route);
 const pageTitle = `${conversation} - ${date}`;
 ---
 
 <Layout title={pageTitle}>
-  <Pwd slug={`${date}/${conversation}`} />
-  <Cat slug={`${date}/${conversation}`} />
+  <Pwd slug={slug} />
+  <Cat slug={slug} />
 </Layout>

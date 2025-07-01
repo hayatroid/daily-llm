@@ -1,5 +1,15 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { Entry } from './content';
+import { match } from 'ts-pattern';
+import {
+  parseSlug,
+  parseUrlPath,
+  routeToUrl,
+  getParentUrl,
+  isConversationRoute,
+  isDateRoute,
+  hasDateField,
+  createRoute,
+} from './routes';
 
 // ========== TYPES ==========
 export interface NavigationContext {
@@ -28,28 +38,34 @@ export const Navigation = {
     if (!entry) throw new Error(`Content not found for slug: ${slug}`);
 
     const allEntries = await getCollection('daily');
-    const isConversation = entry.slug.includes('/');
+    const currentRoute = parseSlug(entry.slug);
 
-    let filteredEntries: CollectionEntry<'daily'>[];
-    let parentUrl: string;
-    let urlBuilder: (entry: CollectionEntry<'daily'>) => string;
-
-    if (isConversation) {
-      const { date } = Entry.parse(entry);
-      filteredEntries = allEntries.filter((e: CollectionEntry<'daily'>) => {
-        const { date: eDate } = Entry.parse(e);
-        return eDate === date && e.slug.includes('/');
-      });
-      parentUrl = `/${date}/`;
-      urlBuilder = (e: CollectionEntry<'daily'>) =>
-        `/${date}/${Entry.parse(e).conversation}/`;
-    } else {
-      filteredEntries = allEntries.filter(
-        (e: CollectionEntry<'daily'>) => !e.slug.includes('/')
-      );
-      parentUrl = '/';
-      urlBuilder = (e: CollectionEntry<'daily'>) => `/${e.slug}/`;
-    }
+    const { filteredEntries, parentUrl, urlBuilder } = match(currentRoute)
+      .with({ type: 'conversation' }, (route) => ({
+        filteredEntries: allEntries.filter((e) => {
+          const entryRoute = parseSlug(e.slug);
+          return (
+            isConversationRoute(entryRoute) && entryRoute.date === route.date
+          );
+        }),
+        parentUrl: getParentUrl(route),
+        urlBuilder: (e: CollectionEntry<'daily'>) =>
+          routeToUrl(parseSlug(e.slug)),
+      }))
+      .with({ type: 'date' }, (route) => ({
+        filteredEntries: allEntries.filter((e) =>
+          isDateRoute(parseSlug(e.slug))
+        ),
+        parentUrl: getParentUrl(route),
+        urlBuilder: (e: CollectionEntry<'daily'>) =>
+          routeToUrl(parseSlug(e.slug)),
+      }))
+      .otherwise((route) => ({
+        filteredEntries: [] as CollectionEntry<'daily'>[],
+        parentUrl: getParentUrl(route),
+        urlBuilder: (e: CollectionEntry<'daily'>) =>
+          routeToUrl(parseSlug(e.slug)),
+      }));
 
     const sorted = filteredEntries.sort((a, b) => a.slug.localeCompare(b.slug));
     const currentIndex = sorted.findIndex((e) => e.slug === entry.slug);
@@ -69,53 +85,66 @@ export const Navigation = {
 // ========== BREADCRUMBS ==========
 export const Breadcrumbs = {
   create: (path: string): Breadcrumb[] => {
-    const breadcrumbs: Breadcrumb[] = [
-      { label: 'Home', href: '/', current: path === '/' },
-    ];
+    const route = parseUrlPath(path);
+    const homeBreadcrumb = {
+      label: 'Home',
+      href: routeToUrl(createRoute.root()),
+      current: route.type === 'root',
+    };
 
-    if (path === '/') return breadcrumbs;
-
-    const parts = path.split('/').filter(Boolean);
-    let currentPath = '';
-
-    parts.forEach((part, i) => {
-      currentPath += '/' + part;
-      const isLast = i === parts.length - 1;
-
-      if (part === 'tags') {
-        breadcrumbs.push({
-          label: 'tags',
-          href: '/tags/',
-          current: isLast,
-        });
-      } else if (parts[0] === 'tags' && i === 1) {
-        breadcrumbs.push({
-          label: part,
-          href: `/tags/${encodeURIComponent(part)}/`,
-          current: isLast,
-        });
-      } else {
-        breadcrumbs.push({
-          label: part,
-          href: currentPath + '/',
-          current: isLast,
-        });
-      }
-    });
-
-    return breadcrumbs;
+    return match(route)
+      .with({ type: 'root' }, () => [homeBreadcrumb])
+      .with({ type: 'date' }, ({ date }) => [
+        homeBreadcrumb,
+        {
+          label: date,
+          href: routeToUrl(createRoute.date(date)),
+          current: true,
+        },
+      ])
+      .with({ type: 'conversation' }, ({ date, conversation }) => [
+        homeBreadcrumb,
+        {
+          label: date,
+          href: routeToUrl(createRoute.date(date)),
+          current: false,
+        },
+        {
+          label: conversation,
+          href: routeToUrl(createRoute.conversation(date, conversation)),
+          current: true,
+        },
+      ])
+      .with({ type: 'tags' }, () => [
+        homeBreadcrumb,
+        { label: 'tags', href: routeToUrl(createRoute.tags()), current: true },
+      ])
+      .with({ type: 'tag' }, ({ tag }) => [
+        homeBreadcrumb,
+        { label: 'tags', href: routeToUrl(createRoute.tags()), current: false },
+        {
+          label: tag,
+          href: routeToUrl(createRoute.tag(tag)),
+          current: true,
+        },
+      ])
+      .exhaustive();
   },
 };
 
 // ========== TREE ==========
 export const Tree = {
   build: (entries: CollectionEntry<'daily'>[], slug: string): TreeItem[] => {
+    const route = parseSlug(slug);
+
     const groupByDate = (entries: CollectionEntry<'daily'>[]) => {
       const grouped = new Map<string, CollectionEntry<'daily'>[]>();
       entries.forEach((entry) => {
-        const { date } = Entry.parse(entry);
-        if (date && !grouped.has(date)) grouped.set(date, []);
-        if (date) grouped.get(date)!.push(entry);
+        const entryRoute = parseSlug(entry.slug);
+        if (hasDateField(entryRoute)) {
+          if (!grouped.has(entryRoute.date)) grouped.set(entryRoute.date, []);
+          grouped.get(entryRoute.date)!.push(entry);
+        }
       });
       return grouped;
     };
@@ -123,97 +152,132 @@ export const Tree = {
     const addConversations = (
       items: TreeItem[],
       conversations: CollectionEntry<'daily'>[],
-      date: string,
       level: number
     ) => {
       conversations.forEach((conv) => {
-        const { conversation } = Entry.parse(conv);
-        if (conversation) {
+        const convRoute = parseSlug(conv.slug);
+        if (isConversationRoute(convRoute)) {
           items.push({
             level,
-            href: `/${date}/${conversation}/`,
-            text: conv.data.title || conversation,
+            href: routeToUrl(convRoute),
+            text: conv.data.title || convRoute.conversation,
           });
         }
       });
     };
 
-    const items: TreeItem[] = [];
+    return match(route)
+      .with({ type: 'root' }, () => {
+        const items: TreeItem[] = [
+          { level: 0, href: routeToUrl(createRoute.root()), text: 'Home/' },
+        ];
+        const entriesByDate = groupByDate(entries);
 
-    if (slug === '') {
-      items.push({ level: 0, href: '/', text: 'Home/' });
-      const entriesByDate = groupByDate(entries);
+        Array.from(entriesByDate.keys())
+          .sort((a, b) => b.localeCompare(a))
+          .forEach((date) => {
+            const conversations = entriesByDate
+              .get(date)!
+              .filter((entry) => isConversationRoute(parseSlug(entry.slug)));
+            items.push({
+              level: 1,
+              href: routeToUrl(createRoute.date(date)),
+              text: `${date}/`,
+              meta:
+                conversations.length > 0
+                  ? `${conversations.length} conversations`
+                  : undefined,
+            });
+            addConversations(items, conversations, 2);
+          });
+        return items;
+      })
+      .with({ type: 'tags' }, () => {
+        const items: TreeItem[] = [
+          { level: 0, href: routeToUrl(createRoute.tags()), text: 'tags/' },
+        ];
+        const tagCounts = new Map<string, number>();
 
-      Array.from(entriesByDate.keys())
-        .sort((a, b) => b.localeCompare(a))
-        .forEach((date) => {
-          const conversations = entriesByDate
-            .get(date)!
-            .filter((entry) => entry.slug.includes('/'));
-          items.push({
-            level: 1,
-            href: `/${date}/`,
+        entries
+          .filter((entry) => isConversationRoute(parseSlug(entry.slug)))
+          .forEach((entry) => {
+            entry.data.tags?.forEach((tag: string) => {
+              tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+            });
+          });
+
+        Array.from(tagCounts.keys())
+          .sort()
+          .forEach((tag) => {
+            items.push({
+              level: 1,
+              href: routeToUrl(createRoute.tag(tag)),
+              text: `${tag}/`,
+              meta: `${tagCounts.get(tag)} conversations`,
+            });
+          });
+        return items;
+      })
+      .with({ type: 'tag' }, ({ tag }) => {
+        const items: TreeItem[] = [
+          {
+            level: 0,
+            href: routeToUrl(createRoute.tag(tag)),
+            text: `tags/${tag}/`,
+          },
+        ];
+        const taggedEntries = entries.filter((entry) => {
+          const entryRoute = parseSlug(entry.slug);
+          return (
+            isConversationRoute(entryRoute) && entry.data.tags?.includes(tag)
+          );
+        });
+        const taggedEntriesByDate = groupByDate(taggedEntries);
+
+        Array.from(taggedEntriesByDate.keys())
+          .sort((a, b) => b.localeCompare(a))
+          .forEach((date) => {
+            const conversations = taggedEntriesByDate.get(date)!;
+            items.push({
+              level: 1,
+              href: routeToUrl(createRoute.date(date)),
+              text: `${date}/`,
+              meta: `${conversations.length} conversations`,
+            });
+            addConversations(items, conversations, 2);
+          });
+        return items;
+      })
+      .with({ type: 'date' }, ({ date }) => {
+        const items: TreeItem[] = [
+          {
+            level: 0,
+            href: routeToUrl(createRoute.date(date)),
             text: `${date}/`,
-            meta:
-              conversations.length > 0
-                ? `${conversations.length} conversations`
-                : undefined,
-          });
-          addConversations(items, conversations, date, 2);
+          },
+        ];
+        const conversations = entries.filter((entry) => {
+          const entryRoute = parseSlug(entry.slug);
+          return isConversationRoute(entryRoute) && entryRoute.date === date;
         });
-    } else if (slug === 'tags') {
-      items.push({ level: 0, href: '/tags/', text: 'tags/' });
-
-      const tagCounts = new Map<string, number>();
-      entries
-        .filter((entry) => entry.slug.includes('/'))
-        .forEach((entry) => {
-          entry.data.tags?.forEach((tag: string) => {
-            tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-          });
-        });
-
-      Array.from(tagCounts.keys())
-        .sort()
-        .forEach((tag) => {
-          items.push({
-            level: 1,
-            href: `/tags/${tag}/`,
-            text: `${tag}/`,
-            meta: `${tagCounts.get(tag)} conversations`,
-          });
-        });
-    } else if (slug.startsWith('tags/')) {
-      const tag = slug.slice(5);
-      items.push({ level: 0, href: `/tags/${tag}/`, text: `tags/${tag}/` });
-
-      const taggedEntries = entries.filter(
-        (entry) => entry.slug.includes('/') && entry.data.tags?.includes(tag)
-      );
-      const entriesByDate = groupByDate(taggedEntries);
-
-      Array.from(entriesByDate.keys())
-        .sort((a, b) => b.localeCompare(a))
-        .forEach((date) => {
-          const conversations = entriesByDate.get(date)!;
-          items.push({
-            level: 1,
-            href: `/${date}/`,
+        addConversations(items, conversations, 1);
+        return items;
+      })
+      .with({ type: 'conversation' }, ({ date }) => {
+        const items: TreeItem[] = [
+          {
+            level: 0,
+            href: routeToUrl(createRoute.date(date)),
             text: `${date}/`,
-            meta: `${conversations.length} conversations`,
-          });
-          addConversations(items, conversations, date, 2);
+          },
+        ];
+        const conversations = entries.filter((entry) => {
+          const entryRoute = parseSlug(entry.slug);
+          return isConversationRoute(entryRoute) && entryRoute.date === date;
         });
-    } else {
-      items.push({ level: 0, href: `/${slug}/`, text: `${slug}/` });
-
-      const conversations = entries.filter((entry) => {
-        const { date } = Entry.parse(entry);
-        return date === slug && entry.slug.includes('/');
-      });
-      addConversations(items, conversations, slug, 1);
-    }
-
-    return items;
+        addConversations(items, conversations, 1);
+        return items;
+      })
+      .exhaustive();
   },
 };

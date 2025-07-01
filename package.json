@@ -18,7 +18,8 @@
   "dependencies": {
     "astro": "^4.15.12",
     "remeda": "^2.23.2",
-    "reset-css": "^5.0.2"
+    "reset-css": "^5.0.2",
+    "ts-pattern": "^5.7.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
