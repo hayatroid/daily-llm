@@ -2,51 +2,50 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 // ========== TYPES ==========
 interface EntryPath {
-  date: string;
-  filename?: string;
+  date?: string;
+  conversation?: string;
 }
 
 // ========== ENTRY OPERATIONS ==========
 export const Entry = {
   parse: (entry: CollectionEntry<'daily'>): EntryPath => {
-    const [date, filename] = entry.slug.split('/');
-    return { date, filename };
+    const [date, conversation] = entry.slug.split('/');
+    return { date, conversation };
   },
-
-  isConversation: (entry: CollectionEntry<'daily'>): boolean =>
-    entry.slug.includes('/'),
-
-  getDates: (entries: CollectionEntry<'daily'>[]): string[] =>
-    [...new Set(entries.map((e) => Entry.parse(e).date))].sort(),
-
-  sort: (entries: CollectionEntry<'daily'>[]): CollectionEntry<'daily'>[] =>
-    entries.sort((a, b) => a.slug.localeCompare(b.slug)),
 };
 
 // ========== STATIC PATHS ==========
 export const StaticPaths = {
   getDates: async () => {
     const entries = await getCollection('daily');
-    return Entry.getDates(entries).map((date) => ({ params: { date } }));
+    return [
+      ...new Set(
+        entries
+          .filter((entry) => !entry.slug.includes('/'))
+          .map((entry) => entry.slug)
+      ),
+    ].map((date) => ({ params: { date } }));
   },
 
   getConversations: async () => {
     const entries = await getCollection('daily');
-    return entries.filter(Entry.isConversation).map((entry) => {
-      const { date, filename } = Entry.parse(entry);
-      return { params: { date, conversation: filename } };
+    return [
+      ...new Set(
+        entries
+          .filter((entry) => entry.slug.includes('/'))
+          .map((entry) => entry.slug)
+      ),
+    ].map((slug) => {
+      const [date, conversation] = slug.split('/');
+      return { params: { date, conversation } };
     });
   },
 
   getTags: async () => {
     const entries = await getCollection('daily');
-    const tags = new Set<string>();
-
-    entries.filter(Entry.isConversation).forEach((entry) => {
-      entry.data.tags?.forEach((tag: string) => tags.add(tag));
-    });
-
-    return Array.from(tags).map((tag) => ({ params: { tag } }));
+    return [...new Set(entries.flatMap((entry) => entry.data.tags || []))].map(
+      (tag) => ({ params: { tag } })
+    );
   },
 };
 
@@ -76,7 +75,7 @@ export const ContentAnchors = {
     for (const heading of headings) {
       const text = heading.textContent || '';
       const id = await generateHashId(text);
-      const level = parseInt(heading.tagName[1]) - 1;
+      const level = parseInt(heading.tagName[1] || '1') - 1;
       const marker = markers[level] || '';
 
       heading.innerHTML = `

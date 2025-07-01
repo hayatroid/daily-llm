@@ -28,7 +28,7 @@ export const Navigation = {
     if (!entry) throw new Error(`Content not found for slug: ${slug}`);
 
     const allEntries = await getCollection('daily');
-    const isConversation = Entry.isConversation(entry);
+    const isConversation = entry.slug.includes('/');
 
     let filteredEntries: CollectionEntry<'daily'>[];
     let parentUrl: string;
@@ -38,29 +38,29 @@ export const Navigation = {
       const { date } = Entry.parse(entry);
       filteredEntries = allEntries.filter((e: CollectionEntry<'daily'>) => {
         const { date: eDate } = Entry.parse(e);
-        return eDate === date && Entry.isConversation(e);
+        return eDate === date && e.slug.includes('/');
       });
       parentUrl = `/${date}/`;
       urlBuilder = (e: CollectionEntry<'daily'>) =>
-        `/${date}/${Entry.parse(e).filename}/`;
+        `/${date}/${Entry.parse(e).conversation}/`;
     } else {
       filteredEntries = allEntries.filter(
-        (e: CollectionEntry<'daily'>) => !Entry.isConversation(e)
+        (e: CollectionEntry<'daily'>) => !e.slug.includes('/')
       );
       parentUrl = '/';
-      urlBuilder = (e: CollectionEntry<'daily'>) => `/${Entry.parse(e).date}/`;
+      urlBuilder = (e: CollectionEntry<'daily'>) => `/${e.slug}/`;
     }
 
-    const sorted = Entry.sort(filteredEntries);
+    const sorted = filteredEntries.sort((a, b) => a.slug.localeCompare(b.slug));
     const currentIndex = sorted.findIndex((e) => e.slug === entry.slug);
 
+    const prevEntry = currentIndex > 0 ? sorted[currentIndex - 1] : undefined;
+    const nextEntry =
+      currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : undefined;
+
     return {
-      prevUrl:
-        currentIndex > 0 ? urlBuilder(sorted[currentIndex - 1]) : undefined,
-      nextUrl:
-        currentIndex < sorted.length - 1
-          ? urlBuilder(sorted[currentIndex + 1])
-          : undefined,
+      prevUrl: prevEntry ? urlBuilder(prevEntry) : undefined,
+      nextUrl: nextEntry ? urlBuilder(nextEntry) : undefined,
       parentUrl,
     };
   },
@@ -114,8 +114,8 @@ export const Tree = {
       const grouped = new Map<string, CollectionEntry<'daily'>[]>();
       entries.forEach((entry) => {
         const { date } = Entry.parse(entry);
-        if (!grouped.has(date)) grouped.set(date, []);
-        grouped.get(date)!.push(entry);
+        if (date && !grouped.has(date)) grouped.set(date, []);
+        if (date) grouped.get(date)!.push(entry);
       });
       return grouped;
     };
@@ -127,12 +127,14 @@ export const Tree = {
       level: number
     ) => {
       conversations.forEach((conv) => {
-        const { filename } = Entry.parse(conv);
-        items.push({
-          level,
-          href: `/${date}/${filename}/`,
-          text: conv.data.title || filename,
-        });
+        const { conversation } = Entry.parse(conv);
+        if (conversation) {
+          items.push({
+            level,
+            href: `/${date}/${conversation}/`,
+            text: conv.data.title || conversation,
+          });
+        }
       });
     };
 
@@ -143,12 +145,11 @@ export const Tree = {
       const entriesByDate = groupByDate(entries);
 
       Array.from(entriesByDate.keys())
-        .sort()
-        .reverse()
+        .sort((a, b) => b.localeCompare(a))
         .forEach((date) => {
           const conversations = entriesByDate
             .get(date)!
-            .filter(Entry.isConversation);
+            .filter((entry) => entry.slug.includes('/'));
           items.push({
             level: 1,
             href: `/${date}/`,
@@ -164,11 +165,13 @@ export const Tree = {
       items.push({ level: 0, href: '/tags/', text: 'tags/' });
 
       const tagCounts = new Map<string, number>();
-      entries.filter(Entry.isConversation).forEach((entry) => {
-        entry.data.tags?.forEach((tag: string) => {
-          tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+      entries
+        .filter((entry) => entry.slug.includes('/'))
+        .forEach((entry) => {
+          entry.data.tags?.forEach((tag: string) => {
+            tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+          });
         });
-      });
 
       Array.from(tagCounts.keys())
         .sort()
@@ -185,13 +188,12 @@ export const Tree = {
       items.push({ level: 0, href: `/tags/${tag}/`, text: `tags/${tag}/` });
 
       const taggedEntries = entries.filter(
-        (entry) => Entry.isConversation(entry) && entry.data.tags?.includes(tag)
+        (entry) => entry.slug.includes('/') && entry.data.tags?.includes(tag)
       );
       const entriesByDate = groupByDate(taggedEntries);
 
       Array.from(entriesByDate.keys())
-        .sort()
-        .reverse()
+        .sort((a, b) => b.localeCompare(a))
         .forEach((date) => {
           const conversations = entriesByDate.get(date)!;
           items.push({
@@ -207,7 +209,7 @@ export const Tree = {
 
       const conversations = entries.filter((entry) => {
         const { date } = Entry.parse(entry);
-        return date === slug && Entry.isConversation(entry);
+        return date === slug && entry.slug.includes('/');
       });
       addConversations(items, conversations, slug, 1);
     }
