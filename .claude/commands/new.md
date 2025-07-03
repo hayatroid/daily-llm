@@ -153,20 +153,16 @@
 4. **品質確保**:
 
    - ファイル作成: `src/content/daily/YYYY-MM-DD/NNN-slug.md`
-   - ダミーサマリー作成（初回記事の場合：以下のテンプレート使用）
-
-   ```markdown
-   ---
-   title: 'Summary not yet created'
-   tags: []
-   description: 'Summary not yet created'
-   ---
-
-   Use `/summarize` to generate a daily summary.
-   ```
-
    - `npm run format && npm run lint`
    - `npm run textlint`（エラー修正後再実行）
+
+5. **日次サマリー自動更新**:
+
+   - **重要**: 記事作成完了後、自動的にその日のサマリーを更新
+   - `/summarize [今日の日付]` を内部実行
+   - 既存 index.md は参照せず、その日の全記事から完全新規生成
+   - 新しい記事を含めた知的探求プロセス全体を再分析
+   - 手動でのサマリー作成は不要（ダミーサマリーシステムを廃止）
 
 ## 成功の判断基準 🎯
 
@@ -327,3 +323,5 @@
 ## 深い理解のために 📚
 
 記事作成で行き詰まった時や、より深く理解したい場合は `/.claude/philosophy/thoughtful-article-creation.md` を参照してください。このガイドでは、記事作成の原理と哲学的背景を詳しく解説しています。
+
+サマリー作成についても同様に、`/.claude/commands/summarize.md` で「思考軌跡の俯瞰」という新しいアプローチを詳述していますが、通常は/new実行時に自動更新されるため手動実行は不要です。
