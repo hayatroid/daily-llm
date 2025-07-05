@@ -90,7 +90,8 @@ export const Tree = {
       conversations: CollectionEntry<'daily'>[],
       level: number
     ) => {
-      conversations.forEach((conv) => {
+      // Display conversations in reverse order (newest first)
+      conversations.reverse().forEach((conv) => {
         const convRoute = parseSlug(conv.slug);
         if (isConversationRoute(convRoute)) {
           items.push({
