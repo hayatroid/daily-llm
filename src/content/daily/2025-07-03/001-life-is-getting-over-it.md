@@ -8,6 +8,7 @@ tags:
     'elegance',
     'unified-principles',
     'bitter-challenge',
+    'gem',
   ]
 description: '「ちょっと良い」という直感から始まり、現代社会の認知的支配構造と真の学習の本質に到達する思考プロセス'
 ---

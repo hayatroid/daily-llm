@@ -98,6 +98,7 @@ export const Tree = {
             level,
             text: conv.data.title,
             href: routeToUrl(convRoute),
+            meta: conv.data.tags.includes('gem') ? '💎' : undefined,
           });
         }
       });
