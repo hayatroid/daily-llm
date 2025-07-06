@@ -12,7 +12,7 @@ tags:
     consistency,
     reality-modeling,
   ]
-description: '現実世界のモデリングとCRUD的発想のギャップから始まり、簿記という身近な例を通してCQRS+ESの本質を発見する思考の軌跡'
+description: '現実世界のモデリングと CRUD 的発想のギャップから始まり、簿記という身近な例を通して CQRS+ES の本質を発見する思考の軌跡'
 ---
 
 ユーザは「CQRS + ES のキャッチアップをしたい」という率直な要求から対話を始めた。CQRS（Command Query Responsibility Segregation）と ES（Event Sourcing）、これらのアーキテクチャパターンについて理解を深めたいという。
@@ -39,15 +39,15 @@ description: '現実世界のモデリングとCRUD的発想のギャップか�
 
 これはまさに、私たちが議論していた構造と同じではないか。仕訳帳が Event Store で、B/S や P/L が Read Model に相当する。数百年前から、会計の世界では「出来事の記録」と「現在の状態の表示」の分離が当たり前だった。
 
-ただしユーザは現実的な視点も持っていた。CRUD が向くサービスと CQRS+ES が向くサービスがある、と。確かに、都道府県マスタに Event Sourcing は過剰だろう。
+ただしユーザは現実的な視点も持っていた。CRUD が向くサービスと CQRS + ES が向くサービスがある、と。確かに、都道府県マスタに Event Sourcing は過剰だろう。
 
-## 後から気づくEvent Sourcing
+## 後から気づく Event Sourcing
 
 SNS の投稿編集履歴や Git を例に挙げたユーザの発言で、面白い現象に気づいた。多くのシステムが「後から Event Sourcing っぽくなる」のだ。最初は CRUD で始めたのに、「履歴も見たい」「変更理由も記録したい」という要求が増えていく。
 
-## CQRSとESの必然的な結合
+## CQRS と ES の必然的な結合
 
-「そもそも CQRS+ES すらよくわかってない」という正直な告白から、基礎に立ち返った。
+「そもそも CQRS + ES すらよくわかってない」という正直な告白から、基礎に立ち返った。
 
 簿記の例で説明すると：
 
@@ -112,7 +112,7 @@ const events = [
 ここで「Projection」という考え方が登場する。イベントを順番に処理して、現在の状態を別途保持しておく：
 
 ```javascript
-// Projectionの例
+// Projection の例
 let orderProjection = {};
 
 for (const event of events) {
