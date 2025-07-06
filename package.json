@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "astro": "^4.15.12",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "remeda": "^2.23.2",
     "reset-css": "^5.0.2",
     "ts-pattern": "^5.7.1"
