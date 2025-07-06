@@ -1,6 +1,6 @@
 ---
 title: '今日は現実の非同期性を発見した'
-tags: ['async', 'reality', 'event-sourcing', 'bookkeeping', 'modeling']
+tags: ['async', 'event-sourcing', 'bookkeeping']
 description: 'CRUDへの違和感から始まり、簿記との出会いを経て、現実世界の本質的な非同期性への気づきに到達した探求'
 ---
 

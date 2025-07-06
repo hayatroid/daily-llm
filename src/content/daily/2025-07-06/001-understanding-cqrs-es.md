@@ -4,9 +4,7 @@ date: 2025-07-06
 tags:
   [
     'develop',
-    'cqrs',
     'event-sourcing',
-    'ddd',
     'architecture',
     'bookkeeping',
     'async',

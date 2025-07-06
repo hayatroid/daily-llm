@@ -1,6 +1,6 @@
 ---
 title: '今日はcontext'
-tags: ['context', 'understanding', 'constraints', 'metacognition', 'dialogue']
+tags: ['context', 'cognition', 'constraints', 'metacognition', 'dialogue']
 description: '自分の文脈に囚われていることに気づき、その制約を創造的に活用する方法を発見した一日の知的探求'
 ---
 

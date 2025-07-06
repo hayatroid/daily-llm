@@ -4,10 +4,7 @@ tags:
   [
     'develop',
     'testing',
-    'property-based-testing',
     'competitive-programming',
-    'jest',
-    'fast-check',
     'verification',
     'differential-testing',
   ]

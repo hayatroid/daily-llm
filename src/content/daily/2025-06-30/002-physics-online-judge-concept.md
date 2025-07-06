@@ -4,9 +4,7 @@ tags:
   [
     'develop',
     'physics-education',
-    'online-judge',
-    'fsharp',
-    'units-of-measure',
+    'competitive-programming',
     'type-system',
     'symbolic-computation',
     'wolfram',

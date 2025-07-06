@@ -5,9 +5,8 @@ tags:
     'life',
     'fault-tolerance',
     'triage',
-    'refactoring',
+    'develop',
     'life-design',
-    'survival-strategy',
     'mental-health',
   ]
 description: '精神的不調を想定したトリアージ的生活設計と、人生における耐障害性の重要性'

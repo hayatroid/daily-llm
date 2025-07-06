@@ -1,15 +1,6 @@
 ---
 title: 'まっすぐ！'
-tags:
-  [
-    'life',
-    'self-consistency',
-    'code-quality',
-    'communication',
-    'values',
-    'practice',
-    'development-culture',
-  ]
+tags: ['life', 'metacognition', 'development-culture']
 description: '技術的な正しさを追求することの意味を、静かに問い直す思考の軌跡'
 ---
 

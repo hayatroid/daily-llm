@@ -2,11 +2,11 @@
 title: '今日は洞察'
 tags:
   [
-    'development-process',
+    'develop',
     'scss',
     'vibe-coding',
     'claude-code',
-    'dialog-driven',
+    'dialogue',
     'architecture',
     'diary-system',
     'natural-language-workflow',

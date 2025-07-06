@@ -1,16 +1,6 @@
 ---
 title: '人生は Getting Over It'
-tags:
-  [
-    'life',
-    'getting-over-it',
-    'trash-culture',
-    'education',
-    'elegance',
-    'unified-principles',
-    'bitter-challenge',
-    'gem',
-  ]
+tags: ['life', 'getting-over-it', 'education', 'bitter-challenge', 'gem']
 description: '「ちょっと良い」という直感から始まり、現代社会の認知的支配構造と真の学習の本質に到達する思考プロセス'
 ---
 

@@ -3,11 +3,7 @@ title: '開発初動のジレンマ'
 tags:
   [
     'develop',
-    'development-process',
     'architecture',
-    'small-steps',
-    'tdd',
-    'project-management',
     'commit-strategy',
     'technical-debt',
     'stakeholder-management',
