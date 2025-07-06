@@ -2,6 +2,7 @@
 title: '開発初動のジレンマ'
 tags:
   [
+    'develop',
     'development-process',
     'architecture',
     'small-steps',

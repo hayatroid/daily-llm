@@ -2,6 +2,7 @@
 title: '物理版オンラインジャッジの構想'
 tags:
   [
+    'develop',
     'physics-education',
     'online-judge',
     'fsharp',

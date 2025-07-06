@@ -2,6 +2,7 @@
 title: 'SCSS は残る'
 tags:
   [
+    'develop',
     'scss',
     'vibe-coding',
     'css-architecture',

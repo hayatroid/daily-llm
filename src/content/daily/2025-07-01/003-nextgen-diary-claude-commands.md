@@ -2,6 +2,7 @@
 title: '次世代の日記は .claude/commands/'
 tags:
   [
+    'life',
     'claude-code',
     'diary-system',
     'natural-language-workflow',

@@ -2,6 +2,7 @@
 title: '人生は Getting Over It'
 tags:
   [
+    'life',
     'getting-over-it',
     'trash-culture',
     'education',

@@ -2,6 +2,7 @@
 title: 'まっすぐ！'
 tags:
   [
+    'life',
     'self-consistency',
     'code-quality',
     'communication',

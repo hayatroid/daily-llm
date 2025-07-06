@@ -2,6 +2,7 @@
 title: 'Branded Types を考える'
 tags:
   [
+    'develop',
     'typescript',
     'rust',
     'go',

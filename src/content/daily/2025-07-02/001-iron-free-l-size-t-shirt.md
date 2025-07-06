@@ -2,6 +2,7 @@
 title: 'アイロンがけのいらない L サイズの T シャツを買え'
 tags:
   [
+    'life',
     'fault-tolerance',
     'triage',
     'refactoring',

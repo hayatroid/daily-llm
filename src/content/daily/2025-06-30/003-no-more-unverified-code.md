@@ -2,6 +2,7 @@
 title: 'もう verify されてないコードは書きたくない'
 tags:
   [
+    'develop',
     'testing',
     'property-based-testing',
     'competitive-programming',

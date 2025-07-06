@@ -2,6 +2,7 @@
 title: 'No Context 人生'
 tags:
   [
+    'life',
     'cognition',
     'dialogue',
     'understanding',
