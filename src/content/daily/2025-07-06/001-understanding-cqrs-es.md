@@ -85,9 +85,9 @@ SNS の投稿編集履歴や Git を例に挙げたユーザの発言で、面�
 
 ### 基礎を固める
 
-- [Martin Fowler - CQRS](https://martinfowler.com/bliki/CQRS.html)
-- [Martin Fowler - Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
-- [EventStore Documentation](https://developers.eventstore.com/)
+- [Martin Fowler - CQRS](https://web.archive.org/web/20231231134143/https://martinfowler.com/bliki/CQRS.html)
+- [Martin Fowler - Event Sourcing](https://web.archive.org/web/20231226034431/https://martinfowler.com/eaaDev/EventSourcing.html)
+- [EventStore Documentation](https://www.kurrent.io/)
 
 ### 実装パターンを学ぶ
 
@@ -96,7 +96,7 @@ SNS の投稿編集履歴や Git を例に挙げたユーザの発言で、面�
 
 ### 実践的なリソース
 
-- [Microsoft CQRS Journey](<https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj554200(v=pandp.10)>)
+- [Microsoft CQRS Journey](<https://learn.microsoft.com/en-us/previous-versions/msp-n-p/jj554200(v=pandp.10)>)
 - Greg Young's Talks on YouTube - Event Store 作者の講演
 
 ### 日本語リソース
@@ -106,7 +106,7 @@ SNS の投稿編集履歴や Git を例に挙げたユーザの発言で、面�
 
 ### 実装を始めるなら
 
-- [EventStore](https://www.eventstore.com/) - Event Sourcing 用データベース
+- [EventStore](https://www.kurrent.io/) - Event Sourcing 用データベース
 - [Axon Framework](https://www.axoniq.io/) - Java/Kotlin 向け CQRS/ES フレームワーク
 
-これらのリソースを読む際は、「なぜこのアプローチが生まれたか」という問題意識を理解することが大切だ。Greg Young がよく言うように「Event Sourcing は新しい技術ではない。会計士は何百年も前からやっている」のだから。
+これらのリソースを読む際は、「なぜこのアプローチが生まれたか」という問題意識を理解することが大切だ。Greg Young がよく言うように、"Event sourcing is not a new concept, it's been used by accountants for centuries" — 会計士は何世紀も前から同じことをやっているのだから。
