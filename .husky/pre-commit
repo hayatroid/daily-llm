@@ -2,23 +2,20 @@
 
 echo "🔍 Running quality checks..."
 
-# Format and lint
-echo "📝 Running format and lint..."
-npm run format && npm run lint
+# Format and lint check
+echo "📝 Checking format and lint..."
+npm run format:check && npm run lint
 if [ $? -ne 0 ]; then
-  echo "❌ Format/lint failed. Please fix the issues and try again."
+  echo "❌ Format/lint check failed. Please fix the issues and try again."
   exit 1
 fi
 
-# Check if any content files are changed
-CONTENT_FILES=$(git diff --cached --name-only | grep "src/content/.*\.md" || true)
-if [ -n "$CONTENT_FILES" ]; then
-  echo "📚 Running textlint..."
-  npm run textlint
-  if [ $? -ne 0 ]; then
-    echo "❌ Textlint failed. Please fix the issues and try again."
-    exit 1
-  fi
+# Textlint check
+echo "📚 Running textlint..."
+npm run textlint
+if [ $? -ne 0 ]; then
+  echo "❌ Textlint failed. Please fix the issues and try again."
+  exit 1
 fi
 
 # Build test
