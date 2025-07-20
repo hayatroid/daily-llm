@@ -117,7 +117,7 @@
 
 1. **レポート保存**:
 
-   - `docs/tag-stats/YYYY-MM.md` として保存（ディレクトリがなければ作成）
+   - `.claude/tag-stats/YYYY-MM.md` として保存（ディレクトリがなければ作成）
    - 前月との比較情報も含める（2回目以降）
    - なぜ保存するか：タグの進化の歴史自体が、プロジェクトの思考の変遷を物語る貴重な記録となる
 
@@ -157,7 +157,7 @@
 Tag statistics report generated:
 - 71 unique tags found
 - 45 active, 18 dormant, 8 removal candidates
-- Report saved to: docs/tag-stats/2025-07.md
+- Report saved to: .claude/tag-stats/2025-07.md
 
 Key findings:
 - "constraint-design" is gaining traction (5 uses in last month)
