@@ -60,7 +60,5 @@ npm run format && npm run lint
 - `/summarize [日付]` - 日次サマリーを協働で作成 📊
 - `/commit [概要]` - 品質チェック付きの安全なコミット 📝
 - `/push [概要]` - 品質チェック付きの安全なプッシュ 🚀
-- `/commit-fast [概要]` - 品質チェック省略の高速コミット ⚡
-- `/push-fast [概要]` - 品質チェック省略の高速プッシュ ⚡
 
 詳細は `.claude/commands/` を参照。 📚
