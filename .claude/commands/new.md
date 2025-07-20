@@ -172,11 +172,10 @@
 [複数の洞察を統合した深い理解]
 ```
 
-4. **品質確保**:
+4. **ファイル作成**:
 
-   - ファイル作成: `src/content/daily/YYYY-MM-DD/NNN-slug.md`
-   - `npm run format && npm run lint`
-   - `npm run textlint`（エラー修正後再実行）
+   - 保存先: `src/content/daily/YYYY-MM-DD/NNN-slug.md`
+   - 品質チェック（format, lint, textlint）は不要（huskyがコミット時に自動実行）
 
 5. **日次サマリー自動更新**:
 
