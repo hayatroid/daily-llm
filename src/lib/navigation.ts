@@ -20,7 +20,7 @@ export interface TreeNode {
   level: number;
   text: string;
   href: string;
-  meta?: string;
+  gem?: boolean;
 }
 
 // ========== BREADCRUMBS ==========
@@ -50,18 +50,6 @@ export const Breadcrumbs = {
         {
           text: conversation,
           href: routeToUrl(createRoute.conversation(date, conversation)),
-        },
-      ])
-      .with({ type: 'tags' }, () => [
-        homeBreadcrumb,
-        { text: 'tags', href: routeToUrl(createRoute.tags()) },
-      ])
-      .with({ type: 'tag' }, ({ tag }) => [
-        homeBreadcrumb,
-        { text: 'tags', href: routeToUrl(createRoute.tags()) },
-        {
-          text: tag,
-          href: routeToUrl(createRoute.tag(tag)),
         },
       ])
       .exhaustive();
@@ -98,7 +86,7 @@ export const Tree = {
             level,
             text: conv.data.title,
             href: routeToUrl(convRoute),
-            meta: conv.data.tags.includes('gem') ? '💎' : undefined,
+            gem: conv.data.gem,
           });
         }
       });
@@ -125,70 +113,6 @@ export const Tree = {
               level: 1,
               text: routeToTreeText(createRoute.date(date)),
               href: routeToUrl(createRoute.date(date)),
-              meta:
-                conversations.length > 0
-                  ? `${conversations.length} conversations`
-                  : undefined,
-            });
-            addConversations(items, conversations, 2);
-          });
-        return items;
-      })
-      .with({ type: 'tags' }, () => {
-        const items: TreeNode[] = [
-          {
-            level: 0,
-            text: routeToTreeText(createRoute.tags()),
-            href: routeToUrl(createRoute.tags()),
-          },
-        ];
-        const tagCounts = new Map<string, number>();
-
-        entries
-          .filter((entry) => isConversationRoute(parseSlug(entry.slug)))
-          .forEach((entry) => {
-            entry.data.tags.forEach((tag: string) => {
-              tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-            });
-          });
-
-        Array.from(tagCounts.keys())
-          .sort()
-          .forEach((tag) => {
-            items.push({
-              level: 1,
-              text: routeToTreeText(createRoute.tag(tag)),
-              href: routeToUrl(createRoute.tag(tag)),
-              meta: `${tagCounts.get(tag)} conversations`,
-            });
-          });
-        return items;
-      })
-      .with({ type: 'tag' }, ({ tag }) => {
-        const items: TreeNode[] = [
-          {
-            level: 0,
-            text: routeToTreeText(createRoute.tag(tag)),
-            href: routeToUrl(createRoute.tag(tag)),
-          },
-        ];
-        const taggedEntries = entries.filter((entry) => {
-          const entryRoute = parseSlug(entry.slug);
-          return (
-            isConversationRoute(entryRoute) && entry.data.tags.includes(tag)
-          );
-        });
-        const taggedEntriesByDate = groupByDate(taggedEntries);
-
-        Array.from(taggedEntriesByDate.keys())
-          .sort((a, b) => b.localeCompare(a))
-          .forEach((date) => {
-            const conversations = taggedEntriesByDate.get(date)!;
-            items.push({
-              level: 1,
-              text: routeToTreeText(createRoute.date(date)),
-              href: routeToUrl(createRoute.date(date)),
-              meta: `${conversations.length} conversations`,
             });
             addConversations(items, conversations, 2);
           });

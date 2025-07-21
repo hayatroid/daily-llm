@@ -1,13 +1,5 @@
 ---
 title: '次世代の日記は .claude/commands/'
-tags:
-  [
-    'life',
-    'claude-code',
-    'diary-system',
-    'natural-language-workflow',
-    'dialogue',
-  ]
 description: '対話による言語化委譲と自然言語ワークフローが実現する、従来の日記を超えた思考支援システム'
 ---
 

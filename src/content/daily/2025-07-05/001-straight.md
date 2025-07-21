@@ -1,6 +1,5 @@
 ---
 title: 'まっすぐ！'
-tags: ['life', 'metacognition', 'development-culture']
 description: '技術的な正しさを追求することの意味を、静かに問い直す思考の軌跡'
 ---
 

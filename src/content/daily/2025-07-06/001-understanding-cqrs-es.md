@@ -1,16 +1,6 @@
 ---
 title: 'CQRS + ES を理解したい'
 date: 2025-07-06
-tags:
-  [
-    'develop',
-    'event-sourcing',
-    'architecture',
-    'bookkeeping',
-    'async',
-    'consistency',
-    'reality-modeling',
-  ]
 description: '現実世界のモデリングと CRUD 的発想のギャップから始まり、簿記という身近な例を通して CQRS+ES の本質を発見する思考の軌跡'
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: '高度に発達したエンジニアリングはデイトレと区別がつかない'
-tags:
-  ['life', 'architecture', 'ai-agent', 'metacognition', 'constraints', 'gem']
+gem: true
 description: 'AI Agent時代のエンジニアリングにおける判断の累積効果と、その本質的な構造変化について'
 ---
 

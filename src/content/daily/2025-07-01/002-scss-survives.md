@@ -1,6 +1,5 @@
 ---
 title: 'SCSS は残る'
-tags: ['develop', 'scss', 'vibe-coding', 'constraints', 'refactoring']
 description: 'Vibe Coding 時代に SCSS が構造的ガードレールとして新たな価値を持つという洞察'
 ---
 

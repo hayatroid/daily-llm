@@ -1,14 +1,5 @@
 ---
 title: 'マルコフを理解したい 1'
-tags:
-  [
-    'develop',
-    'markov',
-    'probability',
-    'stationary-distribution',
-    'equilibrium',
-    'ergodic',
-  ]
 description: 'マルコフ解析の具体的問題から出発し、無記憶性の本質と様々な確率分布の統一的理解へ至る思考の軌跡'
 ---
 

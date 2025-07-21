@@ -1,14 +1,5 @@
 ---
 title: 'アイロンがけのいらない L サイズの T シャツを買え'
-tags:
-  [
-    'life',
-    'fault-tolerance',
-    'triage',
-    'develop',
-    'life-design',
-    'mental-health',
-  ]
 description: '精神的不調を想定したトリアージ的生活設計と、人生における耐障害性の重要性'
 ---
 

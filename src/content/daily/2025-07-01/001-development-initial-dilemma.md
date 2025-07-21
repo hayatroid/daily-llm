@@ -1,13 +1,5 @@
 ---
 title: '開発初動のジレンマ'
-tags:
-  [
-    'develop',
-    'architecture',
-    'commit-strategy',
-    'technical-debt',
-    'stakeholder-management',
-  ]
 description: '機能追加圧力と基盤整備の必要性の間で揺れ動く開発現場の構造的ジレンマと、現実的な折り合いのつけ方を探る'
 ---
 

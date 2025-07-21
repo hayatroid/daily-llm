@@ -1,13 +1,5 @@
 ---
 title: 'もう verify されてないコードは書きたくない'
-tags:
-  [
-    'develop',
-    'testing',
-    'competitive-programming',
-    'verification',
-    'differential-testing',
-  ]
 description: 'continue と break の取り違えで競技時間を溶かした経験から、コードの検証手法を体系的に探求する'
 ---
 

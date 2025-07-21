@@ -1,6 +1,5 @@
 ---
 title: '今日は耐障害性'
-tags: ['fault-tolerance', 'triage', 'life-design', 'subtraction-philosophy']
 description: '「アイロンがけのいらない L サイズの T シャツを買え」から始まり、人生の耐障害性という原理に到達'
 ---
 

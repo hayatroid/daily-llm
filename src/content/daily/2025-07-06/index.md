@@ -1,6 +1,5 @@
 ---
 title: '今日は記憶'
-tags: ['life', 'pattern-discovery', 'modeling']
 description: 'CQRS+ES の探求とマルコフ連鎖の学習を通して、現実世界をモデリングする異なるアプローチに共通する構造を見出した'
 ---
 

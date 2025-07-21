@@ -1,6 +1,5 @@
 ---
 title: 'Branded Types を考える'
-tags: ['develop', 'type-system', 'design-pattern', 'type-safety']
 description: 'Branded Types の実装コストと各言語でのアプローチを探り、型システムが設計意図を表現する言語として進化している現状を考察'
 ---
 

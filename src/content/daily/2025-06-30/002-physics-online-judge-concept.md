@@ -1,15 +1,5 @@
 ---
 title: '物理版オンラインジャッジの構想'
-tags:
-  [
-    'develop',
-    'physics-education',
-    'competitive-programming',
-    'type-system',
-    'symbolic-computation',
-    'wolfram',
-    'automated-scoring',
-  ]
 description: '高校物理の求値問題において、単位の整合性・極限値の妥当性・式の等価性を段階的に判定する自動採点システムの構想'
 ---
 

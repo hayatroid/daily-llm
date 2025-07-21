@@ -2,12 +2,7 @@
 // Cat: display content entry
 import { getEntry } from 'astro:content';
 import Shell from '../lv1-shell/Shell.astro';
-import {
-  routeToUrl,
-  parseSlug,
-  routeToTreeText,
-  createRoute,
-} from '../../lib/routes';
+import { routeToUrl, parseSlug } from '../../lib/routes';
 
 export interface Props {
   slug: string; // "2024-01-15/001-astro-setup" or "2024-01-15"
@@ -26,22 +21,11 @@ const { Content } = await entry.render();
 
 const route = parseSlug(slug);
 const displayPath = routeToUrl(route);
-
-const tags = data.tags;
 ---
 
 <Shell command={`cat ${displayPath}`}>
   <div class="file-content">
-    <h1>{data.title}</h1>
-    <div class="tags">
-      {
-        tags.map((tag: string) => (
-          <a href={routeToUrl({ type: 'tag', tag })} class="tag">
-            {routeToTreeText(createRoute.tag(tag))}
-          </a>
-        ))
-      }
-    </div>
+    <h1>{data.title} {data.gem && <span class="gem">💎</span>}</h1>
     <Content />
   </div>
 </Shell>
@@ -52,14 +36,8 @@ const tags = data.tags;
     line-height: var(--line-height-normal);
   }
 
-  .tags {
-    font-size: var(--text-small);
-    margin: var(--space-sm) 0 var(--space-md) 0;
-    line-height: var(--line-height-normal);
-  }
-
-  .tag {
-    margin-right: var(--space-sm);
+  .gem {
+    margin-left: var(--space-xs);
   }
 
   .file-content :global(h1) {

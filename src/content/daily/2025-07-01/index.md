@@ -1,16 +1,5 @@
 ---
 title: '今日は洞察'
-tags:
-  [
-    'develop',
-    'scss',
-    'vibe-coding',
-    'claude-code',
-    'dialogue',
-    'architecture',
-    'diary-system',
-    'natural-language-workflow',
-  ]
 description: '開発現場のジレンマ、SCSS の未来、対話型日記システム—それぞれの領域で気づきが生まれた一日'
 ---
 

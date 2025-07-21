@@ -1,11 +1,6 @@
 import { getCollection } from 'astro:content';
 import * as R from 'remeda';
-import {
-  parseSlug,
-  isDateRoute,
-  isConversationRoute,
-  hasDateField,
-} from './routes';
+import { parseSlug, isDateRoute, isConversationRoute } from './routes';
 
 // ========== STATIC PATHS ==========
 export const StaticPaths = {
@@ -28,17 +23,6 @@ export const StaticPaths = {
       R.filter(isConversationRoute),
       R.map(({ date, conversation }) => ({ params: { date, conversation } })),
       R.unique()
-    );
-  },
-
-  getTags: async () => {
-    const entries = await getCollection('daily');
-    return R.pipe(
-      entries,
-      R.filter((entry) => hasDateField(parseSlug(entry.slug))),
-      R.flatMap((entry) => entry.data.tags),
-      R.unique(),
-      R.map((tag) => ({ params: { tag } }))
     );
   },
 };

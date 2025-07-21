@@ -5,7 +5,7 @@ import { Tree as TreeLib } from '../../lib/navigation';
 import Shell from '../lv1-shell/Shell.astro';
 
 export interface Props {
-  slug: string; // "" | "2024-01-15" | "tags" | "tags/react"
+  slug: string; // "" | "2024-01-15" | "2024-01-15/001-article-slug"
 }
 
 const { slug } = Astro.props;
@@ -20,9 +20,8 @@ const TreeNodes = TreeLib.build(allEntries, slug);
       TreeNodes.map((item) => (
         <div class="tree-item" data-level={item.level}>
           <a href={item.href} class="tree-link">
-            {item.text}
+            {item.text} {item.gem && <span class="gem">💎</span>}
           </a>
-          {item.meta && <span class="tree-meta">{item.meta}</span>}
         </div>
       ))
     }
@@ -56,9 +55,8 @@ const TreeNodes = TreeLib.build(allEntries, slug);
     }
   }
 
-  .tree-meta {
-    font-size: var(--text-small);
-    color: var(--term-text);
+  .gem {
+    margin-left: var(--space-xs);
   }
 
   /* Mobile responsive */
@@ -70,10 +68,6 @@ const TreeNodes = TreeLib.build(allEntries, slug);
         flex-direction: column;
         gap: var(--space-xs);
       }
-    }
-
-    .tree-meta {
-      margin-left: var(--space-sm);
     }
   }
 </style>

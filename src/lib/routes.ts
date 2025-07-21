@@ -4,9 +4,7 @@ import { match, P } from 'ts-pattern';
 export type Route =
   | { type: 'root' }
   | { type: 'date'; date: string }
-  | { type: 'conversation'; date: string; conversation: string }
-  | { type: 'tags' }
-  | { type: 'tag'; tag: string };
+  | { type: 'conversation'; date: string; conversation: string };
 
 // ========== ROUTE CONSTRUCTORS ==========
 export const createRoute = {
@@ -17,16 +15,12 @@ export const createRoute = {
     date,
     conversation,
   }),
-  tags: (): Route => ({ type: 'tags' }),
-  tag: (tag: string): Route => ({ type: 'tag', tag }),
 };
 
 // ========== ROUTE OPERATIONS ==========
 export const parseSlug = (slug: string): Route =>
   match(slug)
     .with('', () => createRoute.root())
-    .with('tags', () => createRoute.tags())
-    .with(P.string.startsWith('tags/'), (s) => createRoute.tag(s.slice(5)))
     .with(P.string.includes('/'), (s) => {
       const parts = s.split('/');
       return createRoute.conversation(parts[0]!, parts[1]!);
@@ -46,8 +40,6 @@ export const routeToUrl = (route: Route): string =>
       { type: 'conversation' },
       ({ date, conversation }) => `/${date}/${conversation}/`
     )
-    .with({ type: 'tags' }, () => '/tags/')
-    .with({ type: 'tag' }, ({ tag }) => `/tags/${tag}/`)
     .exhaustive();
 
 export const routeToSlug = (route: Route): string =>
@@ -58,8 +50,6 @@ export const routeToSlug = (route: Route): string =>
       { type: 'conversation' },
       ({ date, conversation }) => `${date}/${conversation}`
     )
-    .with({ type: 'tags' }, () => 'tags')
-    .with({ type: 'tag' }, ({ tag }) => `tags/${tag}`)
     .exhaustive();
 
 export const routeToTreeText = (route: Route): string =>
@@ -67,8 +57,6 @@ export const routeToTreeText = (route: Route): string =>
     .with({ type: 'root' }, () => 'Home/')
     .with({ type: 'date' }, ({ date }) => `${date}/`)
     .with({ type: 'conversation' }, ({ conversation }) => conversation)
-    .with({ type: 'tags' }, () => 'tags/')
-    .with({ type: 'tag' }, ({ tag }) => `#${tag}`)
     .exhaustive();
 
 // ========== TYPE GUARDS ==========

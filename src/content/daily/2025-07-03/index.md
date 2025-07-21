@@ -1,6 +1,5 @@
 ---
 title: '今日は bitter challenges'
-tags: ['getting-over-it', 'education']
 description: '「ちょっと良いはドカ損」から始まり、真の学習とは bitter challenge であることを発見'
 ---
 

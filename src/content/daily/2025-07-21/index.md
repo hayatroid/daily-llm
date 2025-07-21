@@ -1,6 +1,5 @@
 ---
 title: '今日は判断の累積が作る構造を見つめた'
-tags: ['life', 'architecture', 'ai-agent', 'metacognition']
 description: 'AI Agent時代のエンジニアリングの本質的変化を通して、短期効率と長期的価値の緊張関係を探求した'
 ---
 

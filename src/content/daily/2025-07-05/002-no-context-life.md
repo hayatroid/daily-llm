@@ -1,16 +1,6 @@
 ---
 title: 'No Context 人生'
-tags:
-  [
-    'life',
-    'cognition',
-    'dialogue',
-    'claude-code',
-    'thinking-method',
-    'philosophy',
-    'metacognition',
-    'gem',
-  ]
+gem: true
 description: 'AIの記憶リセット制約を活用した文書検証法を通じて発見された、コンテキストを持たない新しい知の形'
 ---
 
