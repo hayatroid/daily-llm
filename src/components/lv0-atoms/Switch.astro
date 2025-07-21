@@ -11,6 +11,10 @@
     <span class="flag-name">--light</span>
     <span class="flag-state"></span>
   </button>
+  <button class="flag system-flag" data-theme="system">
+    <span class="flag-name">--system</span>
+    <span class="flag-state"></span>
+  </button>
 </div>
 
 <style lang="scss">
@@ -41,16 +45,31 @@
   }
 
   /* Active state styling */
-  :global([data-theme='dark']) .dark-flag .flag-state::before {
+  :global([data-theme-preference='dark']) .dark-flag .flag-state::before {
     content: '[x]';
   }
 
-  :global([data-theme='light']) .light-flag .flag-state::before {
+  :global([data-theme-preference='light']) .light-flag .flag-state::before {
+    content: '[x]';
+  }
+
+  :global([data-theme-preference='system']) .system-flag .flag-state::before {
     content: '[x]';
   }
 </style>
 
 <script>
-  import { ThemeManager } from '../../lib/theme';
-  ThemeManager.init();
+  import { applyTheme } from '../../lib/theme';
+
+  document.querySelectorAll('.flag').forEach((button) => {
+    button.addEventListener('click', () => {
+      const theme = button.getAttribute('data-theme') as
+        | 'light'
+        | 'dark'
+        | 'system';
+      if (theme) {
+        applyTheme(theme);
+      }
+    });
+  });
 </script>

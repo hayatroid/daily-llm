@@ -37,15 +37,19 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
     <script is:inline>
       // FOUC prevention - Set theme before CSS loads
       (function () {
-        const getTheme = () => {
-          const stored = localStorage.getItem('theme');
-          if (stored === 'light' || stored === 'dark') return stored;
-          return window.matchMedia?.('(prefers-color-scheme: light)').matches
-            ? 'light'
-            : 'dark';
-        };
-        document.documentElement.setAttribute('data-theme', getTheme());
+        const pref = localStorage.getItem('theme') || 'system';
+        const theme =
+          pref === 'system'
+            ? matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark'
+            : pref;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePreference = pref;
       })();
+    </script>
+    <script>
+      import '../../lib/theme'; // Just import to register system theme change listener
     </script>
   </head>
   <body>
