@@ -1,10 +1,17 @@
 ---
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../../components/lv3-layout/Layout.astro';
-import Pwd from '../../components/lv2-commands/Pwd.astro';
-import Cat from '../../components/lv2-commands/Cat.astro';
-import Tree from '../../components/lv2-commands/Tree.astro';
+import Pwd from '../../components/lv2-commands/Pwd';
+import Cat from '../../components/lv2-commands/Cat';
+import Tree from '../../components/lv2-commands/Tree';
+import { Tree as TreeLib } from '../../lib/navigation';
 import { StaticPaths } from '../../lib/content';
-import { createRoute, routeToSlug } from '../../lib/routes';
+import {
+  createRoute,
+  routeToSlug,
+  routeToUrl,
+  parseSlug,
+} from '../../lib/routes';
 
 export async function getStaticPaths() {
   return await StaticPaths.getConversations();
@@ -19,10 +26,30 @@ const route =
     : createRoute.root();
 const slug = routeToSlug(route);
 const pageTitle = `${conversation} - ${date}`;
+
+// Catコンポーネント用のデータを取得
+const entry = await getEntry('daily', slug);
+if (!entry) {
+  throw new Error(`Content not found for slug: ${slug}`);
+}
+const { data } = entry;
+const { Content } = await entry.render();
+const displayPath = routeToUrl(parseSlug(slug));
+
+// Treeコンポーネント用のデータを取得
+const allEntries = await getCollection('daily');
+const treeNodes = TreeLib.build(allEntries, slug);
 ---
 
 <Layout title={pageTitle}>
-  <Pwd slug={slug} />
-  <Cat slug={slug} />
-  <Tree slug={slug} />
+  <Pwd slug={slug} client:load />
+  <Cat
+    command={`cat ${displayPath}`}
+    title={data.title}
+    gem={data.gem}
+    client:load
+  >
+    <Content />
+  </Cat>
+  <Tree nodes={treeNodes} client:load />
 </Layout>

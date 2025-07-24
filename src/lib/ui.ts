@@ -27,10 +27,7 @@ export const ContentAnchors = {
       const level = parseInt(heading.tagName[1] || '1') - 1;
       const marker = markers[level] || '';
 
-      heading.innerHTML = `
-        <span class="heading-marker">${marker}</span>
-        <a href="#${id}" id="${id}">${text}</a>
-      `;
+      heading.innerHTML = `<a href="#${id}" id="${id}">${marker} ${text}</a>`;
 
       heading.querySelector('a')?.addEventListener('click', (e) => {
         e.preventDefault();

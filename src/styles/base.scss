@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Dark theme (default) - One Half Dark palette */
+  :root {
+    /* Terminal colors */
+    --term-green: #98c379;
+    --term-blue: #61afef;
+    --term-bg: #282c34;
+    --term-link: #dcdfe4;
+    --term-text: #8b949e;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-section: 2.5rem;
+
+    /* Typography */
+    --text-normal: 1rem;
+    --text-small: 0.875rem;
+    --text-lg: 1.5rem;
+    --text-weight-normal: 400;
+    --text-weight-bold: 700;
+    --line-height-compact: 1.4;
+    --line-height-normal: 1.6;
+    --line-height-tight: 1;
+    --font-mono: 'Fira Code', monospace;
+
+    /* Layout */
+    --gap-default: 1ch;
+    --min-width-small: 4ch;
+    --container-width: 80ch;
+    --border-radius: 4px;
+    --tree-indent: 2ch;
+    --char-offset: 0.2ch;
+    --char-multiplier: 2.5;
+    --prompt-spacing: 1ch;
+    --opacity-hover: 0.7;
+
+    /* Animation & backgrounds */
+    --duration-fast: 0.2s;
+    --duration-blink: 1s;
+    --bg-code-dark: rgba(255, 255, 255, 0.05);
+
+    /* Theme toggle */
+    --toggle-width: calc(var(--space-lg) + var(--space-md));
+    --toggle-height: calc(var(--space-md) + var(--space-sm));
+    --toggle-padding: calc(var(--space-xs) - 1px);
+    --toggle-slider-size: calc(
+      var(--toggle-height) - 4px - (var(--toggle-padding) * 2)
+    );
+    --toggle-travel: calc(
+      var(--toggle-width) - 4px - var(--toggle-slider-size) -
+        (var(--toggle-padding) * 2)
+    );
+
+    /* Responsive */
+    --bp-mobile: 767px;
+  }
+
+  /* Light theme - One Half Light palette */
+  [data-theme='light'] {
+    /* Terminal colors */
+    --term-green: #50a14f;
+    --term-blue: #0184bc;
+    --term-bg: #fafafa;
+    --term-link: #383a42;
+    --term-text: #6c7680;
+
+    /* Code backgrounds */
+    --bg-code-dark: rgba(0, 0, 0, 0.03);
+  }
+
+  /* Theme transition */
+  html {
+    scrollbar-gutter: stable;
+    @apply transition-colors duration-200 ease-in-out;
+  }
+
+  @supports not (scrollbar-gutter: stable) {
+    html {
+      margin-left: calc(100vw - 100%);
+    }
+  }
+
+  body {
+    @apply p-md bg-term-bg text-term-text font-mono leading-normal text-normal;
+    @apply transition-colors duration-200 ease-in-out;
+  }
+
+  @media (max-width: 767px) {
+    body {
+      @apply p-sm text-small;
+    }
+  }
+
+  /* Global color system - role-based styling */
+  a,
+  .nav-arrow,
+  .path-link {
+    @apply text-term-link no-underline hover:underline;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-term-link;
+  }
+
+  @media (max-width: 767px) {
+    h1 {
+      @apply text-normal;
+    }
+
+    h2,
+    h3 {
+      @apply text-small;
+    }
+  }
+
+  /* Text elements */
+  .meta,
+  .comment,
+  .empty,
+  .empty-tree,
+  .file-content,
+  ul,
+  ol,
+  li,
+  p {
+    @apply text-term-text;
+  }
+
+  /* Code styling */
+  code {
+    @apply font-mono text-term-text;
+  }
+
+  p code,
+  li code {
+    @apply text-term-blue;
+  }
+
+  pre {
+    @apply font-mono my-sm p-sm bg-black/5 dark:bg-white/5 overflow-x-auto text-small rounded;
+  }
+
+  /* Lists */
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  /* Meta information */
+  .meta {
+    @apply text-small;
+  }
+
+  /* File content (Markdown) styles */
+  .file-content {
+    h1 {
+      @apply text-normal font-bold m-0 font-mono flex items-baseline;
+    }
+
+    h2 {
+      @apply text-normal mt-md mb-sm font-bold font-mono flex items-baseline text-term-link;
+    }
+
+    h3 {
+      @apply text-normal mt-sm mb-xs font-bold font-mono flex items-baseline text-term-link;
+    }
+
+    h4,
+    h5,
+    h6 {
+      @apply text-normal font-bold font-mono text-term-link;
+    }
+
+    p {
+      @apply my-sm;
+    }
+
+    ul,
+    ol {
+      @apply my-sm pl-xl;
+      list-style-position: outside;
+    }
+
+    li {
+      @apply mb-xs;
+    }
+  }
+}

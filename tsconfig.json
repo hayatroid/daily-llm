@@ -5,7 +5,9 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "exactOptionalPropertyTypes": false
+    "exactOptionalPropertyTypes": false,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
   },
   "include": ["src/**/*", ".astro/types.d.ts"]
 }

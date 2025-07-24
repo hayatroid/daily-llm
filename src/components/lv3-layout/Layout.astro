@@ -1,9 +1,8 @@
 ---
-import 'reset-css';
-import '../../styles/global.scss';
+import '../../styles/base.scss';
 import '../../styles/syntax.scss';
-import Prompt from '../lv0-atoms/Prompt.astro';
-import Switch from '../lv0-atoms/Switch.astro';
+import Prompt from '../lv0-atoms/Prompt';
+import Switch from '../lv0-atoms/Switch';
 import { createRoute, routeToUrl } from '../../lib/routes';
 
 export interface Props {
@@ -53,17 +52,18 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
     </script>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <div class="header-content">
-          <h1>
+    <div class="max-w-container mx-auto">
+      <header class="mb-xl">
+        <div class="flex justify-between items-center gap-md">
+          <h1 class="m-0 text-lg font-normal text-left flex-1">
             <Prompt
               command="daily-llm"
               clickable={true}
               href={routeToUrl(createRoute.root())}
+              client:load
             />
           </h1>
-          <Switch />
+          <Switch client:load />
         </div>
       </header>
 
@@ -71,7 +71,7 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
         <slot />
       </main>
 
-      <footer>
+      <footer class="mt-section text-small text-center">
         <p class="comment">
           # Generated with Astro | <a
             href="https://github.com/hayatroid/daily-llm"
@@ -81,39 +81,5 @@ const { title, description = 'Daily conversations with AI' } = Astro.props;
         </p>
       </footer>
     </div>
-
-    <style lang="scss">
-      .container {
-        max-width: var(--container-width);
-        margin: 0 auto;
-      }
-
-      header {
-        margin-bottom: var(--space-xl);
-      }
-
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: var(--space-md);
-      }
-
-      .header-content {
-        h1 {
-          margin: 0;
-          font-size: var(--text-lg);
-          font-weight: var(--text-weight-normal);
-          text-align: left;
-          flex: 1;
-        }
-      }
-
-      footer {
-        margin-top: var(--space-section);
-        font-size: var(--text-small);
-        text-align: center;
-      }
-    </style>
   </body>
 </html>
