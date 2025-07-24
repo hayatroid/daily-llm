@@ -167,18 +167,55 @@
     @apply text-small;
   }
 
+  /* Gem indicator */
+  [data-gem='true']::after {
+    content: '💎';
+    color: var(--term-text);
+    margin-left: 0.5ch;
+  }
+
   /* File content (Markdown) styles */
   .file-content {
     h1 {
       @apply text-normal font-bold m-0 font-mono flex items-baseline;
+
+      &::before {
+        content: '#';
+        color: var(--term-text);
+        margin-right: 0.5ch;
+      }
+
+      a {
+        @apply text-term-link no-underline hover:underline;
+      }
     }
 
     h2 {
       @apply text-normal mt-md mb-sm font-bold font-mono flex items-baseline text-term-link;
+
+      &::before {
+        content: '##';
+        color: var(--term-text);
+        margin-right: 0.5ch;
+      }
+
+      a {
+        @apply text-term-link no-underline hover:underline;
+      }
     }
 
     h3 {
       @apply text-normal mt-sm mb-xs font-bold font-mono flex items-baseline text-term-link;
+
+      &::before {
+        content: '###';
+        color: var(--term-text);
+        margin-right: 0.5ch;
+      }
+
+      a {
+        @apply text-term-link no-underline hover:underline;
+      }
     }
 
     h4,

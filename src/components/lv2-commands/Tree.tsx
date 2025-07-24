@@ -1,4 +1,4 @@
-import { type Component, For, Show } from 'solid-js';
+import { type Component, For } from 'solid-js';
 import type { TreeNode } from '../../lib/navigation';
 import Shell from '../lv1-shell/Shell';
 
@@ -19,11 +19,8 @@ const Tree: Component<TreeProps> = (props) => {
                 'margin-left': `calc(${item.level} * var(--tree-indent))`,
               }}
             >
-              <a href={item.href} class="tree-link">
+              <a href={item.href} class="tree-link" data-gem={item.gem}>
                 {item.text}
-                <Show when={item.gem}>
-                  <span class="ml-xs">💎</span>
-                </Show>
               </a>
             </div>
           )}

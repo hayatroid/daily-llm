@@ -21,8 +21,11 @@ const Cat: Component<CatProps> = (props) => {
   return (
     <Shell command={props.command}>
       <div class="file-content ml-0 leading-normal">
-        <h1 class="text-normal font-bold m-0 font-mono flex items-baseline">
-          {props.title} {props.gem && '💎'}
+        <h1
+          class="text-normal font-bold m-0 font-mono flex items-baseline"
+          data-gem={props.gem}
+        >
+          {props.title}
         </h1>
         {props.children}
       </div>

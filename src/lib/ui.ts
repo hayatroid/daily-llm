@@ -16,7 +16,6 @@ export const ContentAnchors = {
         .substring(0, 7);
     };
 
-    const markers = ['# ', '## ', '### ', '#### ', '##### ', '###### '];
     const headings = document.querySelectorAll(
       `${containerSelector} h1, ${containerSelector} h2, ${containerSelector} h3`
     );
@@ -24,10 +23,8 @@ export const ContentAnchors = {
     for (const heading of headings) {
       const text = heading.textContent ?? '';
       const id = await generateHashId(text);
-      const level = parseInt(heading.tagName[1] || '1') - 1;
-      const marker = markers[level] || '';
 
-      heading.innerHTML = `<a href="#${id}" id="${id}">${marker} ${text}</a>`;
+      heading.innerHTML = `<a href="#${id}" id="${id}">${text}</a>`;
 
       heading.querySelector('a')?.addEventListener('click', (e) => {
         e.preventDefault();
