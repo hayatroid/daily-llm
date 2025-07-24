@@ -4,10 +4,10 @@
   },
   "permissions": {
     "allow": [
-      "Bash(npm run format)",
-      "Bash(npm run lint)",
-      "Bash(npm run textlint)",
-      "Bash(npm run build)",
+      "Bash(bun format)",
+      "Bash(bun lint)",
+      "Bash(bun textlint)",
+      "Bash(bun run build)",
       "Bash(gemini:*)"
     ],
     "deny": []

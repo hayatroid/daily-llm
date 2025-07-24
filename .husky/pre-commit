@@ -4,7 +4,7 @@ echo "🔍 Running quality checks..."
 
 # Format and lint check
 echo "📝 Checking format and lint..."
-npm run format:check && npm run lint
+bun format:check && bun lint
 if [ $? -ne 0 ]; then
   echo "❌ Format/lint check failed. Please fix the issues and try again."
   exit 1
@@ -12,7 +12,7 @@ fi
 
 # Textlint check
 echo "📚 Running textlint..."
-npm run textlint
+bun textlint
 if [ $? -ne 0 ]; then
   echo "❌ Textlint failed. Please fix the issues and try again."
   exit 1
@@ -20,7 +20,7 @@ fi
 
 # Build test
 echo "🏗️ Running build test..."
-npm run build
+bun run build
 if [ $? -ne 0 ]; then
   echo "❌ Build failed. Please fix the issues and try again."
   exit 1
